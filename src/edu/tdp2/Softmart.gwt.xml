@@ -12,6 +12,9 @@
 
       <!-- Other module inherits                                      -->
 
+      <!-- Example servlet loaded into hosted mode tomcat       -->
+      <servlet path="/softmart" class="edu.tdp2.server.SoftmartServiceImpl" />
+
 
       <!-- Specify the app entry point class.                         -->
       <entry-point class='edu.tdp2.client.Softmart'/>
