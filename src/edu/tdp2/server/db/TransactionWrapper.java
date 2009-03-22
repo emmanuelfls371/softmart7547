@@ -6,6 +6,13 @@ import org.hibernate.Transaction;
 
 public class TransactionWrapper
 {
+	/**
+	 * Graba el objeto o usando la sesion pasada por parametros, envolviendo la operacion en una transaccion que incluye
+	 * esta operacion sola. La sesion no se cierra. 
+	 * 
+	 * @param session
+	 * @param o
+	 */
 	public static void save(Session session, Object o)
 	{
 		Transaction tx = null;
@@ -21,9 +28,5 @@ public class TransactionWrapper
 				tx.rollback();
 			throw he;
 		}
-/*		finally
-		{
-			session.close();
-		}*/
 	}
 }

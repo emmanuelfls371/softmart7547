@@ -12,6 +12,9 @@ public class Usuario extends AbstractDomainObject
 
 	@Column(name = "Nombre", length = 50)
 	private String nombre;
+	
+	@Column(name = "PasswordHash", length = 32)
+	private String passwordHash;
 
 	public String getNombre()
 	{
@@ -21,5 +24,15 @@ public class Usuario extends AbstractDomainObject
 	public void setNombre(String nombre)
 	{
 		this.nombre = nombre;
+	}
+
+	public void setPasswordHash(String passwordHash)
+	{
+		this.passwordHash = passwordHash;
+	}
+
+	public String getPasswordHash()
+	{
+		return passwordHash;
 	}
 }

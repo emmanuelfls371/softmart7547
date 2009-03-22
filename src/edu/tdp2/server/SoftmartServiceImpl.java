@@ -1,37 +1,44 @@
 package edu.tdp2.server;
 
+import java.util.List;
+
 import org.hibernate.Session;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.tdp2.client.SoftmartService;
 import edu.tdp2.server.db.HibernateUtil;
-import edu.tdp2.server.db.TransactionWrapper;
-import edu.tdp2.server.model.Proyecto;
+import edu.tdp2.server.exceptions.BadLoginException;
 import edu.tdp2.server.model.Usuario;
+import edu.tdp2.server.utils.Encrypter;
 
 public class SoftmartServiceImpl extends RemoteServiceServlet implements SoftmartService
 {
 	private static final long serialVersionUID = 7772479472218006401L;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String login(String userName, String passwordHash)
 	{
 		Session sess = HibernateUtil.getSession();
 
-		Usuario moncho = new Usuario();
-		moncho.setNombre("Moncho");
-		TransactionWrapper.save(sess, moncho);
-		Proyecto proy = new Proyecto();
-		proy.setNombre("Ir a la luna");
-		TransactionWrapper.save(sess, proy);
-		sess.close();
+		try
+		{
+			List<Usuario> result = sess.createQuery("FROM Usuario WHERE Nombre = ? AND PasswordHash = ?").setString(0,
+					userName).setString(1, passwordHash).list();
+			if (result.size() > 0)
+				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
+			else
+				throw new BadLoginException("Login incorrecto");
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 
-		/*
-		 * moncho = null; sess = HibernateUtil.getSession(); for (Object u :
-		 * sess.createQuery("from Usuario where Nombre = ?").setString(0, "Moncho").list())
-		 * System.out.println(((Usuario) u).getNombre()); // TODO Auto-generated method stub sess.close();
-		 */
-		return "1";
+	private String crearTicket(String userName, long userId)
+	{
+		return userName + ";" + Encrypter.getInstance().encrypt("ID=" + userId);
 	}
 }

@@ -3,9 +3,12 @@ package edu.tdp2.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -20,6 +23,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	private SoftmartConstants constants;
 	private SoftmartMessages messages;
 	private VerticalPanel centerPanel;
+	private HorizontalPanel northPanel;
 
 	/**
 	 * This is the entry point method.
@@ -34,6 +38,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 
 		dPanel.add(getWestPanel(), DockPanel.WEST);
 		dPanel.add(getCenterPanel(), DockPanel.CENTER);
+		dPanel.add(getNorthPanel(), DockPanel.NORTH);
 		showWelcome();
 
 		hPanel.add(dPanel);
@@ -48,9 +53,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
-		/*if (loginCookie != null && !loginCookie.equals(""))
+		if (loginCookie != null && !loginCookie.equals(""))
 			onLogin();
-		else*/
+		else
 		{
 			centerPanel.clear();
 			LoginWidget loginWidget = LoginWidget.getInstance();
@@ -72,19 +77,43 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	{
 		centerPanel = new VerticalPanel();
 		centerPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+		centerPanel.setSize("100%", "450px");
 		return centerPanel;
+	}
+
+	private Panel getNorthPanel()
+	{
+		northPanel = new HorizontalPanel();
+		northPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		northPanel.setSize("700px", "50px");
+		return northPanel;
 	}
 
 	public void onLogin()
 	{
-		// TODO Auto-generated method stub
+		centerPanel.clear();
+		String loginCookie = Cookies.getCookie(constants.loginCookieName());
+		String currentUser = loginCookie.split(";")[0];
+		LoginWidget.setCurrentUser(currentUser);
+		centerPanel.add(new HTML(messages.welcomeUser(currentUser == null ? "" : currentUser)));
 
+		Hyperlink logoutLink = new Hyperlink(constants.logout(), "");
+		logoutLink.addClickListener(new ClickListener()
+		{
+			public void onClick(Widget sender)
+			{
+				onLogout();
+			}
+		});
+		northPanel.add(logoutLink);
 	}
 
 	public void onLogout()
 	{
-		// TODO Auto-generated method stub
-
+		Cookies.setCookie(constants.loginCookieName(), "");
+		LoginWidget.setCurrentUser(null);
+		northPanel.clear();
+		showWelcome();
 	}
 
 	public void onChangePw()

@@ -28,6 +28,7 @@ public class LoginWidget extends SimplePanel
 	private final PasswordTextBox passwordTextBox;
 	private LoginListener loginListener;
 	private SoftmartConstants constants;
+	private SoftmartMessages messages;
 
 	public static LoginWidget getInstance()
 	{
@@ -49,6 +50,7 @@ public class LoginWidget extends SimplePanel
 	private LoginWidget()
 	{
 		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
+		messages = (SoftmartMessages) GWT.create(SoftmartMessages.class);
 		userNameTextBox = new TextBox();
 		userNameTextBox.setWidth("200px");
 		passwordTextBox = new PasswordTextBox();
@@ -95,7 +97,7 @@ public class LoginWidget extends SimplePanel
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("Login incorrecto");
+						Window.alert(messages.badLogin());
 					}
 
 					public void onSuccess(String result)
