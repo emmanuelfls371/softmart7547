@@ -48,9 +48,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
-		if (loginCookie != null && !loginCookie.equals(""))
+		/*if (loginCookie != null && !loginCookie.equals(""))
 			onLogin();
-		else
+		else*/
 		{
 			centerPanel.clear();
 			LoginWidget loginWidget = LoginWidget.getInstance();
