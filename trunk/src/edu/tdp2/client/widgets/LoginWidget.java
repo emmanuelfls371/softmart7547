@@ -1,4 +1,4 @@
-package edu.tdp2.client;
+package edu.tdp2.client.widgets;
 
 import java.util.Date;
 
@@ -11,12 +11,15 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.SoftmartConstants;
+import edu.tdp2.client.SoftmartMessages;
 import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.utils.MD5;
 
@@ -55,10 +58,10 @@ public class LoginWidget extends SimplePanel
 		userNameTextBox.setWidth("200px");
 		passwordTextBox = new PasswordTextBox();
 		passwordTextBox.setWidth("200px");
-		armarWidget();
+		buildWidget();
 	}
 
-	private void armarWidget()
+	private void buildWidget()
 	{
 		VerticalPanel panel = new VerticalPanel();
 		panel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
@@ -73,22 +76,35 @@ public class LoginWidget extends SimplePanel
 	private FlexTable getTable()
 	{
 		FlexTable table = new FlexTable();
-		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
-		submitPanel.setWidth("100%");
-		submitPanel.add(getSubmitButton());
-		table.setWidget(0, 0, new HTML("<b>Login</b>"));
+		table.setWidget(0, 0, new HTML("<b>Iniciar sesi&oacute;n</b>"));
+		table.setWidget(0, 1, getRegisterLink());
 		table.setWidget(1, 0, new HTML("Usuario: "));
 		table.setWidget(1, 1, userNameTextBox);
 		table.setWidget(2, 0, new HTML("Contrase&ntilde;a: "));
 		table.setWidget(2, 1, passwordTextBox);
-		table.setWidget(3, 1, submitPanel);
+		table.setWidget(3, 1, getSubmitPanel());
 		table.setWidth("100px");
 		return table;
 	}
 
-	private Button getSubmitButton()
+	private Widget getRegisterLink()
 	{
+		Hyperlink link = new Hyperlink("Registrarse", true, "");
+		link.addClickListener(new ClickListener()
+		{
+			public void onClick(Widget sender)
+			{
+				loginListener.onShowRegistration();
+			}
+		});
+		return link;
+	}
+
+	private HorizontalPanel getSubmitPanel()
+	{
+		HorizontalPanel submitPanel = new HorizontalPanel();
+		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		submitPanel.setWidth("100%");
 		Button submit = new Button("Entrar", new ClickListener()
 		{
 			public void onClick(Widget sender)
@@ -119,7 +135,8 @@ public class LoginWidget extends SimplePanel
 				return MD5.md5(text);
 			}
 		});
-		return submit;
+		submitPanel.add(submit);
+		return submitPanel;
 	}
 
 	public TextBox getUserNameTextBox()

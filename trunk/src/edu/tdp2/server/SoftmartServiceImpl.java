@@ -41,4 +41,36 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	{
 		return userName + ";" + Encrypter.getInstance().encrypt("ID=" + userId);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getCiudades(String pais)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			return sess.createQuery("SELECT nombre FROM Ciudad WHERE pais.nombre = ?").setString(0, pais).list();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getPaises()
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			return sess.createQuery("SELECT nombre FROM Pais ORDER BY nombre").list();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 }
