@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.utils.ClientUtils;
 
+// TODO Pasar los mensajes de RegistrationWidget a messages
 public class RegistrationWidget extends FormPanel
 {
 	private static RegistrationWidget instance;

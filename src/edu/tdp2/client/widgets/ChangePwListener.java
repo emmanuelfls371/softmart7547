@@ -1,4 +1,4 @@
-package edu.tdp2.client;
+package edu.tdp2.client.widgets;
 
 public interface ChangePwListener
 {
