@@ -15,6 +15,11 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.widgets.ChangePwListener;
+import edu.tdp2.client.widgets.LoginListener;
+import edu.tdp2.client.widgets.LoginWidget;
+import edu.tdp2.client.widgets.RegistrationWidget;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -120,5 +125,12 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	public void onShowRegistration()
+	{
+		centerPanel.clear();
+		RegistrationWidget registrationWidget = RegistrationWidget.getInstance();
+		centerPanel.add(registrationWidget);
 	}
 }

@@ -11,7 +11,8 @@
       <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
       <!-- Other module inherits                                      -->
-
+      <inherits name='com.google.gwt.validation.Validation' />
+       
       <!-- Example servlet loaded into hosted mode tomcat       -->
       <servlet path="/softmart" class="edu.tdp2.server.SoftmartServiceImpl" />
 
