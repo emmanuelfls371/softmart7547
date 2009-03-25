@@ -15,6 +15,7 @@
        
       <!-- Example servlet loaded into hosted mode tomcat       -->
       <servlet path="/softmart" class="edu.tdp2.server.SoftmartServiceImpl" />
+      <servlet path="/registration" class="edu.tdp2.server.RegistrationServlet" />
 
 
       <!-- Specify the app entry point class.                         -->

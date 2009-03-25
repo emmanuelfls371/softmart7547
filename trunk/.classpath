@@ -22,5 +22,7 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/sqljdbc.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-validation-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar" sourcepath="C:/Documents and Settings/Administrador/Escritorio/commons-fileupload-1.2.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
