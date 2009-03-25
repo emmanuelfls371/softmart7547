@@ -6,14 +6,14 @@
 	<!-- Appender: Consola
 	     Consola -->
 	<appender name="consola" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="DEBUG"/>
+        <param name="Threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss} %-5p %C{1}-%M() -> %m%n"/>
 		</layout>
 	</appender>
 
 	<root>
-		<priority value ="DEBUG"/>
+		<priority value ="INFO"/>
 		<appender-ref ref="consola"/>
 	</root>
 

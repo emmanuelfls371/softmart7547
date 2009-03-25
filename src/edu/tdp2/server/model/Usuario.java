@@ -5,7 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Table;
+
+import org.hibernate.Session;
+
+import edu.tdp2.client.dto.UsuarioDto;
 
 @Entity
 @Table(name = "Usuario")
@@ -13,34 +18,56 @@ public class Usuario extends AbstractDomainObject
 {
 	private static final long serialVersionUID = -4991786482118294352L;
 
-	@Column(name = "Nombre", length = 50)
+	@Column(name = "Nombre", length = 50, nullable = false)
 	private String nombre;
-	
-	@Column(name = "Apellido", length = 50)
+
+	@Column(name = "Apellido", length = 50, nullable = false)
 	private String apellido;
 
-	@Column(name = "Email", length = 255)
+	@Column(name = "Email", length = 255, nullable = false)
 	private String email;
-	
-	@Column(name = "Login", length = 50)
+
+	@Column(name = "Login", length = 50, nullable = false)
 	private String login;
-	
-	@Column(name = "PasswordHash", length = 32)
+
+	@Column(name = "PasswordHash", length = 32, nullable = false)
 	private String passwordHash;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Ciudad", nullable = false)
+	@JoinColumn(name = "Ciudad")
 	private Ciudad ciudad;
-	
-	@Column(name = "CodPostal", length = 10)
+
+	@Column(name = "CodPostal", length = 10, nullable = false)
 	private String codPostal;
-	
+
 	@Column(name = "DescripPerfil")
 	private String descripPerfil;
 
 	@Column(name = "PathLogo", length = 255)
 	private String pathLogo;
-	
+
+	public Usuario()
+	{
+	}
+
+	public Usuario(UsuarioDto dto, Session sess)
+	{
+		nombre = dto.getNombre();
+		apellido = dto.getApellido();
+		email = dto.getEmail();
+		login = dto.getUsuario();
+		if (sess.createQuery("FROM Usuario WHERE login = ?").setString(0, login).uniqueResult() != null)
+			throw new NonUniqueResultException("El nombre de usuario \"" + login + "\" ya existe");
+		passwordHash = dto.getClave();
+
+		ciudad = (Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?").setString(0,
+				dto.getCiudad()).setString(1, dto.getPais()).uniqueResult();
+
+		codPostal = dto.getCodPostal();
+		descripPerfil = dto.getDescripPerfil();
+		pathLogo = dto.getLogo().isEmpty() ? null : dto.getLogo();
+	}
+
 	public String getApellido()
 	{
 		return apellido;
