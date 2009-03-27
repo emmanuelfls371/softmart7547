@@ -25,7 +25,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Usuario> result = sess.createQuery("FROM Usuario WHERE Nombre = ? AND PasswordHash = ?").setString(0,
+			List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ? AND passwordHash = ?").setString(0,
 					userName).setString(1, passwordHash).list();
 			if (result.size() > 0)
 				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
