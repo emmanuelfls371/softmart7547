@@ -20,24 +20,23 @@ import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.Dto;
 
+public abstract class FormWidget extends FormPanel
+{
 
-
-public abstract class FormWidget extends FormPanel{
-	
 	protected String nombreWidget;
 	protected String anchoWidget;
 	protected String anchoTabla;
 	protected String url;
-	
+
 	protected Dto dto;
 	protected Map<FormFields, Widget> widgets = new HashMap<FormFields, Widget>();
-	
+
 	protected List<String> errMsgs;
-	
+
 	protected native void reload() /*-{
 	   $wnd.location.reload();
 	  }-*/;
-	
+
 	protected void buildWidget()
 	{
 		VerticalPanel panel = new VerticalPanel();
@@ -45,11 +44,10 @@ public abstract class FormWidget extends FormPanel{
 		FlexTable table = getTable();
 		panel.add(table);
 		add(panel);
-		
 	}
-	
+
 	protected abstract FormFields[] values();
-	
+
 	protected FlexTable getTable()
 	{
 		FlexTable table = new FlexTable();
@@ -66,8 +64,9 @@ public abstract class FormWidget extends FormPanel{
 		table.setWidth(anchoTabla);
 		return table;
 	}
-	
-	protected void init(){
+
+	protected void init()
+	{
 		setMethod(METHOD_POST);
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setAction(GWT.getModuleBaseURL() + url);
@@ -75,9 +74,9 @@ public abstract class FormWidget extends FormPanel{
 		buildWidget();
 		errMsgs = new ArrayList<String>();
 	}
-	
+
 	protected abstract void populateWidgets();
-	
+
 	protected HorizontalPanel getSubmitPanel()
 	{
 		HorizontalPanel submitPanel = new HorizontalPanel();
@@ -93,16 +92,18 @@ public abstract class FormWidget extends FormPanel{
 		submitPanel.add(submit);
 		return submitPanel;
 	}
-	
-	protected void createErrorMessage(Class<?> dtoClass){
+
+	protected void createErrorMessage(Class<?> dtoClass)
+	{
 		errMsgs.clear();
-		
+
 		IValidator<Dto> validator = GWT.create(dtoClass);
 		for (InvalidConstraint<Dto> error : validator.validate(dto))
 			errMsgs.add(error.getMessage());
 	}
-		
-	protected boolean buildErrorMessage(){
+
+	protected boolean buildErrorMessage()
+	{
 		if (errMsgs.size() > 0)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -117,6 +118,6 @@ public abstract class FormWidget extends FormPanel{
 		}
 		return true;
 	}
-	
+
 	protected abstract boolean validate();
 }

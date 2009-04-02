@@ -48,28 +48,31 @@ public class Usuario extends AbstractDomainObject
 
 	@Column(name = "PathLogo", length = 255)
 	private String pathLogo;
-	
+
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Proyecto> proyectos;
-	
-	public boolean existe(Proyecto proy){
-		if(proy!=null){
-			for(Proyecto proyecto: proyectos){
-				if(proyecto.id==proy.id){
+
+	public boolean existe(Proyecto proy)
+	{
+		if (proy != null)
+		{
+			for (Proyecto proyecto : proyectos)
+				if (proyecto.id == proy.id)
 					return true;
-				}
-			}
 			return false;
-		}else
+		}
+		else
 			return false;
 	}
-	
-	
-	public boolean addProyecto(Proyecto proy) {
-		if(proy!=null && !existe(proy)){
+
+	public boolean addProyecto(Proyecto proy)
+	{
+		if (proy != null && !existe(proy))
+		{
 			proyectos.add(proy);
 			return true;
-		}else
+		}
+		else
 			return false;
 	}
 

@@ -1,35 +1,21 @@
 package edu.tdp2.client.widgets;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormHandler;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.validation.client.InvalidConstraint;
-import com.google.gwt.validation.client.interfaces.IValidator;
 
-import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
@@ -48,18 +34,21 @@ public class RegistrationWidget extends FormWidget
 
 	private RegistrationWidget()
 	{
-		nombreWidget="<b>Nuevo usuario</b>";
-		anchoWidget="200px";
-		anchoTabla="100px";
-		url="registration";
-		dto=new UsuarioDto();
+		nombreWidget = "<b>Nuevo usuario</b>";
+		anchoWidget = "200px";
+		anchoTabla = "100px";
+		url = "registration";
+		dto = new UsuarioDto();
 		init();
 	}
-	
-	protected FormFields[] values(){
+
+	@Override
+	protected FormFields[] values()
+	{
 		return RegistrationFields.values();
 	}
 
+	@Override
 	protected void populateWidgets()
 	{
 		TextBox t = new TextBox();
@@ -135,13 +124,14 @@ public class RegistrationWidget extends FormWidget
 		widgets.put(RegistrationFields.Logo, f);
 	}
 
+	@Override
 	protected void buildWidget()
 	{
 		super.buildWidget();
 		addFormHandler(new RegistrationFormHandler());
 	}
 
-
+	@Override
 	protected boolean validate()
 	{
 		createErrorMessage(UsuarioDto.class);
@@ -153,8 +143,6 @@ public class RegistrationWidget extends FormWidget
 
 		return super.buildErrorMessage();
 	}
-
-	
 
 	private final class RegistrationFormHandler implements FormHandler
 	{
@@ -170,7 +158,8 @@ public class RegistrationWidget extends FormWidget
 			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
 			((UsuarioDto) dto).setCiudad(((SuggestBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
 			((UsuarioDto) dto).setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
-			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil)).getText());
+			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil))
+					.getText());
 			if (!validate())
 				event.setCancelled(true);
 		}
@@ -212,11 +201,11 @@ public class RegistrationWidget extends FormWidget
 				"C&oacute;digo postal"), DescripPerfil("Descripci&oacute;n del perfil (opcional)"), Logo(
 				"Logo o imagen (opcional - PNG, GIF, JPEG. Tama&ntilde;o m&aacute;ximo 200KB");
 
-		
 		private RegistrationFields(String description)
 		{
 			this.description = description;
 		}
+
 		public String description;
 
 		private RegistrationFields()
@@ -228,7 +217,7 @@ public class RegistrationWidget extends FormWidget
 		{
 			return description;
 		}
-		
+
 	}
 
 	private class SuggestCallback implements AsyncCallback<List<String>>

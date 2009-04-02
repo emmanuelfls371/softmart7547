@@ -1,5 +1,6 @@
 package edu.tdp2.server.model;
 
-public enum TamanioProyecto {
+public enum TamanioProyecto
+{
 	Chico, Mediano, Grande
 }
