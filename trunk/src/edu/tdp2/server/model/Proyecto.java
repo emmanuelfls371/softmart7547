@@ -1,12 +1,14 @@
 package edu.tdp2.server.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import edu.tdp2.client.dto.ProyectoDto;
@@ -47,7 +49,34 @@ public class Proyecto extends AbstractDomainObject
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Usuario", nullable = false)
 	private Usuario usuario;
+	
+	@OneToMany(mappedBy = "proyecto", fetch = FetchType.LAZY)
+	private List<Oferta> ofertas;
 
+	public boolean existe(Oferta of)
+	{
+		if (of != null)
+		{
+			for (Oferta oferta : ofertas)
+				if (oferta.id == of.id)
+					return true;
+			return false;
+		}
+		else
+			return false;
+	}
+
+	public boolean addOferta(Oferta of)
+	{
+		if (of != null && !existe(of))
+		{
+			ofertas.add(of);
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	public Proyecto()
 	{
 	}

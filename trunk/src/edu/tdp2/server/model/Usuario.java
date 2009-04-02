@@ -51,6 +51,33 @@ public class Usuario extends AbstractDomainObject
 
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Proyecto> proyectos;
+	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<Oferta> ofertas;
+	
+	public boolean existe(Oferta of)
+	{
+		if (of != null)
+		{
+			for (Oferta oferta : ofertas)
+				if (oferta.id == of.id)
+					return true;
+			return false;
+		}
+		else
+			return false;
+	}
+
+	public boolean addOferta(Oferta of)
+	{
+		if (of != null && !existe(of))
+		{
+			ofertas.add(of);
+			return true;
+		}
+		else
+			return false;
+	}
 
 	public boolean existe(Proyecto proy)
 	{

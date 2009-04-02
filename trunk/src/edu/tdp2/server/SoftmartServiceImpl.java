@@ -16,6 +16,7 @@ import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.BadLoginException;
 import edu.tdp2.server.model.DificultadProyecto;
 import edu.tdp2.server.model.NivelReputacion;
+import edu.tdp2.server.model.Oferta;
 import edu.tdp2.server.model.Presupuesto;
 import edu.tdp2.server.model.Proyecto;
 import edu.tdp2.server.model.TamanioProyecto;
@@ -167,8 +168,39 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		return Presupuesto.armarRangos();
 	}
 	
-	public String ofertar(OfertaDto oferta){
-		return null;
+	private Proyecto getProyecto(Session sess, String proyName){
+		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE Nombre = ?").setString(0, proyName).list();
+		if (result.size() > 0)
+			return result.get(0);
+		else
+			return null;		
+	}
+	
+	public String ofertar(OfertaDto ofertaDto){
+		Session sess = HibernateUtil.getSession();
+		try
+		{
+			Proyecto proy = getProyecto(sess, ofertaDto.getProyecto());
+			Usuario us = getUsuario(sess, ofertaDto.getUsuario());
+			if (proy != null&&us !=null)
+			{
+				Oferta nueva=new Oferta(ofertaDto, proy, us);
+				if (proy.addOferta(nueva)&&us.addOferta(nueva))
+				{
+					TransactionWrapper.save(sess, nueva);
+					TransactionWrapper.save(sess, proy);
+				}
+			}
+			return null;
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
 	}
 	
 }

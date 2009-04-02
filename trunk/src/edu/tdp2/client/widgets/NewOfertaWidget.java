@@ -108,6 +108,9 @@ public class NewOfertaWidget extends FormWidget{
 			
 				
 			//((OfertaDto) dto).setProyecto(ListProjectsWidget.getCurrentProject());
+			((OfertaDto) dto).setProyecto("Prueba");
+			
+			((OfertaDto) dto).setUsuario(LoginWidget.getCurrentUser());
 			
 			createErrorMessage();
 			if (!validate())

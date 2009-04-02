@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 import edu.tdp2.server.model.Ciudad;
+import edu.tdp2.server.model.Oferta;
 import edu.tdp2.server.model.Pais;
 import edu.tdp2.server.model.Proyecto;
 import edu.tdp2.server.model.Usuario;
@@ -20,7 +21,7 @@ public class HibernateUtil
 		{
 			BasicConfigurator.configure();
 			sessionFactory = new AnnotationConfiguration().addAnnotatedClass(Usuario.class).addAnnotatedClass(
-					Ciudad.class).addAnnotatedClass(Pais.class).addAnnotatedClass(Proyecto.class).configure()
+					Ciudad.class).addAnnotatedClass(Pais.class).addAnnotatedClass(Proyecto.class).addAnnotatedClass(Oferta.class).configure()
 					.buildSessionFactory();
 		}
 		catch (Throwable ex)
