@@ -1,5 +1,6 @@
 package edu.tdp2.server.model;
 
-public enum DificultadProyecto {
+public enum DificultadProyecto
+{
 	Simple, Medio, Complejo
 }

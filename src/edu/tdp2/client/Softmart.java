@@ -51,7 +51,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		hPanel.setWidth("100%");
 		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
 		RootPanel.get().add(hPanel);
-
 	}
 
 	private void showWelcome()
@@ -83,7 +82,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		centerPanel.add(menuLink);
-		
 	}
 
 	private Widget getWestPanel()

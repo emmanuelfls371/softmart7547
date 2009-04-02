@@ -1,5 +1,6 @@
 package edu.tdp2.server.model;
 
-public enum NivelReputacion {
+public enum NivelReputacion
+{
 	Normal, Premium
 }

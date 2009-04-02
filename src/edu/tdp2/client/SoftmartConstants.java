@@ -7,5 +7,4 @@ public interface SoftmartConstants extends Constants
 	String loginCookieName();
 	String logout();
 	String login();
-
 }

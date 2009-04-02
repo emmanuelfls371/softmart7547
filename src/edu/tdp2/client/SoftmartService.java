@@ -4,7 +4,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
-import edu.tdp2.client.dto.*;
+import edu.tdp2.client.dto.ProyectoDto;
+import edu.tdp2.client.dto.UsuarioDto;
 
 public interface SoftmartService extends RemoteService
 {
