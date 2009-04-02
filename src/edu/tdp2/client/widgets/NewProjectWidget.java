@@ -3,6 +3,10 @@ package edu.tdp2.client.widgets;
 import java.util.Date;
 import java.util.List;
 
+
+
+
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -36,6 +40,7 @@ public class NewProjectWidget extends FormWidget
 	private static NewProjectWidget instance;
 	private SoftmartConstants constants;
 
+
 	public static NewProjectWidget getInstance()
 	{
 		if (instance == null)
@@ -50,9 +55,11 @@ public class NewProjectWidget extends FormWidget
 		anchoTabla = "100px";
 		url = "newproject";
 		dto = new ProyectoDto();
-		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
+		constants=(SoftmartConstants) GWT.create(SoftmartConstants.class);
 		init();
 	}
+	
+	
 
 	@Override
 	protected void populateWidgets()
@@ -86,17 +93,15 @@ public class NewProjectWidget extends FormWidget
 		// Create a basic date picker
 		DatePicker datePicker = new DatePicker();
 		final Label text = new Label();
-		ValueChangeHandler<Date> v = new ValueChangeHandler<Date>()
-		{
-			public void onValueChange(ValueChangeEvent<Date> event)
-			{
-				Date date = event.getValue();
-				String dateString = DateTimeFormat.getMediumDateFormat().format(date);
-				text.setText(dateString);
+		ValueChangeHandler<Date> v=new ValueChangeHandler<Date>() {
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				 Date date = event.getValue();
+				 String dateString = DateTimeFormat.getMediumDateFormat().format(date);
+				 text.setText(dateString);
 			}
 		};
-		datePicker.addValueChangeHandler(v);
-		((DatePicker) datePicker).setValue(new Date(), true);
+		datePicker.addValueChangeHandler(v);		
+		((DatePicker) datePicker).setValue(new Date(),true);
 		DateBox dateBox = new DateBox();
 		VerticalPanel vPanel = new VerticalPanel();
 		vPanel.add(new HTML(constants.cwDatePickerLabel()));
@@ -188,8 +193,9 @@ public class NewProjectWidget extends FormWidget
 	protected boolean validate()
 	{
 		createErrorMessage();
-		if (((ProyectoDto) dto).getFecha() == null)
+		if(((ProyectoDto) dto).getFecha()==null){
 			errMsgs.add("Debe ingresar la fecha de cierre");
+		}
 		return super.buildErrorMessage();
 	}
 
@@ -210,10 +216,10 @@ public class NewProjectWidget extends FormWidget
 			ListBox lisRangos = (ListBox) instance.widgets.get(ProjectFields.Presupuesto);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
-			VerticalPanel panel = (VerticalPanel) instance.widgets.get(ProjectFields.Fecha);
-
+			VerticalPanel panel= (VerticalPanel) instance.widgets.get(ProjectFields.Fecha);
+			
 			proyectoDto.setFecha(((DateBox) panel.getWidget(4)).getValue());
-
+				
 			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
 			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
 
@@ -221,22 +227,24 @@ public class NewProjectWidget extends FormWidget
 			for (Widget widget : panel3)
 			{
 				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					proyectoDto.setDificultad(b.getHTML());
+				if (b.isChecked())
+					proyectoDto.setDificultad(b.getHTML());					
 			}
 
 			FlowPanel panel2 = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
 			for (Widget widget : panel2)
 			{
 				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					proyectoDto.setTamanio(b.getHTML());
+				if (b.isChecked())
+					proyectoDto.setTamanio(b.getHTML());					
 			}
-
+				
 			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
 
+				
 			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
-
+				
+			
 			if (!validate())
 				event.setCancelled(true);
 		}
@@ -294,10 +302,9 @@ public class NewProjectWidget extends FormWidget
 			return description;
 		}
 	}
-
+	
 	@Override
-	protected IValidator<Dto> getValidator()
-	{
+	protected IValidator<Dto> getValidator() {
 		return GWT.create(ProyectoDto.class);
 	}
 }

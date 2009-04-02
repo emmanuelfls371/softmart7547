@@ -25,6 +25,16 @@ public class OfertaDto implements IValidatable, Serializable,Dto{
 
 	private String proyecto;
 	
+	private String usuario;
+	
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
 	public String getDescripcion() {
 		return Descripcion;
 	}
