@@ -7,4 +7,13 @@ public interface SoftmartConstants extends Constants
 	String loginCookieName();
 	String logout();
 	String login();
+	
+	 String cwDatePickerBoxLabel();
+
+	 String cwDatePickerDescription();
+
+	 String cwDatePickerLabel();
+
+	 String cwDatePickerName();
+
 }

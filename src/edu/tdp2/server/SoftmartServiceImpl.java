@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.tdp2.client.SoftmartService;
+import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.server.db.HibernateUtil;
@@ -165,4 +166,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	{
 		return Presupuesto.armarRangos();
 	}
+	
+	public String ofertar(OfertaDto oferta){
+		return null;
+	}
+	
 }

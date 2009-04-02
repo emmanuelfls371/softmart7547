@@ -26,7 +26,7 @@ public class Proyecto extends AbstractDomainObject
 	@Column(name = "PresupuestoMin", nullable = false)
 	private int minPresupuesto;
 
-	@Column(name = "Fecha", length = 10)
+	@Column(name = "Fecha", length = 10, nullable = false)
 	private Date fecha;
 
 	@Column(name = "Nivel", nullable = false)
@@ -64,10 +64,7 @@ public class Proyecto extends AbstractDomainObject
 		this.setMaxPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(0));
 		this.setMinPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(1));
 		this.setUsuario(usuario);
-		this.fecha = new Date();
-		fecha.setMonth(dto.getMes() - 1);
-		fecha.setDate(dto.getDia());
-		fecha.setYear(dto.getAnio() - 1900);
+		this.setFecha(dto.getFecha());
 	}
 
 	public Usuario getUsuario()
