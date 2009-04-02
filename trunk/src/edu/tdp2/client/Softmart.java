@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
+import edu.tdp2.client.widgets.NewOfertaWidget;
 import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
 
@@ -79,6 +80,16 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			public void onClick(Widget sender)
 			{
 				onShowNewProject();
+			}
+		});
+		centerPanel.add(menuLink);
+		
+		menuLink = new Hyperlink("New Oferta", "");
+		menuLink.addClickListener(new ClickListener()
+		{
+			public void onClick(Widget sender)
+			{
+				onShowNewOferta();
 			}
 		});
 		centerPanel.add(menuLink);
@@ -153,5 +164,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		NewProjectWidget newProjectWidget=NewProjectWidget.getInstance();
 		centerPanel.add(newProjectWidget);
+	}
+	public void onShowNewOferta(){
+		centerPanel.clear();
+		NewOfertaWidget newOfertaWidget=NewOfertaWidget.getInstance();
+		centerPanel.add(newOfertaWidget);
 	}
 }

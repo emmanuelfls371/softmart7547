@@ -1,8 +1,12 @@
 package edu.tdp2.client.widgets;
 
+import java.util.Date;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
+
+
+
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -10,12 +14,23 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+
+import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.utils.ClientUtils;
@@ -23,6 +38,8 @@ import edu.tdp2.client.utils.ClientUtils;
 public class NewProjectWidget extends FormWidget
 {
 	private static NewProjectWidget instance;
+	private SoftmartConstants constants;
+
 
 	public static NewProjectWidget getInstance()
 	{
@@ -38,8 +55,11 @@ public class NewProjectWidget extends FormWidget
 		anchoTabla = "100px";
 		url = "newproject";
 		dto = new ProyectoDto();
+		constants=(SoftmartConstants) GWT.create(SoftmartConstants.class);
 		init();
 	}
+	
+	
 
 	@Override
 	protected void populateWidgets()
@@ -70,24 +90,26 @@ public class NewProjectWidget extends FormWidget
 		ClientUtils.getSoftmartService().getPresupuestos(projectCallback);
 		widgets.put(ProjectFields.Presupuesto, lisRangos);
 
-		FlowPanel panel3 = new FlowPanel();
-
-		t = new TextBox();
-		t.setMaxLength(2);
-		t.setWidth("30px");
-		panel3.add(t);
-
-		t = new TextBox();
-		t.setMaxLength(2);
-		t.setWidth("30px");
-		panel3.add(t);
-
-		t = new TextBox();
-		t.setMaxLength(4);
-		t.setWidth("60px");
-		panel3.add(t);
-
-		widgets.put(ProjectFields.Fecha, panel3);
+		// Create a basic date picker
+		DatePicker datePicker = new DatePicker();
+		final Label text = new Label();
+		ValueChangeHandler<Date> v=new ValueChangeHandler<Date>() {
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				 Date date = event.getValue();
+				 String dateString = DateTimeFormat.getMediumDateFormat().format(date);
+				 text.setText(dateString);
+			}
+		};
+		datePicker.addValueChangeHandler(v);		
+		((DatePicker) datePicker).setValue(new Date(),true);
+		DateBox dateBox = new DateBox();
+		VerticalPanel vPanel = new VerticalPanel();
+		vPanel.add(new HTML(constants.cwDatePickerLabel()));
+		vPanel.add(text);
+		vPanel.add(datePicker);
+		vPanel.add(new HTML(constants.cwDatePickerBoxLabel()));
+		vPanel.add(dateBox);
+		widgets.put(ProjectFields.Fecha, vPanel);
 
 		final ListBox lisNivel = new ListBox();
 		lisNivel.setName(ProjectFields.Nivel.toString());
@@ -171,6 +193,9 @@ public class NewProjectWidget extends FormWidget
 	protected boolean validate()
 	{
 		createErrorMessage();
+		if(((ProyectoDto) dto).getFecha()==null){
+			errMsgs.add("Debe ingresar la fecha de cierre");
+		}
 		return super.buildErrorMessage();
 	}
 
@@ -191,48 +216,37 @@ public class NewProjectWidget extends FormWidget
 			ListBox lisRangos = (ListBox) instance.widgets.get(ProjectFields.Presupuesto);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
-			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Fecha);
-			try
+			VerticalPanel panel= (VerticalPanel) instance.widgets.get(ProjectFields.Fecha);
+			
+			proyectoDto.setFecha(((DateBox) panel.getWidget(4)).getValue());
+				
+			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
+			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
+
+			FlowPanel panel3 = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
+			for (Widget widget : panel3)
 			{
-				proyectoDto.setDia(Integer.parseInt(((TextBox) panel.getWidget(0)).getText()));
-				proyectoDto.setMes(Integer.parseInt(((TextBox) panel.getWidget(1)).getText()));
-				proyectoDto.setAnio(Integer.parseInt(((TextBox) panel.getWidget(2)).getText()));
-
-				ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
-				proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
-
-				FlowPanel panel3 = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
-				for (Widget widget : panel3)
-				{
-					RadioButton b = (RadioButton) widget;
-					if (b.isChecked())
-						proyectoDto.setDificultad(b.getHTML());
-				}
-
-				FlowPanel panel2 = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
-				for (Widget widget : panel2)
-				{
-					RadioButton b = (RadioButton) widget;
-					if (b.isChecked())
-						proyectoDto.setTamanio(b.getHTML());
-				}
-
-				proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
-
-				/*
-				 * String loginCookie = Cookies.getCookie(constants.loginCookieName()); String currentUser =
-				 * loginCookie.split(";")[0]; ((ProyectoDto) dto).setUsuario(currentUser);
-				 */
-
-				if (!validate())
-					event.setCancelled(true);
+				RadioButton b = (RadioButton) widget;
+				if (b.isChecked())
+					proyectoDto.setDificultad(b.getHTML());					
 			}
-			catch (NumberFormatException e)
+
+			FlowPanel panel2 = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
+			for (Widget widget : panel2)
 			{
-				Window.alert("La fecha indicada no es valida");
-				validate();
+				RadioButton b = (RadioButton) widget;
+				if (b.isChecked())
+					proyectoDto.setTamanio(b.getHTML());					
+			}
+				
+			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
+
+				
+			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
+				
+			
+			if (!validate())
 				event.setCancelled(true);
-			}
 		}
 
 		public void onSubmitComplete(FormSubmitCompleteEvent event)
@@ -268,8 +282,8 @@ public class NewProjectWidget extends FormWidget
 
 	private enum ProjectFields implements FormFields
 	{
-		Nombre, Presupuesto, Fecha("Fecha de cierre de la oferta (dd/mm/yyyy)"), Nivel("Nivel de reputación"), Dificultad, Tamanio(
-				"Tamaño"), Descripcion, Archivo("Archivo (opcional - m&aacute;ximo 5MB");
+		Nombre, Presupuesto, Fecha("Fecha de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
+				"Tama&ntilde;o"), Descripcion("Descripci&oacute;n"), Archivo("Archivo (opcional - m&aacute;ximo 5MB)");
 
 		private ProjectFields(String description)
 		{
@@ -288,10 +302,9 @@ public class NewProjectWidget extends FormWidget
 			return description;
 		}
 	}
-
+	
 	@Override
-	protected IValidator<Dto> getValidator()
-	{
+	protected IValidator<Dto> getValidator() {
 		return GWT.create(ProyectoDto.class);
 	}
 }

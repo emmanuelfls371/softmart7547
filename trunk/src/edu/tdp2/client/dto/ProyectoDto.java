@@ -1,6 +1,7 @@
 package edu.tdp2.client.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.google.gwt.validation.client.Max;
 import com.google.gwt.validation.client.Min;
@@ -20,54 +21,15 @@ public class ProyectoDto implements IValidatable, Serializable,Dto{
 	@NotNull (message = "Debe ingresar el rango de presupuesto")
 	private String presupuesto;
 
+	private Date Fecha;
 	
-	@Max(maximum=32, message = "Supera maximo de dias")
-	@Min(minimum=0, message = "Por debajo de minimo de dias")
-	private int dia;
-	
-	public int getDia() {
-		return dia;
-	}
-
-	public void setDia(int dia) {
-		this.dia = dia;
-	}
-
-	public int getMes() {
-		return mes;
-	}
-
-	public void setMes(int mes) {
-		this.mes = mes;
-	}
-
-	public int getAnio() {
-		return anio;
-	}
-
-	public void setAnio(int anio) {
-		this.anio = anio;
-	}
-
-	
-	@Max(maximum=13, message = "Supera maximo de meses")
-	@Min(minimum=0, message = "Por debajo de minimo de meses")
-	private int mes;
-	
-	
-	@Max(maximum=2021, message = "Supera maximo de años")
-	@Min(minimum=2008, message = "Por debajo de minimo de años")
-	private int anio;
-
 	@NotEmpty(message = "Debe ingresar el nivel de reputación")
 	@NotNull (message = "Debe ingresar el nivel de reputación")
 	private String nivel;
 	
-	@NotEmpty(message = "Debe ingresar la dificultad")
 	@NotNull (message = "Debe ingresar la dificultad")
 	private String dificultad;
 	
-	@NotEmpty (message = "Debe ingresar el tamaño")
 	@NotNull (message = "Debe ingresar el tamaño")
 	private String tamanio;
 	
@@ -77,6 +39,14 @@ public class ProyectoDto implements IValidatable, Serializable,Dto{
 	
 	private String usuario;
 
+	public Date getFecha() {
+		return Fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		Fecha = fecha;
+	}
+	
 	public String getUsuario() {
 		return usuario;
 	}
