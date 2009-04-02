@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/devel/gwt-windows-1.5.3/gwt-user.jar"/>
 	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j.jar"/>
 	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>
@@ -24,5 +23,6 @@
 	<classpathentry kind="lib" path="lib/gwt-validation-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar" sourcepath="C:/Documents and Settings/Administrador/Escritorio/commons-fileupload-1.2.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="D:/devel/gwt-windows-1.6.3/gwt-user.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
