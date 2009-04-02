@@ -22,6 +22,8 @@
       <entry-point class='edu.tdp2.client.Softmart'/>
     
       <!-- Specify the application specific style sheet.              -->
-      <stylesheet src='Softmart.css' />
-	
+      <stylesheet src='Softmart.css' /><servlet path="/newproject"
+      	class="edu.tdp2.server.RegistrationServlet">
+</servlet>
+
 </module>

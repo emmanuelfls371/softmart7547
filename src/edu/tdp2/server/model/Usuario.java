@@ -1,11 +1,14 @@
 package edu.tdp2.server.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.Session;
@@ -45,6 +48,30 @@ public class Usuario extends AbstractDomainObject
 
 	@Column(name = "PathLogo", length = 255)
 	private String pathLogo;
+	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<Proyecto> proyectos;
+	
+	public boolean existe(Proyecto proy){
+		if(proy!=null){
+			for(Proyecto proyecto: proyectos){
+				if(proyecto.id==proy.id){
+					return true;
+				}
+			}
+			return false;
+		}else
+			return false;
+	}
+	
+	
+	public boolean addProyecto(Proyecto proy) {
+		if(proy!=null && !existe(proy)){
+			proyectos.add(proy);
+			return true;
+		}else
+			return false;
+	}
 
 	public Usuario()
 	{

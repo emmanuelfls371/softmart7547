@@ -9,7 +9,7 @@ import com.google.gwt.validation.client.interfaces.IValidatable;
 
 import edu.tdp2.client.utils.MD5;
 
-public class UsuarioDto implements IValidatable, Serializable
+public class UsuarioDto implements IValidatable, Serializable, Dto
 {
 	private static final long serialVersionUID = 3538926217892037317L;
 
