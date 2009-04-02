@@ -93,15 +93,17 @@ public abstract class FormWidget extends FormPanel
 		return submitPanel;
 	}
 
-	protected void createErrorMessage(Class<?> dtoClass)
+	protected void createErrorMessage()
 	{
 		errMsgs.clear();
 
-		IValidator<Dto> validator = GWT.create(dtoClass);
+		IValidator<Dto> validator = getValidator();
 		for (InvalidConstraint<Dto> error : validator.validate(dto))
 			errMsgs.add(error.getMessage());
 	}
 
+	protected abstract IValidator<Dto> getValidator();
+	
 	protected boolean buildErrorMessage()
 	{
 		if (errMsgs.size() > 0)

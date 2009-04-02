@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -15,7 +16,9 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.validation.client.interfaces.IValidator;
 
+import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
@@ -134,7 +137,7 @@ public class RegistrationWidget extends FormWidget
 	@Override
 	protected boolean validate()
 	{
-		createErrorMessage(UsuarioDto.class);
+		createErrorMessage();
 
 		String fileName = ((FileUpload) widgets.get(RegistrationFields.Logo)).getFilename().toUpperCase();
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
@@ -241,5 +244,11 @@ public class RegistrationWidget extends FormWidget
 			oracle.clear();
 			oracle.addAll(paises);
 		}
+	}
+
+	@Override
+	protected IValidator<Dto> getValidator()
+	{
+		return GWT.create(UsuarioDto.class);
 	}
 }

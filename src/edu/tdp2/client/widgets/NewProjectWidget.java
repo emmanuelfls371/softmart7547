@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -13,7 +14,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.validation.client.interfaces.IValidator;
 
+import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.utils.ClientUtils;
 
@@ -167,7 +170,7 @@ public class NewProjectWidget extends FormWidget
 	@Override
 	protected boolean validate()
 	{
-		createErrorMessage(ProyectoDto.class);
+		createErrorMessage();
 		return super.buildErrorMessage();
 	}
 
@@ -203,7 +206,7 @@ public class NewProjectWidget extends FormWidget
 				{
 					RadioButton b = (RadioButton) widget;
 					if (b.isChecked())
-						proyectoDto.setDificultad(b.getHTML());					
+						proyectoDto.setDificultad(b.getHTML());
 				}
 
 				FlowPanel panel2 = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
@@ -211,9 +214,9 @@ public class NewProjectWidget extends FormWidget
 				{
 					RadioButton b = (RadioButton) widget;
 					if (b.isChecked())
-						proyectoDto.setTamanio(b.getHTML());					
+						proyectoDto.setTamanio(b.getHTML());
 				}
-				
+
 				proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
 
 				/*
@@ -284,5 +287,11 @@ public class NewProjectWidget extends FormWidget
 		{
 			return description;
 		}
+	}
+
+	@Override
+	protected IValidator<Dto> getValidator()
+	{
+		return GWT.create(ProyectoDto.class);
 	}
 }
