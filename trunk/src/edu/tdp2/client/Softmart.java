@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
+import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
 
 /**
@@ -70,6 +71,20 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			loginWidget.setLoginListener(this);
 		}
 	}
+	
+	private void showMenu(){
+		
+		Hyperlink menuLink = new Hyperlink("New Project", "");
+		menuLink.addClickListener(new ClickListener()
+		{
+			public void onClick(Widget sender)
+			{
+				onShowNewProject();
+			}
+		});
+		centerPanel.add(menuLink);
+		
+	}
 
 	private Widget getWestPanel()
 	{
@@ -111,6 +126,8 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		northPanel.add(logoutLink);
+		
+		showMenu();
 	}
 
 	public void onLogout()
@@ -132,5 +149,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		RegistrationWidget registrationWidget = RegistrationWidget.getInstance();
 		centerPanel.add(registrationWidget);
+	}
+	
+	public void onShowNewProject(){
+		centerPanel.clear();
+		NewProjectWidget newProjectWidget=NewProjectWidget.getInstance();
+		centerPanel.add(newProjectWidget);
 	}
 }

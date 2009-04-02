@@ -1,5 +1,6 @@
 package edu.tdp2.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -7,10 +8,16 @@ import org.hibernate.Session;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.tdp2.client.SoftmartService;
+import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.BadLoginException;
+import edu.tdp2.server.model.DificultadProyecto;
+import edu.tdp2.server.model.NivelReputacion;
+import edu.tdp2.server.model.Presupuesto;
+import edu.tdp2.server.model.Proyecto;
+import edu.tdp2.server.model.TamanioProyecto;
 import edu.tdp2.server.model.Usuario;
 import edu.tdp2.server.utils.Encrypter;
 
@@ -36,6 +43,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+	
+	private Usuario getUsuario(Session sess,String userName){
+		List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ?").setString(0,userName).list();
+		if(result.size() > 0){
+			return result.get(0);
+		}else
+			return null;
 	}
 
 	private String crearTicket(String userName, long userId)
@@ -92,4 +107,62 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+	
+	public String publicar(ProyectoDto proyecto){
+		
+		Session sess = HibernateUtil.getSession();
+		try
+		{
+			Usuario us=getUsuario(sess,proyecto.getUsuario());
+			if(us!=null){
+				Proyecto nuevo=new Proyecto(proyecto, us);
+				if(us.addProyecto(nuevo)){
+					TransactionWrapper.save(sess,nuevo);
+					TransactionWrapper.save(sess,us);
+				}
+			}
+			return null;
+		}
+		catch(Exception e)
+		{
+			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
+
+	}
+	
+	public List<String> getNiveles(){
+		List<String> lista=new ArrayList<String>();
+		for(NivelReputacion n: NivelReputacion.values()){
+			lista.add(n.name());
+		}
+		return lista;
+	}
+	
+	public List<String> getDificultades(){
+		List<String> lista=new ArrayList<String>();
+		for(DificultadProyecto n: DificultadProyecto.values()){
+			lista.add(n.name());
+		}
+		return lista;
+		
+	}
+	
+	public List<String> getTamanios(){
+		List<String> lista=new ArrayList<String>();
+		for(TamanioProyecto n: TamanioProyecto.values()){
+			lista.add(n.name());
+		}
+		return lista;
+		
+	}
+	
+	public List<String> getPresupuestos(){
+		return Presupuesto.armarRangos();		
+	}
+	
+	
 }

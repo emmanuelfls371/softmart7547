@@ -29,16 +29,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.InvalidConstraint;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
+import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
-// TODO Pasar los mensajes de RegistrationWidget a messages
-public class RegistrationWidget extends FormPanel
+/* TODO Pasar los mensajes de RegistrationWidget a messages*/
+public class RegistrationWidget extends FormWidget
 {
 	private static RegistrationWidget instance;
-	private Map<RegistrationFields, Widget> widgets = new HashMap<RegistrationFields, Widget>();
-	private UsuarioDto usuario;
-
 	private SuggestCallback suggestCallback;
 
 	public static RegistrationWidget getInstance()
@@ -50,14 +48,19 @@ public class RegistrationWidget extends FormPanel
 
 	private RegistrationWidget()
 	{
-		setMethod(METHOD_POST);
-		setEncoding(FormPanel.ENCODING_MULTIPART);
-		setAction(GWT.getModuleBaseURL() + "registration");
-		populateWidgets();
-		buildWidget();
+		nombreWidget="<b>Nuevo usuario</b>";
+		anchoWidget="200px";
+		anchoTabla="100px";
+		url="registration";
+		dto=new UsuarioDto();
+		init();
+	}
+	
+	protected FormFields[] values(){
+		return RegistrationFields.values();
 	}
 
-	private void populateWidgets()
+	protected void populateWidgets()
 	{
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
@@ -132,96 +135,42 @@ public class RegistrationWidget extends FormPanel
 		widgets.put(RegistrationFields.Logo, f);
 	}
 
-	private void buildWidget()
+	protected void buildWidget()
 	{
-		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
-		FlexTable table = getTable();
-		panel.add(table);
-		add(panel);
+		super.buildWidget();
 		addFormHandler(new RegistrationFormHandler());
 	}
 
-	private FlexTable getTable()
-	{
-		FlexTable table = new FlexTable();
-		table.setWidget(0, 0, new HTML("<b>Nuevo usuario</b>"));
-		int row = 1;
-		table.getWidget(0, 0).setWidth("200px");
-		for (RegistrationFields field : RegistrationFields.values())
-		{
-			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));
-			table.setWidget(row, 1, widgets.get(field));
-			row++;
-		}
-		table.setWidget(row, 1, getSubmitPanel());
-		table.setWidth("100px");
-		return table;
-	}
-
-	private HorizontalPanel getSubmitPanel()
-	{
-		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
-		submitPanel.setWidth("100%");
-		Button submit = new Button("Entrar", new ClickListener()
-		{
-			public void onClick(Widget sender)
-			{
-				submit();
-			}
-		});
-		submitPanel.add(submit);
-		return submitPanel;
-	}
 
 	protected boolean validate()
 	{
-		List<String> errMsgs = new ArrayList<String>();
-
-		IValidator<UsuarioDto> validator = GWT.create(UsuarioDto.class);
-		for (InvalidConstraint<UsuarioDto> error : validator.validate(usuario))
-			errMsgs.add(error.getMessage());
+		createErrorMessage(UsuarioDto.class);
 
 		String fileName = ((FileUpload) widgets.get(RegistrationFields.Logo)).getFilename().toUpperCase();
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
 				&& !fileName.endsWith("JPEG"))
 			errMsgs.add("El archivo debe tener extensión PNG, GIF, JPG o JPEG");
 
-		if (errMsgs.size() > 0)
-		{
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < errMsgs.size(); i++)
-			{
-				if (i > 0)
-					sb.append('\n');
-				sb.append(errMsgs.get(i));
-			}
-			Window.alert(sb.toString());
-			return false;
-		}
-		return true;
+		return super.buildErrorMessage();
 	}
 
-	private native void reload() /*-{
-	   $wnd.location.reload();
-	  }-*/;
+	
 
 	private final class RegistrationFormHandler implements FormHandler
 	{
 		public void onSubmit(FormSubmitEvent event)
 		{
-			usuario = new UsuarioDto();
-			usuario.setNombre(((TextBox) instance.widgets.get(RegistrationFields.Nombre)).getText());
-			usuario.setApellido(((TextBox) instance.widgets.get(RegistrationFields.Apellido)).getText());
-			usuario.setEmail(((TextBox) instance.widgets.get(RegistrationFields.Email)).getText());
-			usuario.setUsuario(((TextBox) instance.widgets.get(RegistrationFields.Usuario)).getText());
-			usuario.setClave(((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText());
+			dto = new UsuarioDto();
+			((UsuarioDto) dto).setNombre(((TextBox) instance.widgets.get(RegistrationFields.Nombre)).getText());
+			((UsuarioDto) dto).setApellido(((TextBox) instance.widgets.get(RegistrationFields.Apellido)).getText());
+			((UsuarioDto) dto).setEmail(((TextBox) instance.widgets.get(RegistrationFields.Email)).getText());
+			((UsuarioDto) dto).setUsuario(((TextBox) instance.widgets.get(RegistrationFields.Usuario)).getText());
+			((UsuarioDto) dto).setClave(((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText());
 			ListBox lisPaises = (ListBox) instance.widgets.get(RegistrationFields.Pais);
-			usuario.setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
-			usuario.setCiudad(((SuggestBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
-			usuario.setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
-			usuario.setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil)).getText());
+			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
+			((UsuarioDto) dto).setCiudad(((SuggestBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
+			((UsuarioDto) dto).setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
+			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil)).getText());
 			if (!validate())
 				event.setCancelled(true);
 		}
@@ -231,9 +180,9 @@ public class RegistrationWidget extends FormPanel
 			String results = event.getResults();
 			if (results.startsWith("OK:"))
 			{
-				usuario.setLogo(results.split(":", 2)[1]);
+				((UsuarioDto) dto).setLogo(results.split(":", 2)[1]);
 
-				ClientUtils.getSoftmartService().registrar(usuario, new AsyncCallback<String>()
+				ClientUtils.getSoftmartService().registrar((UsuarioDto) dto, new AsyncCallback<String>()
 				{
 					public void onFailure(Throwable caught)
 					{
@@ -257,28 +206,29 @@ public class RegistrationWidget extends FormPanel
 		}
 	}
 
-	private enum RegistrationFields
+	private enum RegistrationFields implements FormFields
 	{
 		Nombre, Apellido, Email, Usuario("Nombre de usuario"), Clave("Contrase&ntilde;a"), Pais("Pa&iacute;s"), Ciudad, CodPostal(
 				"C&oacute;digo postal"), DescripPerfil("Descripci&oacute;n del perfil (opcional)"), Logo(
 				"Logo o imagen (opcional - PNG, GIF, JPEG. Tama&ntilde;o m&aacute;ximo 200KB");
 
-		private String description;
-
-		private RegistrationFields()
-		{
-			description = name();
-		}
-
+		
 		private RegistrationFields(String description)
 		{
 			this.description = description;
+		}
+		public String description;
+
+		private RegistrationFields()
+		{
+			this.description = name();
 		}
 
 		public String getDescription()
 		{
 			return description;
 		}
+		
 	}
 
 	private class SuggestCallback implements AsyncCallback<List<String>>
