@@ -25,9 +25,11 @@ public class Contrato extends AbstractDomainObject{
 	private Oferta ofertaGanadora;
 	
 	@OneToOne(mappedBy = "contrato", fetch = FetchType.LAZY)
+	@JoinColumn(name="CalifVendedor")
 	private Calificacion califVendedor;
 
     @OneToOne(mappedBy = "contrato", fetch = FetchType.LAZY)
+    @JoinColumn(name="CalifComprador")
 	private Calificacion califComprador;
 	
 	

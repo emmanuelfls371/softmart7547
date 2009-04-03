@@ -24,8 +24,7 @@ public class Calificacion extends AbstractDomainObject {
 	@Column(name = "Comentario")
 	private String comentario;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Contrato", nullable = false)
+	@OneToOne(fetch = FetchType.LAZY)
 	private Contrato contrato;
 	
 	public Contrato getContrato() {
