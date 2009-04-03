@@ -26,5 +26,6 @@
       	class="edu.tdp2.server.RegistrationServlet">
 </servlet>
 	<servlet path="/newoferta" class="edu.tdp2.server.RegistrationServlet"></servlet>
+	<servlet path="/calificar" class="edu.tdp2.server.RegistrationServlet"></servlet>
 
 </module>

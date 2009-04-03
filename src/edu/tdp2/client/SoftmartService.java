@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
+import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
@@ -21,6 +22,8 @@ public interface SoftmartService extends RemoteService
 	public String publicar(ProyectoDto proyecto);
 	
 	public String ofertar(OfertaDto oferta);
+	
+	public String calificar(CalificacionDto calif);
 	
 	public List<String> getNiveles();
 	public List<String> getPresupuestos();
