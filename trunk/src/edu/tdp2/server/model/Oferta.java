@@ -2,11 +2,13 @@ package edu.tdp2.server.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import edu.tdp2.client.dto.OfertaDto;
@@ -37,6 +39,17 @@ public class Oferta extends AbstractDomainObject {
 	@JoinColumn(name = "Usuario", nullable = false)
 	private Usuario usuario;
 	
+	@OneToOne(mappedBy = "ofertaGanadora", fetch = FetchType.LAZY)
+	private Contrato contrato;
+	
+	public Contrato getContrato() {
+		return contrato;
+	}
+
+	public void setContrato(Contrato contrato) {
+		this.contrato = contrato;
+	}
+
 	public Oferta(){
 		
 	}

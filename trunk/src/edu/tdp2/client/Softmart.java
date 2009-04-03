@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.widgets.CalificationWidget;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
@@ -90,6 +91,16 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			public void onClick(Widget sender)
 			{
 				onShowNewOferta();
+			}
+		});
+		centerPanel.add(menuLink);
+		
+		menuLink = new Hyperlink("Calificar", "");
+		menuLink.addClickListener(new ClickListener()
+		{
+			public void onClick(Widget sender)
+			{
+				onShowCalificacion();
 			}
 		});
 		centerPanel.add(menuLink);
@@ -169,5 +180,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		NewOfertaWidget newOfertaWidget=NewOfertaWidget.getInstance();
 		centerPanel.add(newOfertaWidget);
+	}
+	
+	public void onShowCalificacion(){
+		centerPanel.clear();
+		CalificationWidget calificacionWidget=CalificationWidget.getInstance();
+		centerPanel.add(calificacionWidget);
 	}
 }

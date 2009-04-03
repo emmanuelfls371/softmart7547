@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
@@ -25,4 +26,5 @@ public interface SoftmartServiceAsync
 	public void getDificultades(AsyncCallback<List<String>> callback);
 	public void getTamanios(AsyncCallback<List<String>> callback);
 	public void ofertar(OfertaDto oferta, AsyncCallback<String> asyncCallback);
+	public void calificar(CalificacionDto calif,  AsyncCallback<String> asyncCallback);
 }

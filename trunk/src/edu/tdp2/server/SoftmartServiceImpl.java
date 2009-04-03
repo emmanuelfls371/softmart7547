@@ -8,12 +8,15 @@ import org.hibernate.Session;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.tdp2.client.SoftmartService;
+import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.BadLoginException;
+import edu.tdp2.server.model.Calificacion;
+import edu.tdp2.server.model.Contrato;
 import edu.tdp2.server.model.DificultadProyecto;
 import edu.tdp2.server.model.NivelReputacion;
 import edu.tdp2.server.model.Oferta;
@@ -169,7 +172,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 	
 	private Proyecto getProyecto(Session sess, String proyName){
-		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE Nombre = ?").setString(0, proyName).list();
+		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, proyName).list();
 		if (result.size() > 0)
 			return result.get(0);
 		else
@@ -201,6 +204,46 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+	
+	private Contrato getContrato(Session sess, String proyName){
+		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.nombre = ?").setString(0, proyName).list();
+		if (result.size() > 0)
+			return result.get(0);
+		else
+			return null;		
+	}
+	
+	public String calificar (CalificacionDto dto){
+		Session sess = HibernateUtil.getSession();
+		try
+		{
+			Contrato c = getContrato(sess, dto.getProyecto());
+			if(c!=null) {
+				Calificacion calif=new Calificacion(dto, c);
+				if(calif!=null){
+					if(c.getProyecto().getUsuario().getLogin().compareTo(dto.getUsuario())==0){
+						c.setCalifComprador(calif);
+					}else if (c.getOfertaGanadora().getUsuario().getLogin().compareTo(dto.getUsuario())==0){
+						c.setCalifVendedor(calif);
+					}else{
+						return null;
+					}
+					TransactionWrapper.save(sess, calif);
+					TransactionWrapper.save(sess, c);
+				}
+			}
+			return null;
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
+		
 	}
 	
 }
