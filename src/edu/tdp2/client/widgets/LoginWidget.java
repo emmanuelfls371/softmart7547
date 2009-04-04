@@ -3,11 +3,12 @@ package edu.tdp2.client.widgets;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -90,9 +91,9 @@ public class LoginWidget extends SimplePanel
 	private Widget getRegisterLink()
 	{
 		Hyperlink link = new Hyperlink("Registrarse", true, "");
-		link.addClickListener(new ClickListener()
+		link.addClickHandler(new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				loginListener.onShowRegistration();
 			}
@@ -105,9 +106,9 @@ public class LoginWidget extends SimplePanel
 		HorizontalPanel submitPanel = new HorizontalPanel();
 		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
-		Button submit = new Button("Entrar", new ClickListener()
+		Button submit = new Button("Entrar", new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{

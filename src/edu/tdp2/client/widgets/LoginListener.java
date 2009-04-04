@@ -5,6 +5,6 @@ public interface LoginListener
 	void onLogin();
 
 	void onLogout();
-	
+
 	void onShowRegistration();
 }

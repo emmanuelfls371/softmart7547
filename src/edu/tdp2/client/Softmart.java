@@ -2,8 +2,9 @@ package edu.tdp2.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -72,33 +73,34 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			loginWidget.setLoginListener(this);
 		}
 	}
-	
-	private void showMenu(){
-		
+
+	private void showMenu()
+	{
+
 		Hyperlink menuLink = new Hyperlink("New Project", "");
-		menuLink.addClickListener(new ClickListener()
+		menuLink.addClickHandler(new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				onShowNewProject();
 			}
 		});
 		centerPanel.add(menuLink);
-		
+
 		menuLink = new Hyperlink("New Oferta", "");
-		menuLink.addClickListener(new ClickListener()
+		menuLink.addClickHandler(new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				onShowNewOferta();
 			}
 		});
 		centerPanel.add(menuLink);
-		
+
 		menuLink = new Hyperlink("Calificar", "");
-		menuLink.addClickListener(new ClickListener()
+		menuLink.addClickHandler(new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				onShowCalificacion();
 			}
@@ -138,15 +140,15 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.add(new HTML(messages.welcomeUser(currentUser == null ? "" : currentUser)));
 
 		Hyperlink logoutLink = new Hyperlink(constants.logout(), "");
-		logoutLink.addClickListener(new ClickListener()
+		logoutLink.addClickHandler(new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				onLogout();
 			}
 		});
 		northPanel.add(logoutLink);
-		
+
 		showMenu();
 	}
 
@@ -170,21 +172,25 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		RegistrationWidget registrationWidget = RegistrationWidget.getInstance();
 		centerPanel.add(registrationWidget);
 	}
-	
-	public void onShowNewProject(){
+
+	public void onShowNewProject()
+	{
 		centerPanel.clear();
-		NewProjectWidget newProjectWidget=NewProjectWidget.getInstance();
+		NewProjectWidget newProjectWidget = NewProjectWidget.getInstance();
 		centerPanel.add(newProjectWidget);
 	}
-	public void onShowNewOferta(){
+
+	public void onShowNewOferta()
+	{
 		centerPanel.clear();
-		NewOfertaWidget newOfertaWidget=NewOfertaWidget.getInstance();
+		NewOfertaWidget newOfertaWidget = NewOfertaWidget.getInstance();
 		centerPanel.add(newOfertaWidget);
 	}
-	
-	public void onShowCalificacion(){
+
+	public void onShowCalificacion()
+	{
 		centerPanel.clear();
-		CalificationWidget calificacionWidget=CalificationWidget.getInstance();
+		CalificationWidget calificacionWidget = CalificationWidget.getInstance();
 		centerPanel.add(calificacionWidget);
 	}
 }

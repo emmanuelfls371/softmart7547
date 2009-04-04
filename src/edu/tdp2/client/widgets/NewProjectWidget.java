@@ -3,17 +3,14 @@ package edu.tdp2.client.widgets;
 import java.util.Date;
 import java.util.List;
 
-
-
-
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FormHandler;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -25,11 +22,6 @@ import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
-
 import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
@@ -39,7 +31,6 @@ public class NewProjectWidget extends FormWidget
 {
 	private static NewProjectWidget instance;
 	private SoftmartConstants constants;
-
 
 	public static NewProjectWidget getInstance()
 	{
@@ -55,11 +46,9 @@ public class NewProjectWidget extends FormWidget
 		anchoTabla = "100px";
 		url = "newproject";
 		dto = new ProyectoDto();
-		constants=(SoftmartConstants) GWT.create(SoftmartConstants.class);
+		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
 		init();
 	}
-	
-	
 
 	@Override
 	protected void populateWidgets()
@@ -93,15 +82,17 @@ public class NewProjectWidget extends FormWidget
 		// Create a basic date picker
 		DatePicker datePicker = new DatePicker();
 		final Label text = new Label();
-		ValueChangeHandler<Date> v=new ValueChangeHandler<Date>() {
-			public void onValueChange(ValueChangeEvent<Date> event) {
-				 Date date = event.getValue();
-				 String dateString = DateTimeFormat.getMediumDateFormat().format(date);
-				 text.setText(dateString);
+		ValueChangeHandler<Date> v = new ValueChangeHandler<Date>()
+		{
+			public void onValueChange(ValueChangeEvent<Date> event)
+			{
+				Date date = event.getValue();
+				String dateString = DateTimeFormat.getMediumDateFormat().format(date);
+				text.setText(dateString);
 			}
 		};
-		datePicker.addValueChangeHandler(v);		
-		((DatePicker) datePicker).setValue(new Date(),true);
+		datePicker.addValueChangeHandler(v);
+		((DatePicker) datePicker).setValue(new Date(), true);
 		DateBox dateBox = new DateBox();
 		VerticalPanel vPanel = new VerticalPanel();
 		vPanel.add(new HTML(constants.cwDatePickerLabel()));
@@ -186,17 +177,15 @@ public class NewProjectWidget extends FormWidget
 	protected void buildWidget()
 	{
 		super.buildWidget();
-		addFormHandler(new ProjectFormHandler());
+		addSubmitHandler(new ProjectSubmitHandler());
+		addSubmitCompleteHandler(new ProjectSubmitCompleteHandler());
 	}
 
 	@Override
-	protected boolean validate()
+	protected void validate(List<String> errMsgs)
 	{
-		createErrorMessage();
-		if(((ProyectoDto) dto).getFecha()==null){
+		if (((ProyectoDto) dto).getFecha() == null)
 			errMsgs.add("Debe ingresar la fecha de cierre");
-		}
-		return super.buildErrorMessage();
 	}
 
 	@Override
@@ -205,9 +194,9 @@ public class NewProjectWidget extends FormWidget
 		return ProjectFields.values();
 	}
 
-	private final class ProjectFormHandler implements FormHandler
+	private final class ProjectSubmitHandler implements SubmitHandler
 	{
-		public void onSubmit(FormSubmitEvent event)
+		public void onSubmit(SubmitEvent event)
 		{
 			dto = new ProyectoDto();
 			ProyectoDto proyectoDto = (ProyectoDto) dto;
@@ -216,40 +205,41 @@ public class NewProjectWidget extends FormWidget
 			ListBox lisRangos = (ListBox) instance.widgets.get(ProjectFields.Presupuesto);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
-			VerticalPanel panel= (VerticalPanel) instance.widgets.get(ProjectFields.Fecha);
-			
-			proyectoDto.setFecha(((DateBox) panel.getWidget(4)).getValue());
-				
+			VerticalPanel panelFecha = (VerticalPanel) instance.widgets.get(ProjectFields.Fecha);
+
+			proyectoDto.setFecha(((DateBox) panelFecha.getWidget(4)).getValue());
+
 			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
 			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
 
-			FlowPanel panel3 = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
-			for (Widget widget : panel3)
+			FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
+			for (Widget widget : panelDificultad)
 			{
 				RadioButton b = (RadioButton) widget;
-				if (b.isChecked())
-					proyectoDto.setDificultad(b.getHTML());					
+				if (b.getValue())
+					proyectoDto.setDificultad(b.getHTML());
 			}
 
-			FlowPanel panel2 = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
-			for (Widget widget : panel2)
+			FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
+			for (Widget widget : panelTamanio)
 			{
 				RadioButton b = (RadioButton) widget;
-				if (b.isChecked())
-					proyectoDto.setTamanio(b.getHTML());					
+				if (b.getValue())
+					proyectoDto.setTamanio(b.getHTML());
 			}
-				
+
 			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
 
-				
 			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
-				
-			
-			if (!validate())
-				event.setCancelled(true);
-		}
 
-		public void onSubmitComplete(FormSubmitCompleteEvent event)
+			if (!validate())
+				event.cancel();
+		}
+	}
+
+	private final class ProjectSubmitCompleteHandler implements SubmitCompleteHandler
+	{
+		public void onSubmitComplete(SubmitCompleteEvent event)
 		{
 			String results = event.getResults();
 			if (results.startsWith("OK:"))
@@ -302,9 +292,10 @@ public class NewProjectWidget extends FormWidget
 			return description;
 		}
 	}
-	
+
 	@Override
-	protected IValidator<Dto> getValidator() {
+	protected IValidator<Dto> getValidator()
+	{
 		return GWT.create(ProyectoDto.class);
 	}
 }

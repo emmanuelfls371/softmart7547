@@ -16,17 +16,20 @@ public interface SoftmartService extends RemoteService
 	public List<String> getPaises();
 
 	public List<String> getCiudades(String pais);
-	
+
 	public String registrar(UsuarioDto usuario);
-	
+
 	public String publicar(ProyectoDto proyecto);
-	
+
 	public String ofertar(OfertaDto oferta);
-	
+
 	public String calificar(CalificacionDto calif);
-	
+
 	public List<String> getNiveles();
+
 	public List<String> getPresupuestos();
+
 	public List<String> getDificultades();
+
 	public List<String> getTamanios();
 }

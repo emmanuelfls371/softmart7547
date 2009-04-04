@@ -15,7 +15,7 @@ public class Ciudad extends AbstractDomainObject
 
 	@Column(name = "Nombre", length = 100)
 	private String nombre;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Pais", nullable = false)
 	private Pais pais;

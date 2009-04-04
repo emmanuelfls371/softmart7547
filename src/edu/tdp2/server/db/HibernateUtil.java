@@ -23,7 +23,8 @@ public class HibernateUtil
 		{
 			BasicConfigurator.configure();
 			sessionFactory = new AnnotationConfiguration().addAnnotatedClass(Usuario.class).addAnnotatedClass(
-					Ciudad.class).addAnnotatedClass(Pais.class).addAnnotatedClass(Proyecto.class).addAnnotatedClass(Oferta.class).addAnnotatedClass(Calificacion.class).addAnnotatedClass(Contrato.class).configure()
+					Ciudad.class).addAnnotatedClass(Pais.class).addAnnotatedClass(Proyecto.class).addAnnotatedClass(
+					Oferta.class).addAnnotatedClass(Calificacion.class).addAnnotatedClass(Contrato.class).configure()
 					.buildSessionFactory();
 		}
 		catch (Throwable ex)

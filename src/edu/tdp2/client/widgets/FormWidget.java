@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -30,8 +31,6 @@ public abstract class FormWidget extends FormPanel
 
 	protected Dto dto;
 	protected Map<FormFields, Widget> widgets = new HashMap<FormFields, Widget>();
-
-	protected List<String> errMsgs;
 
 	protected native void reload() /*-{
 	   $wnd.location.reload();
@@ -72,7 +71,6 @@ public abstract class FormWidget extends FormPanel
 		setAction(GWT.getModuleBaseURL() + url);
 		populateWidgets();
 		buildWidget();
-		errMsgs = new ArrayList<String>();
 	}
 
 	protected abstract void populateWidgets();
@@ -82,9 +80,9 @@ public abstract class FormWidget extends FormPanel
 		HorizontalPanel submitPanel = new HorizontalPanel();
 		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
-		Button submit = new Button("Entrar", new ClickListener()
+		Button submit = new Button("Entrar", new ClickHandler()
 		{
-			public void onClick(Widget sender)
+			public void onClick(ClickEvent event)
 			{
 				submit();
 			}
@@ -93,18 +91,20 @@ public abstract class FormWidget extends FormPanel
 		return submitPanel;
 	}
 
-	protected void createErrorMessage()
+	private List<String> createErrorMessage()
 	{
+		List<String> errMsgs = new ArrayList<String>();
 		errMsgs.clear();
 
 		IValidator<Dto> validator = getValidator();
 		for (InvalidConstraint<Dto> error : validator.validate(dto))
 			errMsgs.add(error.getMessage());
+		return errMsgs;
 	}
 
 	protected abstract IValidator<Dto> getValidator();
-	
-	protected boolean buildErrorMessage()
+
+	private boolean buildErrorMessage(List<String> errMsgs)
 	{
 		if (errMsgs.size() > 0)
 		{
@@ -121,5 +121,12 @@ public abstract class FormWidget extends FormPanel
 		return true;
 	}
 
-	protected abstract boolean validate();
+	protected final boolean validate()
+	{
+		List<String> errMsgs = createErrorMessage();
+		validate(errMsgs);
+		return buildErrorMessage(errMsgs);
+	}
+
+	protected abstract void validate(List<String> errMsgs);
 }
