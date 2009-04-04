@@ -3,7 +3,6 @@ package edu.tdp2.server.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,18 +50,20 @@ public class Proyecto extends AbstractDomainObject
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Usuario", nullable = false)
 	private Usuario usuario;
-	
+
 	@OneToMany(mappedBy = "proyecto", fetch = FetchType.LAZY)
 	private List<Oferta> ofertas;
-	
+
 	@OneToOne(mappedBy = "proyecto", fetch = FetchType.LAZY)
 	private Contrato contrato;
 
-	public Contrato getContrato() {
+	public Contrato getContrato()
+	{
 		return contrato;
 	}
 
-	public void setContrato(Contrato contrato) {
+	public void setContrato(Contrato contrato)
+	{
 		this.contrato = contrato;
 	}
 
@@ -89,12 +90,11 @@ public class Proyecto extends AbstractDomainObject
 		else
 			return false;
 	}
-	
+
 	public Proyecto()
 	{
 	}
 
-	@SuppressWarnings("deprecation")
 	public Proyecto(ProyectoDto dto, Usuario usuario)
 	{
 		this.setNombre(dto.getNombre());
@@ -129,7 +129,6 @@ public class Proyecto extends AbstractDomainObject
 		this.minPresupuesto = minPresupuesto;
 	}
 
-	@SuppressWarnings("unused")
 	private void setFecha(Date fecha)
 	{
 		this.fecha = fecha;

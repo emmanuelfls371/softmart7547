@@ -170,25 +170,28 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	{
 		return Presupuesto.armarRangos();
 	}
-	
-	private Proyecto getProyecto(Session sess, String proyName){
+
+	@SuppressWarnings("unchecked")
+	private Proyecto getProyecto(Session sess, String proyName)
+	{
 		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, proyName).list();
 		if (result.size() > 0)
 			return result.get(0);
 		else
-			return null;		
+			return null;
 	}
-	
-	public String ofertar(OfertaDto ofertaDto){
+
+	public String ofertar(OfertaDto ofertaDto)
+	{
 		Session sess = HibernateUtil.getSession();
 		try
 		{
 			Proyecto proy = getProyecto(sess, ofertaDto.getProyecto());
 			Usuario us = getUsuario(sess, ofertaDto.getUsuario());
-			if (proy != null&&us !=null)
+			if (proy != null && us != null)
 			{
-				Oferta nueva=new Oferta(ofertaDto, proy, us);
-				if (proy.addOferta(nueva)&&us.addOferta(nueva))
+				Oferta nueva = new Oferta(ofertaDto, proy, us);
+				if (proy.addOferta(nueva) && us.addOferta(nueva))
 				{
 					TransactionWrapper.save(sess, nueva);
 					TransactionWrapper.save(sess, proy);
@@ -205,30 +208,35 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
-	
-	private Contrato getContrato(Session sess, String proyName){
-		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.nombre = ?").setString(0, proyName).list();
+
+	@SuppressWarnings("unchecked")
+	private Contrato getContrato(Session sess, String proyName)
+	{
+		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.nombre = ?").setString(0, proyName)
+				.list();
 		if (result.size() > 0)
 			return result.get(0);
 		else
-			return null;		
+			return null;
 	}
-	
-	public String calificar (CalificacionDto dto){
+
+	public String calificar(CalificacionDto dto)
+	{
 		Session sess = HibernateUtil.getSession();
 		try
 		{
 			Contrato c = getContrato(sess, dto.getProyecto());
-			if(c!=null) {
-				Calificacion calif=new Calificacion(dto, c);
-				if(calif!=null){
-					if(c.getProyecto().getUsuario().getLogin().compareTo(dto.getUsuario())==0){
+			if (c != null)
+			{
+				Calificacion calif = new Calificacion(dto, c);
+				if (calif != null)
+				{
+					if (c.getProyecto().getUsuario().getLogin().compareTo(dto.getUsuario()) == 0)
 						c.setCalifComprador(calif);
-					}else if (c.getOfertaGanadora().getUsuario().getLogin().compareTo(dto.getUsuario())==0){
+					else if (c.getOfertaGanadora().getUsuario().getLogin().compareTo(dto.getUsuario()) == 0)
 						c.setCalifVendedor(calif);
-					}else{
+					else
 						return null;
-					}
 					TransactionWrapper.save(sess, calif);
 					TransactionWrapper.save(sess, c);
 				}
@@ -243,7 +251,5 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
-		
 	}
-	
 }

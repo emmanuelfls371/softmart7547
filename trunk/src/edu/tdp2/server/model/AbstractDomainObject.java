@@ -110,7 +110,8 @@ public abstract class AbstractDomainObject implements Serializable
 					}
 				}
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			return false;
 		}

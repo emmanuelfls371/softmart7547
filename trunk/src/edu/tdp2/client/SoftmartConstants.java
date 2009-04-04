@@ -5,15 +5,17 @@ import com.google.gwt.i18n.client.Constants;
 public interface SoftmartConstants extends Constants
 {
 	String loginCookieName();
+
 	String logout();
+
 	String login();
-	
-	 String cwDatePickerBoxLabel();
 
-	 String cwDatePickerDescription();
+	String cwDatePickerBoxLabel();
 
-	 String cwDatePickerLabel();
+	String cwDatePickerDescription();
 
-	 String cwDatePickerName();
+	String cwDatePickerLabel();
+
+	String cwDatePickerName();
 
 }

@@ -16,15 +16,20 @@ public interface SoftmartServiceAsync
 	public void getPaises(AsyncCallback<List<String>> callback);
 
 	public void getCiudades(String pais, AsyncCallback<List<String>> callback);
-	
+
 	public void registrar(UsuarioDto usuario, AsyncCallback<String> callback);
-	
+
 	public void publicar(ProyectoDto proyecto, AsyncCallback<String> callback);
-	
+
 	public void getNiveles(AsyncCallback<List<String>> callback);
+
 	public void getPresupuestos(AsyncCallback<List<String>> callback);
+
 	public void getDificultades(AsyncCallback<List<String>> callback);
+
 	public void getTamanios(AsyncCallback<List<String>> callback);
+
 	public void ofertar(OfertaDto oferta, AsyncCallback<String> asyncCallback);
-	public void calificar(CalificacionDto calif,  AsyncCallback<String> asyncCallback);
+
+	public void calificar(CalificacionDto calif, AsyncCallback<String> asyncCallback);
 }

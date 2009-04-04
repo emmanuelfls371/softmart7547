@@ -3,19 +3,16 @@ package edu.tdp2.client.widgets;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FormHandler;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.Dto;
@@ -97,9 +94,9 @@ public class RegistrationWidget extends FormWidget
 			}
 		};
 		ClientUtils.getSoftmartService().getPaises(callback);
-		lisPaises.addChangeListener(new ChangeListener()
+		lisPaises.addChangeHandler(new ChangeHandler()
 		{
-			public void onChange(Widget sender)
+			public void onChange(ChangeEvent event)
 			{
 				ClientUtils.getSoftmartService().getCiudades(lisPaises.getItemText(lisPaises.getSelectedIndex()),
 						suggestCallback);
@@ -131,25 +128,22 @@ public class RegistrationWidget extends FormWidget
 	protected void buildWidget()
 	{
 		super.buildWidget();
-		addFormHandler(new RegistrationFormHandler());
+		addSubmitCompleteHandler(new RegistrationSubmitCompleteHandler());
+		addSubmitHandler(new RegistrationSubmitHandler());
 	}
 
 	@Override
-	protected boolean validate()
+	protected void validate(List<String> errMsgs)
 	{
-		createErrorMessage();
-
 		String fileName = ((FileUpload) widgets.get(RegistrationFields.Logo)).getFilename().toUpperCase();
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
 				&& !fileName.endsWith("JPEG"))
 			errMsgs.add("El archivo debe tener extensión PNG, GIF, JPG o JPEG");
-
-		return super.buildErrorMessage();
 	}
 
-	private final class RegistrationFormHandler implements FormHandler
+	private final class RegistrationSubmitHandler implements SubmitHandler
 	{
-		public void onSubmit(FormSubmitEvent event)
+		public void onSubmit(SubmitEvent event)
 		{
 			dto = new UsuarioDto();
 			((UsuarioDto) dto).setNombre(((TextBox) instance.widgets.get(RegistrationFields.Nombre)).getText());
@@ -164,10 +158,13 @@ public class RegistrationWidget extends FormWidget
 			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil))
 					.getText());
 			if (!validate())
-				event.setCancelled(true);
+				event.cancel();
 		}
+	}
 
-		public void onSubmitComplete(FormSubmitCompleteEvent event)
+	private final class RegistrationSubmitCompleteHandler implements SubmitCompleteHandler
+	{
+		public void onSubmitComplete(SubmitCompleteEvent event)
 		{
 			String results = event.getResults();
 			if (results.startsWith("OK:"))
