@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -23,6 +24,7 @@ import edu.tdp2.client.widgets.LoginWidget;
 import edu.tdp2.client.widgets.NewOfertaWidget;
 import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
+import edu.tdp2.client.widgets.UnassignedProjectList;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -76,8 +78,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 
 	private void showMenu()
 	{
+		FlexTable table = new FlexTable();
 
-		Hyperlink menuLink = new Hyperlink("New Project", "");
+		Hyperlink menuLink = new Hyperlink("Publicar proyecto", "");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -85,9 +88,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				onShowNewProject();
 			}
 		});
-		centerPanel.add(menuLink);
+		table.setWidget(0, 1, menuLink);
 
-		menuLink = new Hyperlink("New Oferta", "");
+		table.setWidget(1, 0, new UnassignedProjectList());
+		menuLink = new Hyperlink("Ofertar", "");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -95,7 +99,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				onShowNewOferta();
 			}
 		});
-		centerPanel.add(menuLink);
+		table.setWidget(1, 1, menuLink);
 
 		menuLink = new Hyperlink("Calificar", "");
 		menuLink.addClickHandler(new ClickHandler()
@@ -105,7 +109,8 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				onShowCalificacion();
 			}
 		});
-		centerPanel.add(menuLink);
+		table.setWidget(2, 1, menuLink);
+		centerPanel.add(table);
 	}
 
 	private Widget getWestPanel()

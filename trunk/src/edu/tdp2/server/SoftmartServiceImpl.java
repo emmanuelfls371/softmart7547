@@ -126,6 +126,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				Proyecto nuevo = new Proyecto(proyecto, us);
 				if (us.addProyecto(nuevo))
 				{
+					// XXX Meter esto dentro de una misma transaccion
 					TransactionWrapper.save(sess, nuevo);
 					TransactionWrapper.save(sess, us);
 				}
@@ -193,6 +194,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				Oferta nueva = new Oferta(ofertaDto, proy, us);
 				if (proy.addOferta(nueva) && us.addOferta(nueva))
 				{
+					// XXX Meter esto dentro de una misma transaccion
 					TransactionWrapper.save(sess, nueva);
 					TransactionWrapper.save(sess, proy);
 				}
@@ -237,6 +239,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 						c.setCalifVendedor(calif);
 					else
 						return null;
+					// XXX Meter esto dentro de una misma transaccion
 					TransactionWrapper.save(sess, calif);
 					TransactionWrapper.save(sess, c);
 				}
@@ -246,6 +249,22 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		catch (Exception e)
 		{
 			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Proyecto> getUnassignedProjects()
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			return sess.createQuery("FROM Proyecto WHERE contrato IS NULL AND fecha >= current_date").list();
 		}
 		finally
 		{
