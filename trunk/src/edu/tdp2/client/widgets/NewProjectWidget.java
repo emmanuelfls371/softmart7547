@@ -11,7 +11,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -22,7 +21,6 @@ import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
-import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.utils.ClientUtils;
@@ -30,7 +28,6 @@ import edu.tdp2.client.utils.ClientUtils;
 public class NewProjectWidget extends FormWidget
 {
 	private static NewProjectWidget instance;
-	private SoftmartConstants constants;
 
 	public static NewProjectWidget getInstance()
 	{
@@ -46,7 +43,6 @@ public class NewProjectWidget extends FormWidget
 		anchoTabla = "100px";
 		url = "newproject";
 		dto = new ProyectoDto();
-		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
 		init();
 	}
 
@@ -95,10 +91,8 @@ public class NewProjectWidget extends FormWidget
 		((DatePicker) datePicker).setValue(new Date(), true);
 		DateBox dateBox = new DateBox();
 		VerticalPanel vPanel = new VerticalPanel();
-		vPanel.add(new HTML(constants.cwDatePickerLabel()));
 		vPanel.add(text);
 		vPanel.add(datePicker);
-		vPanel.add(new HTML(constants.cwDatePickerBoxLabel()));
 		vPanel.add(dateBox);
 		widgets.put(ProjectFields.Fecha, vPanel);
 
@@ -115,7 +109,7 @@ public class NewProjectWidget extends FormWidget
 			public void onSuccess(List<String> niveles)
 			{
 				lisNivel.clear();
-				lisNivel.addItem("---- Elija un nivel de reputación mínima ----", "");
+				lisNivel.addItem("---- Elija un nivel de reputaci&oacute;n m&iacute;nima ----", "");
 				for (String n : niveles)
 					lisNivel.addItem(n, n);
 			}

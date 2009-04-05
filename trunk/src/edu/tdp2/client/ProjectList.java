@@ -43,7 +43,7 @@ public abstract class ProjectList extends ListBox
 
 	private void addItem(Proyecto project)
 	{
-		addItem(project.getDescripcion(), project.getId().toString());
+		addItem(project.getNombre(), project.getId().toString());
 		projects.put(project.getId().toString(), project);
 	}
 

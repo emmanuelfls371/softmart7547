@@ -19,13 +19,13 @@ public class CalificationWidget extends FormWidget
 {
 	private static CalificationWidget instance;
 	private List<String> errMsgs;
-	private Proyecto project;
 
 	public static CalificationWidget getInstance(Proyecto project)
 	{
 		if (instance == null)
 			instance = new CalificationWidget();
-		instance.project = project;
+		((Label) instance.widgets.get(CalificacionFields.Proyecto)).setText(project.getNombre());
+		((Label) instance.widgets.get(CalificacionFields.Usuario)).setText(project.getUsuario().getLogin());
 		return instance;
 	}
 
@@ -49,12 +49,10 @@ public class CalificationWidget extends FormWidget
 	@Override
 	protected void populateWidgets()
 	{
-		Label l = new Label(project.getDescripcion());
-		widgets.put(CalificacionFields.Proyecto, l);
-		
-		l = new Label(project.getUsuario().getLogin());
-		widgets.put(CalificacionFields.Usuario, l);
-		
+		widgets.put(CalificacionFields.Proyecto, new Label());
+
+		widgets.put(CalificacionFields.Usuario, new Label());
+
 		TextBox t = new TextBox();
 		t.setMaxLength(2);
 		t.setWidth("30px");
