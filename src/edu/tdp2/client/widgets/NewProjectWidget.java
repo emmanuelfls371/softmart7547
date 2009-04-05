@@ -41,7 +41,7 @@ public class NewProjectWidget extends FormWidget
 
 	private NewProjectWidget()
 	{
-		nombreWidget = "<b>Nuevo proyecto</b>";
+		tituloWidget = "<b>Nuevo proyecto</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		url = "newproject";

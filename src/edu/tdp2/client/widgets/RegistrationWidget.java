@@ -34,7 +34,7 @@ public class RegistrationWidget extends FormWidget
 
 	private RegistrationWidget()
 	{
-		nombreWidget = "<b>Nuevo usuario</b>";
+		tituloWidget = "<b>Nuevo usuario</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		url = "registration";

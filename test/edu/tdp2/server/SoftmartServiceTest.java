@@ -5,11 +5,11 @@ import java.util.List;
 import org.hibernate.Session;
 
 import edu.tdp2.client.dto.ProyectoDto;
+import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.model.Usuario;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 
-import edu.tdp2.server.model.Proyecto;
-import edu.tdp2.server.model.Usuario;
 import junit.framework.TestCase;
 
 public class SoftmartServiceTest extends TestCase

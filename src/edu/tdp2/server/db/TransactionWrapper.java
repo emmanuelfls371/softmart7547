@@ -4,7 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import edu.tdp2.server.model.AbstractDomainObject;
+import edu.tdp2.client.model.AbstractDomainObject;
 
 public class TransactionWrapper
 {

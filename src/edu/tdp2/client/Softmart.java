@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.widgets.CalificationWidget;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
@@ -90,7 +92,8 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(0, 1, menuLink);
 
-		table.setWidget(1, 0, new UnassignedProjectList());
+		ProjectList unassignedProjects = new UnassignedProjectList();
+		table.setWidget(1, 0, unassignedProjects);
 		menuLink = new Hyperlink("Ofertar", "");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -101,13 +104,18 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(1, 1, menuLink);
 
-		table.setWidget(2, 0, new QualifiableProjectList(LoginWidget.getCurrentUser()));
+		final ProjectList qualifiableProjects = new QualifiableProjectList(LoginWidget.getCurrentUser());
+		table.setWidget(2, 0, qualifiableProjects);
 		menuLink = new Hyperlink("Calificar", "");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
-				onShowCalificacion();
+				Proyecto proyecto = qualifiableProjects.getSelectedItem();
+				if (proyecto == null)
+					Window.alert("Debe seleccionar un proyecto para calificar");
+				else
+					onShowCalificacion(proyecto);
 			}
 		});
 		table.setWidget(2, 1, menuLink);
@@ -193,10 +201,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.add(newOfertaWidget);
 	}
 
-	public void onShowCalificacion()
+	public void onShowCalificacion(Proyecto project)
 	{
 		centerPanel.clear();
-		CalificationWidget calificacionWidget = CalificationWidget.getInstance();
+		CalificationWidget calificacionWidget = CalificationWidget.getInstance(project);
 		centerPanel.add(calificacionWidget);
 	}
 }

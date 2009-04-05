@@ -3,6 +3,8 @@ package edu.tdp2.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NonUniqueResultException;
+
 import org.hibernate.Session;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -12,19 +14,20 @@ import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.client.model.Calificacion;
+import edu.tdp2.client.model.Ciudad;
+import edu.tdp2.client.model.Contrato;
+import edu.tdp2.client.model.DificultadProyecto;
+import edu.tdp2.client.model.NivelReputacion;
+import edu.tdp2.client.model.Oferta;
+import edu.tdp2.client.model.Presupuesto;
+import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.model.TamanioProyecto;
+import edu.tdp2.client.model.Usuario;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.BadLoginException;
 import edu.tdp2.server.exceptions.SoftmartServerException;
-import edu.tdp2.server.model.Calificacion;
-import edu.tdp2.server.model.Contrato;
-import edu.tdp2.server.model.DificultadProyecto;
-import edu.tdp2.server.model.NivelReputacion;
-import edu.tdp2.server.model.Oferta;
-import edu.tdp2.server.model.Presupuesto;
-import edu.tdp2.server.model.Proyecto;
-import edu.tdp2.server.model.TamanioProyecto;
-import edu.tdp2.server.model.Usuario;
 import edu.tdp2.server.utils.Encrypter;
 
 public class SoftmartServiceImpl extends RemoteServiceServlet implements SoftmartService
@@ -102,7 +105,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			TransactionWrapper.save(sess, new Usuario(usuarioDto, sess));
+			if (sess.createQuery("FROM Usuario WHERE login = ?").setString(0, usuarioDto.getUsuario()).uniqueResult() != null)
+				throw new NonUniqueResultException("El nombre de usuario \"" + usuarioDto.getUsuario() + "\" ya existe");
+			usuarioDto.setCiudad((Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?")
+					.setString(0, (String) usuarioDto.getCiudad()).setString(1, usuarioDto.getPais()).uniqueResult());
+			TransactionWrapper.save(sess, new Usuario(usuarioDto));
 			return null;
 		}
 		catch (Exception e)
@@ -275,7 +282,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			return sess.createQuery("FROM Proyecto WHERE contrato IS NULL AND fecha >= current_date").list();
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE contrato IS NULL AND fecha >= current_date()").list();
+			for (Proyecto project : projects)
+				project.prune();
+			return projects;
 		}
 		finally
 		{
@@ -299,7 +310,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			String sql = "FROM Proyecto WHERE ((contrato.ofertaGanadora.usuario.login = :usr "
 					+ "AND contrato.califAlComprador IS NULL) OR (contrato.proyecto.usuario.login = :usr "
 					+ "AND contrato.califAlVendedor IS NULL))";
-			return sess.createQuery(sql).setString("usr", user).list();
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString("usr", user).list();
+			for (Proyecto project : projects)
+				project.prune();
+			return projects;
 		}
 		finally
 		{

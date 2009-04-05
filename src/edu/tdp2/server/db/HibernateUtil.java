@@ -6,13 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import edu.tdp2.server.model.Calificacion;
-import edu.tdp2.server.model.Ciudad;
-import edu.tdp2.server.model.Contrato;
-import edu.tdp2.server.model.Oferta;
-import edu.tdp2.server.model.Pais;
-import edu.tdp2.server.model.Proyecto;
-import edu.tdp2.server.model.Usuario;
+import edu.tdp2.client.model.Calificacion;
+import edu.tdp2.client.model.Ciudad;
+import edu.tdp2.client.model.Contrato;
+import edu.tdp2.client.model.Oferta;
+import edu.tdp2.client.model.Pais;
+import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.model.Usuario;
 
 public class HibernateUtil
 {
