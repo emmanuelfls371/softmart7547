@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -14,6 +15,7 @@ import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.OfertaDto;
+import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 
 public class NewOfertaWidget extends FormWidget
@@ -21,10 +23,12 @@ public class NewOfertaWidget extends FormWidget
 	private static NewOfertaWidget instance;
 	private List<String> errMsgs;
 
-	public static NewOfertaWidget getInstance()
+	public static NewOfertaWidget getInstance(Proyecto project)
 	{
 		if (instance == null)
 			instance = new NewOfertaWidget();
+		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
+		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
 		return instance;
 	}
 
@@ -42,6 +46,10 @@ public class NewOfertaWidget extends FormWidget
 	@Override
 	protected void populateWidgets()
 	{
+		widgets.put(OfertaFields.Proyecto, new Label());
+
+		widgets.put(OfertaFields.Usuario, new Label());
+
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(OfertaFields.Presupuesto.toString());
@@ -153,7 +161,7 @@ public class NewOfertaWidget extends FormWidget
 
 	private enum OfertaFields implements FormFields
 	{
-		Presupuesto, Dias("D&iacute;as"), Descripcion("Descripci&oacute;n"), MailNotification(
+		Proyecto, Usuario("Comprador"), Presupuesto, Dias("D&iacute;as"), Descripcion("Descripci&oacute;n"), MailNotification(
 				"Desea ser notificado de una oferta menor?");
 
 		private OfertaFields(String description)
