@@ -20,10 +20,10 @@ public class Calificacion extends AbstractDomainObject
 	@Column(name = "Comentario")
 	private String comentario;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "califComprador")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "califAlComprador")
 	private Contrato contratoComprador;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "califVendedor")
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "califAlVendedor")
 	private Contrato contratoVendedor;
 
 	public Contrato getContrato()
