@@ -34,7 +34,6 @@ public class CalificationWidget extends FormWidget
 		tituloWidget = "<b>Calificar</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
-		url = "calificar";
 		dto = new CalificacionDto();
 		errMsgs = new ArrayList<String>();
 		init();

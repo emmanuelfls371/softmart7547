@@ -21,7 +21,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-public class RegistrationServlet extends HttpServlet
+public class FileUploadServlet extends HttpServlet
 {
 	private static final int MAX_LEN_LOGO = 200 * 1024;
 	private static final String LOGO_FIELD_NAME = "Logo";
@@ -36,7 +36,7 @@ public class RegistrationServlet extends HttpServlet
 		try
 		{
 			props = new Properties();
-			props.load(RegistrationServlet.class.getClassLoader().getResource("edu/tdp2/server/server.properties")
+			props.load(FileUploadServlet.class.getClassLoader().getResource("edu/tdp2/server/server.properties")
 					.openStream());
 			baseDir = props.getProperty("images.path");
 		}
