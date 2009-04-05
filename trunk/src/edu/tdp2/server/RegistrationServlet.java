@@ -24,6 +24,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class RegistrationServlet extends HttpServlet
 {
 	private static final int MAX_LEN_LOGO = 200 * 1024;
+	private static final String LOGO_FIELD_NAME = "Logo";
+	private static final int MAX_LEN_PROJECT_FILE = 5 * 1024 * 1024;
+	private static final String PROJECT_FILE_FIELD_NAME = "Archivo";
 	private static final long serialVersionUID = 5436940293464995513L;
 	private static Properties props;
 	private static final String baseDir;
@@ -80,21 +83,38 @@ public class RegistrationServlet extends HttpServlet
 				continue;
 			if (item.getInputStream().available() > 0)
 			{
-				File f = new File(baseDir + File.separator + item.getFieldName() + getMD5(item.getInputStream()));
+				String fieldName = item.getFieldName();
+				File f = new File(baseDir + File.separator + fieldName + getMD5(item.getInputStream()));
 				fileName = f.getName();
 				if (!f.exists()) // Si ya existe, no hace falta crearlo
 					item.write(f);
 				if (!f.exists()) // Si ya lo escribi y todavia no existe estamos en problemas
 					throw new FileNotFoundException("No pude crear el archivo");
-				if (f.length() > MAX_LEN_LOGO)
+
+				int maxLen = getMaxLen(fieldName);
+				if (f.length() > maxLen)
 				{
 					f.delete();
-					throw new IllegalArgumentException("El logo debe tener un tamaño de menos de 200KB");
+					throw new IllegalArgumentException(props.getProperty("logoSizeError").replaceAll("\\$\\{size\\}",
+							((Integer) (maxLen / 1024)).toString()));
 				}
 			}
 			break; // No voy a subir mas de un archivo
 		}
 		return fileName;
+	}
+
+	private int getMaxLen(String fieldName)
+	{
+		int maxLen;
+		if (fieldName.equals(LOGO_FIELD_NAME))
+			maxLen = MAX_LEN_LOGO;
+		else if (fieldName.equals(PROJECT_FILE_FIELD_NAME))
+			maxLen = MAX_LEN_PROJECT_FILE;
+		else
+			throw new IllegalArgumentException("Nombre inesperado para el campo que contiene el archivo subido: "
+					+ fieldName);
+		return maxLen;
 	}
 
 	private String getMD5(InputStream is) throws NoSuchAlgorithmException
