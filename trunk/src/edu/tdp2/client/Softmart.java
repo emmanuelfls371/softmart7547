@@ -92,14 +92,18 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(0, 1, menuLink);
 
-		ProjectList unassignedProjects = new UnassignedProjectList();
+		final ProjectList unassignedProjects = new UnassignedProjectList();
 		table.setWidget(1, 0, unassignedProjects);
 		menuLink = new Hyperlink("Ofertar", "");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
-				onShowNewOferta();
+				Proyecto proyecto = unassignedProjects.getSelectedItem();
+				if (proyecto == null)
+					Window.alert("Debe seleccionar un proyecto para calificar");
+				else
+					onShowNewOferta(proyecto);
 			}
 		});
 		table.setWidget(1, 1, menuLink);
@@ -194,10 +198,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.add(newProjectWidget);
 	}
 
-	public void onShowNewOferta()
+	public void onShowNewOferta(Proyecto project)
 	{
 		centerPanel.clear();
-		NewOfertaWidget newOfertaWidget = NewOfertaWidget.getInstance();
+		NewOfertaWidget newOfertaWidget = NewOfertaWidget.getInstance(project);
 		centerPanel.add(newOfertaWidget);
 	}
 

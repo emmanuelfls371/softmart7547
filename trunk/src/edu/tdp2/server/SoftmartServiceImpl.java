@@ -283,7 +283,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE contrato IS NULL AND fecha >= current_date()").list();
+					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date()").list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
