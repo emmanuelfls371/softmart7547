@@ -1,4 +1,4 @@
-package edu.tdp2.server.model;
+package edu.tdp2.client.model;
 
 import java.util.ArrayList;
 import java.util.List;

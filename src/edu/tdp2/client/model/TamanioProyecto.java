@@ -1,4 +1,4 @@
-package edu.tdp2.server.model;
+package edu.tdp2.client.model;
 
 public enum TamanioProyecto
 {

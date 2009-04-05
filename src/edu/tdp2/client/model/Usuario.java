@@ -1,4 +1,4 @@
-package edu.tdp2.server.model;
+package edu.tdp2.client.model;
 
 import java.util.List;
 
@@ -7,11 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.Session;
 
 import edu.tdp2.client.dto.UsuarioDto;
 
@@ -107,19 +104,14 @@ public class Usuario extends AbstractDomainObject
 	{
 	}
 
-	public Usuario(UsuarioDto dto, Session sess)
+	public Usuario(UsuarioDto dto)
 	{
 		nombre = dto.getNombre();
 		apellido = dto.getApellido();
 		email = dto.getEmail();
 		login = dto.getUsuario();
-		if (sess.createQuery("FROM Usuario WHERE login = ?").setString(0, login).uniqueResult() != null)
-			throw new NonUniqueResultException("El nombre de usuario \"" + login + "\" ya existe");
 		passwordHash = dto.getClave();
-
-		ciudad = (Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?").setString(0,
-				dto.getCiudad()).setString(1, dto.getPais()).uniqueResult();
-
+		ciudad = (Ciudad) dto.getCiudad();
 		codPostal = dto.getCodPostal();
 		descripPerfil = dto.getDescripPerfil();
 		pathLogo = dto.getLogo().isEmpty() ? null : dto.getLogo();
@@ -213,5 +205,12 @@ public class Usuario extends AbstractDomainObject
 	public String getPathLogo()
 	{
 		return pathLogo;
+	}
+
+	public void prune()
+	{
+		proyectos = null;
+		ciudad = null;
+		ofertas = null;
 	}
 }

@@ -1,4 +1,4 @@
-package edu.tdp2.server.model;
+package edu.tdp2.client.model;
 
 import java.util.Date;
 import java.util.List;
@@ -227,5 +227,12 @@ public class Proyecto extends AbstractDomainObject
 	public void setNombre(String nombre)
 	{
 		this.nombre = nombre;
+	}
+
+	public void prune()
+	{
+		contrato = null;
+		ofertas = null;
+		usuario.prune();
 	}
 }
