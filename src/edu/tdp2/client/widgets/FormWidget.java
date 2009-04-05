@@ -23,7 +23,6 @@ import edu.tdp2.client.dto.Dto;
 
 public abstract class FormWidget extends FormPanel
 {
-
 	protected String tituloWidget;
 	protected String anchoWidget;
 	protected String anchoTabla;
