@@ -117,19 +117,22 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 	public String publicar(ProyectoDto proyecto)
 	{
-		Session sess = HibernateUtil.getSession();
+		final Session sess = HibernateUtil.getSession();
 		try
 		{
-			Usuario us = getUsuario(sess, proyecto.getUsuario());
+			final Usuario us = getUsuario(sess, proyecto.getUsuario());
 			if (us != null)
 			{
-				Proyecto nuevo = new Proyecto(proyecto, us);
+				final Proyecto nuevo = new Proyecto(proyecto, us);
 				if (us.addProyecto(nuevo))
-				{
-					// XXX Meter esto dentro de una misma transaccion
-					TransactionWrapper.save(sess, nuevo);
-					TransactionWrapper.save(sess, us);
-				}
+					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
+					{
+						public void execute()
+						{
+							sess.save(nuevo);
+							sess.save(us);
+						}
+					});
 			}
 			return null;
 		}
@@ -184,20 +187,23 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 	public String ofertar(OfertaDto ofertaDto)
 	{
-		Session sess = HibernateUtil.getSession();
+		final Session sess = HibernateUtil.getSession();
 		try
 		{
-			Proyecto proy = getProyecto(sess, ofertaDto.getProyecto());
+			final Proyecto proy = getProyecto(sess, ofertaDto.getProyecto());
 			Usuario us = getUsuario(sess, ofertaDto.getUsuario());
 			if (proy != null && us != null)
 			{
-				Oferta nueva = new Oferta(ofertaDto, proy, us);
+				final Oferta nueva = new Oferta(ofertaDto, proy, us);
 				if (proy.addOferta(nueva) && us.addOferta(nueva))
-				{
-					// XXX Meter esto dentro de una misma transaccion
-					TransactionWrapper.save(sess, nueva);
-					TransactionWrapper.save(sess, proy);
-				}
+					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
+					{
+						public void execute()
+						{
+							sess.save(nueva);
+							sess.save(proy);
+						}
+					});
 			}
 			return null;
 		}
@@ -224,13 +230,13 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 	public String calificar(CalificacionDto dto)
 	{
-		Session sess = HibernateUtil.getSession();
+		final Session sess = HibernateUtil.getSession();
 		try
 		{
-			Contrato c = getContrato(sess, dto.getProyecto());
+			final Contrato c = getContrato(sess, dto.getProyecto());
 			if (c != null)
 			{
-				Calificacion calif = new Calificacion(dto, c);
+				final Calificacion calif = new Calificacion(dto, c);
 				if (calif != null)
 				{
 					if (c.getProyecto().getUsuario().getLogin().compareTo(dto.getUsuario()) == 0)
@@ -239,9 +245,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 						c.setCalifVendedor(calif);
 					else
 						return null;
-					// XXX Meter esto dentro de una misma transaccion
-					TransactionWrapper.save(sess, calif);
-					TransactionWrapper.save(sess, c);
+					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
+					{
+						public void execute()
+						{
+							sess.save(calif);
+							sess.save(c);
+						}
+					});
 				}
 			}
 			return null;

@@ -4,6 +4,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import edu.tdp2.server.model.AbstractDomainObject;
+
 public class TransactionWrapper
 {
 	/**
@@ -13,13 +15,24 @@ public class TransactionWrapper
 	 * @param session
 	 * @param o
 	 */
-	public static void save(Session session, Object o)
+	public static void save(final Session session, final AbstractDomainObject o)
+	{
+		execute(session, new Action()
+		{
+			public void execute()
+			{
+				session.save(o);
+			}
+		});
+	}
+
+	public static void execute(Session session, Action action)
 	{
 		Transaction tx = null;
 		try
 		{
 			tx = session.beginTransaction();
-			session.save(o);
+			action.execute();
 			tx.commit();
 		}
 		catch (HibernateException he)
@@ -28,5 +41,10 @@ public class TransactionWrapper
 				tx.rollback();
 			throw he;
 		}
+	}
+
+	public interface Action
+	{
+		void execute();
 	}
 }
