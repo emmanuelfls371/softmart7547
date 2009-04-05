@@ -101,6 +101,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(1, 1, menuLink);
 
+		table.setWidget(2, 0, new QualifiableProjectList(LoginWidget.getCurrentUser()));
 		menuLink = new Hyperlink("Calificar", "");
 		menuLink.addClickHandler(new ClickHandler()
 		{

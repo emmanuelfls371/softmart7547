@@ -228,5 +228,4 @@ public class Proyecto extends AbstractDomainObject
 	{
 		this.nombre = nombre;
 	}
-
 }
