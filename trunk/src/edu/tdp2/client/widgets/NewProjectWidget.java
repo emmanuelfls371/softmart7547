@@ -4,23 +4,19 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DatePicker;
+import com.google.gwt.user.datepicker.client.DateBox.Format;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
+import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.utils.ClientUtils;
@@ -28,6 +24,8 @@ import edu.tdp2.client.utils.ClientUtils;
 public class NewProjectWidget extends FormWidget
 {
 	private static NewProjectWidget instance;
+	private static final Format DATE_FORMAT = new DateFormat();
+	private SoftmartConstants constants;
 
 	public static NewProjectWidget getInstance()
 	{
@@ -38,6 +36,7 @@ public class NewProjectWidget extends FormWidget
 
 	private NewProjectWidget()
 	{
+		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
 		tituloWidget = "<b>Nuevo proyecto</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
@@ -67,7 +66,7 @@ public class NewProjectWidget extends FormWidget
 			public void onSuccess(List<String> presupuestos)
 			{
 				lisRangos.clear();
-				lisRangos.addItem("---- Elija un rango en Pesos ----", "");
+				lisRangos.addItem(constants.elijaRango(), "");
 				for (String presup : presupuestos)
 					lisRangos.addItem(presup, presup);
 			}
@@ -76,25 +75,10 @@ public class NewProjectWidget extends FormWidget
 		widgets.put(ProjectFields.Presupuesto, lisRangos);
 
 		// Create a basic date picker
-		DatePicker datePicker = new DatePicker();
-		final Label text = new Label();
-		ValueChangeHandler<Date> v = new ValueChangeHandler<Date>()
-		{
-			public void onValueChange(ValueChangeEvent<Date> event)
-			{
-				Date date = event.getValue();
-				String dateString = DateTimeFormat.getMediumDateFormat().format(date);
-				text.setText(dateString);
-			}
-		};
-		datePicker.addValueChangeHandler(v);
-		((DatePicker) datePicker).setValue(new Date(), true);
-		DateBox dateBox = new DateBox();
-		VerticalPanel vPanel = new VerticalPanel();
-		vPanel.add(text);
-		vPanel.add(datePicker);
-		vPanel.add(dateBox);
-		widgets.put(ProjectFields.Fecha, vPanel);
+		DateBox date = new DateBox();
+		date.getDatePicker().setValue(new Date());
+		date.setFormat(DATE_FORMAT);
+		widgets.put(ProjectFields.Fecha, date);
 
 		final ListBox lisNivel = new ListBox();
 		lisNivel.setName(ProjectFields.Nivel.toString());
@@ -109,7 +93,7 @@ public class NewProjectWidget extends FormWidget
 			public void onSuccess(List<String> niveles)
 			{
 				lisNivel.clear();
-				lisNivel.addItem("---- Elija un nivel de reputaci&oacute;n m&iacute;nima ----", "");
+				lisNivel.addItem(constants.elijaReputacion(), "");
 				for (String n : niveles)
 					lisNivel.addItem(n, n);
 			}
@@ -199,9 +183,8 @@ public class NewProjectWidget extends FormWidget
 			ListBox lisRangos = (ListBox) instance.widgets.get(ProjectFields.Presupuesto);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
-			VerticalPanel panelFecha = (VerticalPanel) instance.widgets.get(ProjectFields.Fecha);
-
-			proyectoDto.setFecha(((DateBox) panelFecha.getWidget(4)).getValue());
+			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
+			proyectoDto.setFecha(dateFecha.getValue());
 
 			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
 			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));

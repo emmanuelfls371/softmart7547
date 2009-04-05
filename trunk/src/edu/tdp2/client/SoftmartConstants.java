@@ -9,4 +9,8 @@ public interface SoftmartConstants extends Constants
 	String logout();
 
 	String login();
+	
+	String elijaReputacion();
+	
+	String elijaRango();
 }
