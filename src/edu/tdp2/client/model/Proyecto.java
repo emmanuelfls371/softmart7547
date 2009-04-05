@@ -47,7 +47,7 @@ public class Proyecto extends AbstractDomainObject
 	@Column(name = "PathArchivo", length = 255)
 	private String pathArchivo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "Usuario", nullable = false)
 	private Usuario usuario;
 

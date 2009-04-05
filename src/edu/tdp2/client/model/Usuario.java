@@ -46,7 +46,7 @@ public class Usuario extends AbstractDomainObject
 	@Column(name = "PathLogo", length = 255)
 	private String pathLogo;
 
-	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Proyecto> proyectos;
 
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
