@@ -2,12 +2,14 @@ package edu.tdp2.client;
 
 import java.util.List;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.server.model.Proyecto;
 
 public interface SoftmartService extends RemoteService
 {
@@ -32,4 +34,6 @@ public interface SoftmartService extends RemoteService
 	public List<String> getDificultades();
 
 	public List<String> getTamanios();
+
+	public List<Proyecto> getUnassignedProjects();
 }

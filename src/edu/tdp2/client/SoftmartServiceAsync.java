@@ -8,6 +8,7 @@ import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.server.model.Proyecto;
 
 public interface SoftmartServiceAsync
 {
@@ -32,4 +33,6 @@ public interface SoftmartServiceAsync
 	public void ofertar(OfertaDto oferta, AsyncCallback<String> asyncCallback);
 
 	public void calificar(CalificacionDto calif, AsyncCallback<String> asyncCallback);
+
+	public void getUnassignedProjects(AsyncCallback<List<Proyecto>> callback);
 }
