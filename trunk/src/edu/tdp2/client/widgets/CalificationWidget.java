@@ -6,28 +6,32 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.Dto;
+import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 
 public class CalificationWidget extends FormWidget
 {
 	private static CalificationWidget instance;
 	private List<String> errMsgs;
+	private Proyecto project;
 
-	public static CalificationWidget getInstance()
+	public static CalificationWidget getInstance(Proyecto project)
 	{
 		if (instance == null)
 			instance = new CalificationWidget();
+		instance.project = project;
 		return instance;
 	}
 
 	private CalificationWidget()
 	{
-		nombreWidget = "<b>Calificar</b>";
+		tituloWidget = "<b>Calificar</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		url = "calificar";
@@ -45,6 +49,12 @@ public class CalificationWidget extends FormWidget
 	@Override
 	protected void populateWidgets()
 	{
+		Label l = new Label(project.getDescripcion());
+		widgets.put(CalificacionFields.Proyecto, l);
+		
+		l = new Label(project.getUsuario().getLogin());
+		widgets.put(CalificacionFields.Usuario, l);
+		
 		TextBox t = new TextBox();
 		t.setMaxLength(2);
 		t.setWidth("30px");
@@ -55,7 +65,6 @@ public class CalificationWidget extends FormWidget
 		t.setHeight("100px");
 		t.setName(CalificacionFields.Comentario.toString());
 		widgets.put(CalificacionFields.Comentario, t);
-
 	}
 
 	@Override
@@ -135,7 +144,7 @@ public class CalificationWidget extends FormWidget
 
 	private enum CalificacionFields implements FormFields
 	{
-		Calif("Calificaci&oacute;n"), Comentario;
+		Proyecto, Usuario("Usuario a calificar"), Calif("Calificaci&oacute;n"), Comentario;
 
 		private CalificacionFields(String description)
 		{

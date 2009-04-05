@@ -8,7 +8,7 @@ import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
-import edu.tdp2.server.model.Proyecto;
+import edu.tdp2.client.model.Proyecto;
 
 public interface SoftmartServiceAsync
 {

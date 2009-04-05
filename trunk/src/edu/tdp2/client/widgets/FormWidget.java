@@ -24,7 +24,7 @@ import edu.tdp2.client.dto.Dto;
 public abstract class FormWidget extends FormPanel
 {
 
-	protected String nombreWidget;
+	protected String tituloWidget;
 	protected String anchoWidget;
 	protected String anchoTabla;
 	protected String url;
@@ -47,10 +47,10 @@ public abstract class FormWidget extends FormPanel
 
 	protected abstract FormFields[] values();
 
-	protected FlexTable getTable()
+	private FlexTable getTable()
 	{
 		FlexTable table = new FlexTable();
-		table.setWidget(0, 0, new HTML(nombreWidget));
+		table.setWidget(0, 0, new HTML(tituloWidget));
 		int row = 1;
 		table.getWidget(0, 0).setWidth(anchoWidget);
 		for (FormFields field : this.values())
@@ -75,7 +75,7 @@ public abstract class FormWidget extends FormPanel
 
 	protected abstract void populateWidgets();
 
-	protected HorizontalPanel getSubmitPanel()
+	private HorizontalPanel getSubmitPanel()
 	{
 		HorizontalPanel submitPanel = new HorizontalPanel();
 		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);

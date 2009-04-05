@@ -30,7 +30,7 @@ public class NewOfertaWidget extends FormWidget
 
 	private NewOfertaWidget()
 	{
-		nombreWidget = "<b>Nueva oferta</b>";
+		tituloWidget = "<b>Nueva oferta</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		url = "newoferta";

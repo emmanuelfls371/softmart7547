@@ -41,7 +41,7 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 
 	@NotEmpty(message = "Debe ingresar la ciudad")
 	@NotNull
-	private String ciudad;
+	private Serializable ciudad;
 
 	@NotEmpty(message = "Debe ingresar el código postal")
 	@NotNull
@@ -101,12 +101,12 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 		this.pais = pais;
 	}
 
-	public String getCiudad()
+	public Serializable getCiudad()
 	{
 		return ciudad;
 	}
 
-	public void setCiudad(String ciudad)
+	public void setCiudad(Serializable ciudad)
 	{
 		this.ciudad = ciudad;
 	}
