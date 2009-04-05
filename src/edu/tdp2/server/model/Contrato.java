@@ -22,11 +22,11 @@ public class Contrato extends AbstractDomainObject
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CalifVendedor")
-	private Calificacion califVendedor;
+	private Calificacion califAlVendedor;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CalifComprador")
-	private Calificacion califComprador;
+	private Calificacion califAlComprador;
 
 	public Contrato()
 	{
@@ -53,24 +53,24 @@ public class Contrato extends AbstractDomainObject
 		this.ofertaGanadora = ofertaGanadora;
 	}
 
-	public void setCalifVendedor(Calificacion califVendedor)
+	public void setCalifAlVendedor(Calificacion califVendedor)
 	{
-		this.califVendedor = califVendedor;
+		this.califAlVendedor = califVendedor;
 	}
 
-	public Calificacion getCalifVendedor()
+	public Calificacion getCalifAlVendedor()
 	{
-		return califVendedor;
+		return califAlVendedor;
 	}
 
-	public void setCalifComprador(Calificacion califComprador)
+	public void setCalifAlComprador(Calificacion califComprador)
 	{
-		this.califComprador = califComprador;
+		this.califAlComprador = califComprador;
 	}
 
-	public Calificacion getCalifComprador()
+	public Calificacion getCalifAlComprador()
 	{
-		return califComprador;
+		return califAlComprador;
 	}
 
 }

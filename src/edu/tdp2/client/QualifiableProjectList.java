@@ -1,24 +1,26 @@
-package edu.tdp2.client.widgets;
+package edu.tdp2.client;
 
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.server.model.Proyecto;
 
-public class UnassignedProjectList extends ProjectList
+public class QualifiableProjectList extends ProjectList
 {
-	public UnassignedProjectList()
+	private String user;
+
+	public QualifiableProjectList(String user)
 	{
 		super();
+		this.user = user;
 		load();
 	}
 
 	@Override
 	protected void doCall(AsyncCallback<List<Proyecto>> callback)
 	{
-		ClientUtils.getSoftmartService().getUnassignedProjects(callback);
+		ClientUtils.getSoftmartService().getQualifiableProjects(user, callback);
 	}
 }

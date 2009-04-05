@@ -15,6 +15,7 @@ import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.BadLoginException;
+import edu.tdp2.server.exceptions.SoftmartServerException;
 import edu.tdp2.server.model.Calificacion;
 import edu.tdp2.server.model.Contrato;
 import edu.tdp2.server.model.DificultadProyecto;
@@ -95,7 +96,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
 	public String registrar(UsuarioDto usuarioDto)
 	{
 		Session sess = HibernateUtil.getSession();
@@ -239,12 +239,13 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				final Calificacion calif = new Calificacion(dto, c);
 				if (calif != null)
 				{
-					if (c.getProyecto().getUsuario().getLogin().compareTo(dto.getUsuario()) == 0)
-						c.setCalifComprador(calif);
-					else if (c.getOfertaGanadora().getUsuario().getLogin().compareTo(dto.getUsuario()) == 0)
-						c.setCalifVendedor(calif);
+					if (c.getProyecto().getUsuario().getLogin().equals(dto.getUsuario())) // Usuario es el que publico
+						c.setCalifAlVendedor(calif); // El comprador califica al vendedor
+					else if (c.getOfertaGanadora().getUsuario().getLogin().equals(dto.getUsuario())) // El que oferto
+						c.setCalifAlComprador(calif); // El vendedor califica al comprador
 					else
-						return null;
+						throw new SoftmartServerException(
+								"No se puede calificar si no se es el comprador ni el vendedor del proyecto");
 					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
 					{
 						public void execute()
@@ -268,7 +269,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public List<Proyecto> getUnassignedProjects()
 	{
 		Session sess = HibernateUtil.getSession();
@@ -276,6 +276,30 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			return sess.createQuery("FROM Proyecto WHERE contrato IS NULL AND fecha >= current_date").list();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	/**
+	 * Obtiene todos los proyectos en que el usuario <tt>user</tt> pasado por parametro puede calificar
+	 * 
+	 * @param user
+	 *            El login del usuario que debe calificar
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Proyecto> getQualifiableProjects(String user)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			String sql = "FROM Proyecto WHERE ((contrato.ofertaGanadora.usuario.login = :usr "
+					+ "AND contrato.califAlComprador IS NULL) OR (contrato.proyecto.usuario.login = :usr "
+					+ "AND contrato.califAlVendedor IS NULL))";
+			return sess.createQuery(sql).setString("usr", user).list();
 		}
 		finally
 		{
