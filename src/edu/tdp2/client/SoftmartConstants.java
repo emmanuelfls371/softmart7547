@@ -9,13 +9,4 @@ public interface SoftmartConstants extends Constants
 	String logout();
 
 	String login();
-
-	String cwDatePickerBoxLabel();
-
-	String cwDatePickerDescription();
-
-	String cwDatePickerLabel();
-
-	String cwDatePickerName();
-
 }
