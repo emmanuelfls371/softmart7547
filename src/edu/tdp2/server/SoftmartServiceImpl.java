@@ -361,4 +361,32 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+
+	@Override
+	public String chooseOffer(long offerId)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Oferta offer = (Oferta) sess.get(Oferta.class, offerId);
+			if (offer == null)
+				throw new SoftmartServerException("No se encuentra a la oferta con id: " + offer);
+			if (offer.getContrato() != null)
+				throw new SoftmartServerException("La oferta ya tiene un contrato asociado");
+			Contrato contrato = new Contrato();
+			contrato.setOfertaGanadora(offer);
+			contrato.setProyecto(offer.getProyecto());
+			TransactionWrapper.save(sess, contrato);
+			return null;
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 }

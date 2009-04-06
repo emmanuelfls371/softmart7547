@@ -42,4 +42,6 @@ public interface SoftmartService extends RemoteService
 	public List<Proyecto> getOwnOpenProjects(String user);
 
 	public List<Oferta> getOffers(Proyecto project);
+
+	public String chooseOffer(long offerId);
 }
