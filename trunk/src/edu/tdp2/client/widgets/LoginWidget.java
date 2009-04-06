@@ -8,11 +8,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -90,7 +90,7 @@ public class LoginWidget extends SimplePanel
 
 	private Widget getRegisterLink()
 	{
-		Hyperlink link = new Hyperlink("Registrarse", true, "");
+		Anchor link = new Anchor("Registrarse");
 		link.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
