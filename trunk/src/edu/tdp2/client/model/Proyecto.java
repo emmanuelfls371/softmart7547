@@ -103,8 +103,8 @@ public class Proyecto extends AbstractDomainObject
 		this.setDificultad(dto.getDificultad());
 		this.setDescripcion(dto.getDescripcion());
 		this.setPathArchivo(dto.getArchivo());
-		this.setMaxPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(0));
-		this.setMinPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(1));
+		this.setMinPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(0));
+		this.setMaxPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(1));
 		this.setUsuario(usuario);
 		this.setFecha(dto.getFecha());
 	}

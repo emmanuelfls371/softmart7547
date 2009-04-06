@@ -35,7 +35,7 @@ public interface SoftmartService extends RemoteService
 
 	public List<String> getTamanios();
 
-	public List<Proyecto> getUnassignedProjects();
+	public List<Proyecto> getUnassignedProjects(String usuario);
 
 	public List<Proyecto> getQualifiableProjects(String user);
 	
@@ -44,4 +44,5 @@ public interface SoftmartService extends RemoteService
 	public List<Oferta> getOffers(Proyecto project);
 
 	public String chooseOffer(long offerId);
+
 }

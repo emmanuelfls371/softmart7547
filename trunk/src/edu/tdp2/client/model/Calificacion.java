@@ -14,7 +14,7 @@ public class Calificacion extends AbstractDomainObject
 {
 	private static final long serialVersionUID = 7230161324210837294L;
 
-	@Column(name = "Calificacion", length = 2, nullable = false)
+	@Column(name = "Calificacion", nullable = false)
 	private int calificacion;
 
 	@Column(name = "Comentario")

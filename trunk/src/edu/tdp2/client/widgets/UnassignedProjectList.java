@@ -10,15 +10,18 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class UnassignedProjectList extends ProjectList
 {
-	public UnassignedProjectList()
+	private String usuario;
+	public UnassignedProjectList(String usuario)
 	{
 		super();
+		this.usuario=usuario;
 		load();
+		
 	}
 
 	@Override
 	protected void doCall(AsyncCallback<List<Proyecto>> callback)
 	{
-		ClientUtils.getSoftmartService().getUnassignedProjects(callback);
+		ClientUtils.getSoftmartService().getUnassignedProjects(usuario, callback);
 	}
 }

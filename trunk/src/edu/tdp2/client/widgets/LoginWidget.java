@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -72,19 +73,23 @@ public class LoginWidget extends SimplePanel
 		FlexTable table = getTable();
 		panel.add(table);
 		add(panel);
+		
 	}
 
 	private FlexTable getTable()
 	{
 		FlexTable table = new FlexTable();
-		table.setWidget(0, 0, new HTML("<b>Iniciar sesi&oacute;n</b>"));
-		table.setWidget(0, 1, getRegisterLink());
-		table.setWidget(1, 0, new HTML("Usuario: "));
-		table.setWidget(1, 1, userNameTextBox);
-		table.setWidget(2, 0, new HTML("Contrase&ntilde;a: "));
-		table.setWidget(2, 1, passwordTextBox);
-		table.setWidget(3, 1, getSubmitPanel());
+		table.setWidget(1, 0, new HTML("<b>Iniciar sesi&oacute;n</b>"));
+		table.setWidget(1, 1, getRegisterLink());
+		table.setWidget(2, 0, new HTML("Usuario: "));
+		table.setWidget(2, 1, userNameTextBox);
+		table.setWidget(3, 0, new HTML("Contrase&ntilde;a: "));
+		table.setWidget(3, 1, passwordTextBox);
+		table.setWidget(4, 1, getSubmitPanel());
 		table.setWidth("100px");
+		/*String sImage = "http://localhost:8888/edu.tdp2.Softmart/logo.jpg";
+		Image image = new Image(sImage);
+		table.setWidget(0, 0, image);*/
 		return table;
 	}
 
