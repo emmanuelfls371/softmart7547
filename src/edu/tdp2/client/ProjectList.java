@@ -17,6 +17,7 @@ public abstract class ProjectList extends ListBox
 	public ProjectList()
 	{
 		super();
+		setWidth("200px");
 		load();
 	}
 

@@ -37,7 +37,6 @@ public class NewOfertaWidget extends FormWidget
 		tituloWidget = "<b>Nueva oferta</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
-		url = "newoferta";
 		dto = new OfertaDto();
 		errMsgs = new ArrayList<String>();
 		init();
@@ -83,7 +82,6 @@ public class NewOfertaWidget extends FormWidget
 	{
 		super.buildWidget();
 		addSubmitHandler(new OfertaSubmitHandler());
-		addSubmitCompleteHandler(new OfertaSubmitCompleteHandler());
 	}
 
 	@Override
@@ -120,23 +118,8 @@ public class NewOfertaWidget extends FormWidget
 				ofertaDto.setUsuario(LoginWidget.getCurrentUser());
 
 				if (!validate())
-					event.cancel();
-			}
-			catch (NumberFormatException e)
-			{
-				errMsgs.add("El formato de dias y/o monto no es valido");
-				validate();
-				event.cancel();
-			}
-		}
-	}
+					return;
 
-	private final class OfertaSubmitCompleteHandler implements SubmitCompleteHandler
-	{
-		public void onSubmitComplete(SubmitCompleteEvent event)
-		{
-			String results = event.getResults();
-			if (results.startsWith("OK:"))
 				ClientUtils.getSoftmartService().ofertar((OfertaDto) dto, new AsyncCallback<String>()
 				{
 					public void onFailure(Throwable caught)
@@ -152,10 +135,12 @@ public class NewOfertaWidget extends FormWidget
 							reload();
 					}
 				});
-			else if (results.startsWith("ERROR:"))
-				Window.alert(results.split(":", 2)[1]);
-			else
-				Window.alert(results);
+			}
+			catch (NumberFormatException e)
+			{
+				errMsgs.add("El formato de dias y/o monto no es valido");
+				validate();
+			}
 		}
 	}
 

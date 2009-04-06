@@ -74,7 +74,6 @@ public class CalificationWidget extends FormWidget
 	protected void buildWidget()
 	{
 		super.buildWidget();
-		addSubmitCompleteHandler(new CalificacionSubmitCompleteHandler());
 		addSubmitHandler(new CalificacionSubmitHandler());
 	}
 
@@ -100,23 +99,8 @@ public class CalificationWidget extends FormWidget
 				califDto.setUsuario(LoginWidget.getCurrentUser());
 
 				if (!validate())
-					event.cancel();
-			}
-			catch (NumberFormatException e)
-			{
-				errMsgs.add("El formato de la calificacion no es valido");
-				validate();
-				event.cancel();
-			}
-		}
-	}
+					return;
 
-	private final class CalificacionSubmitCompleteHandler implements SubmitCompleteHandler
-	{
-		public void onSubmitComplete(SubmitCompleteEvent event)
-		{
-			String results = event.getResults();
-			if (results.startsWith("OK:"))
 				ClientUtils.getSoftmartService().calificar((CalificacionDto) dto, new AsyncCallback<String>()
 				{
 					public void onFailure(Throwable caught)
@@ -132,10 +116,12 @@ public class CalificationWidget extends FormWidget
 							reload();
 					}
 				});
-			else if (results.startsWith("ERROR:"))
-				Window.alert(results.split(":", 2)[1]);
-			else
-				Window.alert(results);
+			}
+			catch (NumberFormatException e)
+			{
+				errMsgs.add("El formato de la calificacion no es valido");
+				validate();
+			}
 		}
 	}
 
