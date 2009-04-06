@@ -86,6 +86,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	private void showMenu()
 	{
 		FlexTable table = new FlexTable();
+		table.setCellPadding(10);
 
 		Anchor menuLink = new Anchor("Publicar proyecto");
 		menuLink.addClickHandler(new ClickHandler()
@@ -208,6 +209,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 
 	public void onShowNewOferta(Proyecto project)
 	{
+		History.newItem("");
 		centerPanel.clear();
 		NewOfertaWidget newOfertaWidget = NewOfertaWidget.getInstance(project);
 		centerPanel.add(newOfertaWidget);
@@ -215,6 +217,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 
 	public void onShowCalificacion(Proyecto project)
 	{
+		History.newItem("");
 		centerPanel.clear();
 		CalificationWidget calificacionWidget = CalificationWidget.getInstance(project);
 		centerPanel.add(calificacionWidget);
@@ -223,7 +226,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
 		public void onValueChange(ValueChangeEvent<String> event)
-		{			
+		{
 			HistoryToken token;
 			try
 			{
@@ -233,7 +236,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			{
 				return;
 			}
-			
+
 			switch (token)
 			{
 			case onShowNewProject:
