@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="war" name="softmart">
+	<target name="build">
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+			<src path="src" />
+		</javac>
+	</target>
+	<target name="war" depends="build">
+		<war destfile="softmart.war" webxml="web.xml">
+			<classes dir="bin" />
+			<lib dir="lib" />
+			<zipfileset dir="src" includes="*.properties" prefix="WEB-INF/classes" />
+			<zipfileset dir="." includes="context.xml" prefix="META-INF" />
+			<zipfileset dir="www/edu.tdp2.Softmart" includes="**/*" prefix="/"/>			
+		</war>
+	</target>
+</project>

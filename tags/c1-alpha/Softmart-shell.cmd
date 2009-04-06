@@ -1,0 +1,1 @@
+@java -Xmx256M -cp "%~dp0\src;%~dp0\bin;D:/devel/gwt-windows-1.6.3/gwt-user.jar;D:/devel/gwt-windows-1.6.3/gwt-dev-windows.jar;D:/devel/gwt-windows-1.6.3/sqljdbc.jar" com.google.gwt.dev.GWTShell -out "%~dp0\www" %* edu.tdp2.Softmart/Softmart.html
