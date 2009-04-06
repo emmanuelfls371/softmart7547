@@ -207,6 +207,7 @@ public class Usuario extends AbstractDomainObject
 		return pathLogo;
 	}
 
+	@Override
 	public void prune()
 	{
 		proyectos = null;

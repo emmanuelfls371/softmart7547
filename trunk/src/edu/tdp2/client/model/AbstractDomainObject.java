@@ -69,4 +69,12 @@ public abstract class AbstractDomainObject implements Serializable
 	{
 		this.version = version;
 	}
+
+	/**
+	 * Setea a <tt>null</tt> el valor de todas las variables que sean de tipos de Hibernate y tengan lazy fetch para
+	 * evitar un error de seguridad al devolver el objeto a traves del response RPC
+	 */
+	public void prune()
+	{
+	}
 }

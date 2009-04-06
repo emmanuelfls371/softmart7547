@@ -18,7 +18,7 @@ public class CalificacionDto implements IValidatable, Serializable, Dto
 
 	private String usuario;
 
-	private String proyecto;
+	private long proyecto;
 
 	public int getCalificacion()
 	{
@@ -50,12 +50,12 @@ public class CalificacionDto implements IValidatable, Serializable, Dto
 		this.usuario = usuario;
 	}
 
-	public String getProyecto()
+	public long getProyecto()
 	{
 		return proyecto;
 	}
 
-	public void setProyecto(String proyecto)
+	public void setProyecto(long proyecto)
 	{
 		this.proyecto = proyecto;
 	}

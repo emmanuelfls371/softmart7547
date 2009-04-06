@@ -22,6 +22,7 @@ public class NewOfertaWidget extends FormWidget
 {
 	private static NewOfertaWidget instance;
 	private List<String> errMsgs;
+	private long projectId;
 
 	public static NewOfertaWidget getInstance(Proyecto project)
 	{
@@ -29,6 +30,7 @@ public class NewOfertaWidget extends FormWidget
 			instance = new NewOfertaWidget();
 		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
 		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
+		instance.projectId = project.getId();
 		return instance;
 	}
 
@@ -113,7 +115,7 @@ public class NewOfertaWidget extends FormWidget
 						.getText()));
 				ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
 
-				ofertaDto.setProyecto("Prueba");
+				ofertaDto.setProyecto(projectId);
 
 				ofertaDto.setUsuario(LoginWidget.getCurrentUser());
 
