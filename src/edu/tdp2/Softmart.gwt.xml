@@ -15,7 +15,7 @@
        
       <!-- Example servlet loaded into hosted mode tomcat       -->
       <servlet path="/softmart" class="edu.tdp2.server.SoftmartServiceImpl" />
-      <servlet path="/registration" class="edu.tdp2.server.RegistrationServlet" />
+      <servlet path="/registration" class="edu.tdp2.server.FileUploadServlet" />
 
 
       <!-- Specify the app entry point class.                         -->
@@ -24,5 +24,4 @@
       <!-- Specify the application specific style sheet.              -->
       <stylesheet src='Softmart.css' />
       <servlet path="/newproject" class="edu.tdp2.server.FileUploadServlet"></servlet>
-      <servlet path="/newoferta" class="edu.tdp2.server.FileUploadServlet"></servlet>
-</module>
+      <servlet path="/newoferta" class="edu.tdp2.server.FileUploadServlet"></servlet></module>

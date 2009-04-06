@@ -227,7 +227,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	@SuppressWarnings("unchecked")
 	private Contrato getContrato(Session sess, long projectId)
 	{
-		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.nombre = ?").setLong(0, projectId)
+		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.id = ?").setLong(0, projectId)
 				.list();
 		if (result.size() > 0)
 			return result.get(0);
@@ -276,7 +276,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Proyecto> getUnassignedProjects()
+	public List<Proyecto> getUnassignedProjects(String usuario)
 	{
 		Session sess = HibernateUtil.getSession();
 
@@ -284,10 +284,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			List<Proyecto> projects = (List<Proyecto>) sess
 					.createQuery(
-							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date()")
+							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date() AND usuario.login != ?").setString(0, usuario)
 					.list();
-			for (Proyecto project : projects)
-				project.prune();
+			for (Proyecto project : projects){
+				project.prune();				
+			}
 			return projects;
 		}
 		finally
@@ -389,4 +390,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+
+	
 }

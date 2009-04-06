@@ -101,7 +101,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		table.setWidget(0, 2, menuLink);
 
 		table.setWidget(1, 0, new Label("Proyectos abiertos para ofertar"));
-		final ProjectList unassignedProjects = new UnassignedProjectList();
+		final ProjectList unassignedProjects = new UnassignedProjectList(LoginWidget.getCurrentUser());
 		table.setWidget(1, 1, unassignedProjects);
 		menuLink = new Anchor("Ofertar");
 		menuLink.addClickHandler(new ClickHandler()
@@ -110,12 +110,25 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			{
 				Proyecto proyecto = unassignedProjects.getSelectedItem();
 				if (proyecto == null)
-					Window.alert("Debe seleccionar un proyecto para calificar");
+					Window.alert("Debe seleccionar un proyecto para ofertar");
 				else
 					onShowNewOferta(proyecto);
 			}
 		});
 		table.setWidget(1, 2, menuLink);
+		menuLink = new Anchor("Ver Proyecto");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Proyecto proyecto = unassignedProjects.getSelectedItem();
+				if (proyecto == null)
+					Window.alert("Debe seleccionar un proyecto para ver");
+				else
+					onShowProyecto(proyecto);
+			}
+		});
+		table.setWidget(1, 3, menuLink);
 
 		table.setWidget(2, 0, new Label("Proyectos pendientes de calificar"));
 		final ProjectList qualifiableProjects = new QualifiableProjectList(LoginWidget.getCurrentUser());
@@ -151,6 +164,19 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		table.setWidget(3, 2, menuLink);
+		menuLink = new Anchor("Ver Proyecto");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Proyecto proyecto = ownOpenProjects.getSelectedItem();
+				if (proyecto == null)
+					Window.alert("Debe seleccionar un proyecto para ver");
+				else
+					onShowProyecto(proyecto);
+			}
+		});
+		table.setWidget(3, 3, menuLink);
 		centerPanel.add(table);
 	}
 
@@ -236,6 +262,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	protected void onShowOffers(Proyecto project)
 	{
 		putAlone(new OffersWidget(project));
+	}
+	
+	protected void onShowProyecto(Proyecto project)
+	{
+		putAlone(new ProjectWidget(project));
 	}
 
 	private void putAlone(Widget widget)

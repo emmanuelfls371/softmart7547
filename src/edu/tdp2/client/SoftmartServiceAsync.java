@@ -35,7 +35,7 @@ public interface SoftmartServiceAsync
 
 	public void calificar(CalificacionDto calif, AsyncCallback<String> asyncCallback);
 
-	public void getUnassignedProjects(AsyncCallback<List<Proyecto>> callback);
+	public void getUnassignedProjects(String usuario, AsyncCallback<List<Proyecto>> callback);
 
 	public void getQualifiableProjects(String user, AsyncCallback<List<Proyecto>> callback);
 
@@ -44,4 +44,5 @@ public interface SoftmartServiceAsync
 	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
 
 	public void chooseOffer(long offerId, AsyncCallback<String> callback);
+	
 }

@@ -17,7 +17,7 @@ public class SoftmartServiceTest extends TestCase
 	public void testPublicar()
 	{
 		Session sess = HibernateUtil.getSession();
-		Usuario us = getUsuario(sess, "celuli");
+		Usuario us = getUsuario(sess, "chechu");
 		assertNotNull(us);
 		ProyectoDto dto = new ProyectoDto();
 		dto.setNombre("lala");
