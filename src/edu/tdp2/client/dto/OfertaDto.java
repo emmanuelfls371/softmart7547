@@ -7,7 +7,6 @@ import com.google.gwt.validation.client.interfaces.IValidatable;
 
 public class OfertaDto implements IValidatable, Serializable, Dto
 {
-
 	private static final long serialVersionUID = 111116217892037317L;
 
 	private int monto;
@@ -19,7 +18,7 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 
 	private String Descripcion;
 
-	private String proyecto;
+	private long proyecto;
 
 	private String usuario;
 
@@ -43,14 +42,14 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 		Descripcion = descripcion;
 	}
 
-	public String getProyecto()
+	public long getProyecto()
 	{
 		return proyecto;
 	}
 
-	public void setProyecto(String proyecto)
+	public void setProyecto(long projectId)
 	{
-		this.proyecto = proyecto;
+		this.proyecto = projectId;
 	}
 
 	public int getMonto()

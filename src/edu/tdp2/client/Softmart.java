@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -88,7 +89,8 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
 
-		Anchor menuLink = new Anchor("Publicar proyecto");
+		table.setWidget(0, 0, new Label("Nuevo proyecto"));
+		Anchor menuLink = new Anchor("Publicar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -96,10 +98,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				onShowNewProject();
 			}
 		});
-		table.setWidget(0, 1, menuLink);
+		table.setWidget(0, 2, menuLink);
 
+		table.setWidget(1, 0, new Label("Proyectos abiertos para ofertar"));
 		final ProjectList unassignedProjects = new UnassignedProjectList();
-		table.setWidget(1, 0, unassignedProjects);
+		table.setWidget(1, 1, unassignedProjects);
 		menuLink = new Anchor("Ofertar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -112,10 +115,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowNewOferta(proyecto);
 			}
 		});
-		table.setWidget(1, 1, menuLink);
+		table.setWidget(1, 2, menuLink);
 
+		table.setWidget(2, 0, new Label("Proyectos pendientes de calificar"));
 		final ProjectList qualifiableProjects = new QualifiableProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(2, 0, qualifiableProjects);
+		table.setWidget(2, 1, qualifiableProjects);
 		menuLink = new Anchor("Calificar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -128,7 +132,25 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowCalificacion(proyecto);
 			}
 		});
-		table.setWidget(2, 1, menuLink);
+		table.setWidget(2, 2, menuLink);
+		centerPanel.add(table);
+
+		table.setWidget(3, 0, new Label("Proyectos propios abiertos"));
+		final ProjectList ownOpenProjects = new OwnOpenProjectList(LoginWidget.getCurrentUser());
+		table.setWidget(3, 1, ownOpenProjects);
+		menuLink = new Anchor("Ver ofertas");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Proyecto proyecto = ownOpenProjects.getSelectedItem();
+				if (proyecto == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else
+					onShowOffers(proyecto);
+			}
+		});
+		table.setWidget(3, 2, menuLink);
 		centerPanel.add(table);
 	}
 
@@ -193,34 +215,39 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 
 	public void onShowRegistration()
 	{
-		History.newItem(HistoryToken.onShowRegistration.toString());
-		centerPanel.clear();
-		RegistrationWidget registrationWidget = RegistrationWidget.getInstance();
-		centerPanel.add(registrationWidget);
+		putAlone(RegistrationWidget.getInstance(), HistoryToken.onShowRegistration.toString());
 	}
 
 	public void onShowNewProject()
 	{
-		History.newItem(HistoryToken.onShowNewProject.toString());
-		centerPanel.clear();
-		NewProjectWidget newProjectWidget = NewProjectWidget.getInstance();
-		centerPanel.add(newProjectWidget);
+		putAlone(NewProjectWidget.getInstance(), HistoryToken.onShowNewProject.toString());
 	}
 
 	public void onShowNewOferta(Proyecto project)
 	{
-		History.newItem("");
-		centerPanel.clear();
-		NewOfertaWidget newOfertaWidget = NewOfertaWidget.getInstance(project);
-		centerPanel.add(newOfertaWidget);
+		putAlone(NewOfertaWidget.getInstance(project));
 	}
 
 	public void onShowCalificacion(Proyecto project)
 	{
-		History.newItem("");
+		putAlone(CalificationWidget.getInstance(project));
+	}
+
+	protected void onShowOffers(Proyecto project)
+	{
+		putAlone(new OffersWidget(project));
+	}
+
+	private void putAlone(Widget widget)
+	{
+		putAlone(widget, "");
+	}
+
+	private void putAlone(Widget widget, String historyToken)
+	{
+		History.newItem(historyToken);
 		centerPanel.clear();
-		CalificationWidget calificacionWidget = CalificationWidget.getInstance(project);
-		centerPanel.add(calificacionWidget);
+		centerPanel.add(widget);
 	}
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>

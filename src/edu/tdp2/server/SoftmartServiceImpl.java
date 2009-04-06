@@ -183,9 +183,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	private Proyecto getProyecto(Session sess, String proyName)
+	private Proyecto getProyecto(Session sess, long projectId)
 	{
-		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, proyName).list();
+		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE id = ?").setLong(0, projectId).list();
 		if (result.size() > 0)
 			return result.get(0);
 		else
@@ -225,9 +225,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	private Contrato getContrato(Session sess, String proyName)
+	private Contrato getContrato(Session sess, long projectId)
 	{
-		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.nombre = ?").setString(0, proyName)
+		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.nombre = ?").setLong(0, projectId)
 				.list();
 		if (result.size() > 0)
 			return result.get(0);
@@ -282,8 +282,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
-					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date()").list();
+			List<Proyecto> projects = (List<Proyecto>) sess
+					.createQuery(
+							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date()")
+					.list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
@@ -314,6 +316,45 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Proyecto> getOwnOpenProjects(String user)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			String sql = "FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
+					+ "AND fecha >= current_date() AND proy.usuario.login = ?";
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString(0, user).list();
+			for (Proyecto project : projects)
+				project.prune();
+			return projects;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Oferta> getOffers(Proyecto project)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			List<Oferta> offers = (List<Oferta>) sess.createQuery("FROM Oferta WHERE proyecto = ?").setParameter(0,
+					project).list();
+			for (Oferta offer : offers)
+				offer.prune();
+			return offers;
 		}
 		finally
 		{

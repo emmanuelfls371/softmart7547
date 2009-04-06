@@ -8,6 +8,7 @@ import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
 
 public interface SoftmartServiceAsync
@@ -37,4 +38,8 @@ public interface SoftmartServiceAsync
 	public void getUnassignedProjects(AsyncCallback<List<Proyecto>> callback);
 
 	public void getQualifiableProjects(String user, AsyncCallback<List<Proyecto>> callback);
+
+	public void getOwnOpenProjects(String user, AsyncCallback<List<Proyecto>> callback);
+
+	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
 }

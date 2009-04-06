@@ -229,6 +229,7 @@ public class Proyecto extends AbstractDomainObject
 		this.nombre = nombre;
 	}
 
+	@Override
 	public void prune()
 	{
 		contrato = null;

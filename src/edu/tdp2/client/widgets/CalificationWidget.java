@@ -19,6 +19,7 @@ public class CalificationWidget extends FormWidget
 {
 	private static CalificationWidget instance;
 	private List<String> errMsgs;
+	private long projectId;
 
 	public static CalificationWidget getInstance(Proyecto project)
 	{
@@ -26,6 +27,7 @@ public class CalificationWidget extends FormWidget
 			instance = new CalificationWidget();
 		((Label) instance.widgets.get(CalificacionFields.Proyecto)).setText(project.getNombre());
 		((Label) instance.widgets.get(CalificacionFields.Usuario)).setText(project.getUsuario().getLogin());
+		instance.projectId = project.getId();
 		return instance;
 	}
 
@@ -95,7 +97,7 @@ public class CalificationWidget extends FormWidget
 				califDto.setComentario(((TextBox) instance.widgets.get(CalificacionFields.Comentario)).getText());
 				califDto.setCalificacion(Integer.parseInt(((TextBox) instance.widgets.get(CalificacionFields.Calif))
 						.getText()));
-				califDto.setProyecto("Prueba");
+				califDto.setProyecto(projectId);
 				califDto.setUsuario(LoginWidget.getCurrentUser());
 
 				if (!validate())

@@ -33,7 +33,7 @@ public class Oferta extends AbstractDomainObject
 	@JoinColumn(name = "Proyecto", nullable = false)
 	private Proyecto proyecto;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "Usuario", nullable = false)
 	private Usuario usuario;
 
@@ -125,4 +125,11 @@ public class Oferta extends AbstractDomainObject
 		this.notificacion = notificacion;
 	}
 
+	@Override
+	public void prune()
+	{
+		proyecto = null;
+		usuario.prune();
+		contrato = null;
+	}
 }
