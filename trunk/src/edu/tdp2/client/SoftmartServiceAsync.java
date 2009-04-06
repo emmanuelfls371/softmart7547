@@ -42,4 +42,6 @@ public interface SoftmartServiceAsync
 	public void getOwnOpenProjects(String user, AsyncCallback<List<Proyecto>> callback);
 
 	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
+
+	public void chooseOffer(long offerId, AsyncCallback<String> callback);
 }

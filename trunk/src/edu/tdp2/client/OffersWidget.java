@@ -66,12 +66,12 @@ public class OffersWidget extends VerticalPanel
 					table.setWidget(row, 1, new HTML(((Integer) oferta.getMonto()).toString()));
 					table.setWidget(row, 2, new HTML(((Integer) oferta.getDias()).toString()));
 					table.setWidget(row, 3, new HTML(oferta.getDescripcion()));
-					table.setWidget(row, COL_RADIO, new RadioButton("pickOffer"));
-					table.setWidget(row, COL_HIDDEN, new Hidden(oferta.getId().toString()));
+					table.setWidget(row, COL_RADIO, new RadioButton("chooseOffer"));
+					table.setWidget(row, COL_HIDDEN, new Hidden("id" + row, oferta.getId().toString()));
 				}
 
 				Anchor back = new Anchor("Volver");
-				table.setWidget(table.getRowCount() - 1, 2, back);
+				table.setWidget(table.getRowCount(), 2, back);
 				back.addClickHandler(new ClickHandler()
 				{
 					public void onClick(ClickEvent event)
@@ -116,9 +116,7 @@ public class OffersWidget extends VerticalPanel
 							reload();
 					}
 				};
-				Window.alert("No implementado!");
-				// TODO Descomentar esta linea e implementar el chooseOffer
-				// ClientUtils.getSoftmartService().chooseOffer(offerId, callback);
+				ClientUtils.getSoftmartService().chooseOffer(offerId, callback);
 			}
 		});
 		return submit;
@@ -126,7 +124,7 @@ public class OffersWidget extends VerticalPanel
 
 	protected int findChecked()
 	{
-		for (int row = 1; row < table.getRowCount() - 2; row++)
+		for (int row = 1; row < table.getRowCount() - 1; row++)
 			if (((RadioButton) table.getWidget(row, COL_RADIO)).getValue())
 				return row;
 		return -1;
