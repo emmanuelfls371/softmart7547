@@ -34,21 +34,23 @@ public class ProjectWidget  extends VerticalPanel{
 		add(table);
 		table.setWidget(0, 0, new HTML("Comprador"));
 		table.setWidget(0, 1, new HTML("Presupuesto"));
-		table.setWidget(0, 2, new HTML("Fecha de cierre"));
-		table.setWidget(0, 3, new HTML("Nivel de reputaci&oacute;n"));
-		table.setWidget(0, 4, new HTML("Dificultad"));
-		table.setWidget(0, 5, new HTML("Tama&ntilde;o"));
-		table.setWidget(0, 6, new HTML("Descripci&oacute;n"));
-		table.setWidget(0, 7, new HTML("Archivo"));
+		table.setWidget(0, 2, new HTML("Moneda"));
+		table.setWidget(0, 3, new HTML("Fecha de cierre"));
+		table.setWidget(0, 4, new HTML("Nivel de reputaci&oacute;n"));
+		table.setWidget(0, 5, new HTML("Dificultad"));
+		table.setWidget(0, 6, new HTML("Tama&ntilde;o"));
+		table.setWidget(0, 7, new HTML("Descripci&oacute;n"));
+		table.setWidget(0, 8, new HTML("Archivo"));
 				
 		int row =1;
 		table.setWidget(row, 0, new HTML(project.getUsuario().getLogin()));
 		table.setWidget(row, 1, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project.getMaxPresupuesto())));
-		table.setWidget(row, 2, new HTML(String.valueOf(project.getFecha().getDate())+"/"+String.valueOf(project.getFecha().getMonth()+1)+"/"+String.valueOf(project.getFecha().getYear())+1900));
-		table.setWidget(row, 3, new HTML(project.getNivel()));
-		table.setWidget(row, 4, new HTML(project.getDificultad()));
-		table.setWidget(row, 5, new HTML(project.getTamanio()));
-		table.setWidget(row, 6, new HTML(project.getDescripcion()));
+		table.setWidget(row, 2, new HTML(project.getMoneda()));
+		table.setWidget(row, 3, new HTML(String.valueOf(project.getFecha().getDate())+"/"+String.valueOf(project.getFecha().getMonth()+1)+"/"+String.valueOf(project.getFecha().getYear()+1900)));
+		table.setWidget(row, 4, new HTML(project.getNivel()));
+		table.setWidget(row, 5, new HTML(project.getDificultad()));
+		table.setWidget(row, 6, new HTML(project.getTamanio()));
+		table.setWidget(row, 7, new HTML(project.getDescripcion()));
 
 		Anchor back = new Anchor("Volver");
 		table.setWidget(table.getRowCount(), 2, back);

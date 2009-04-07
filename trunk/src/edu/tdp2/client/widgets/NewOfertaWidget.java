@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -15,32 +16,36 @@ import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.OfertaDto;
+import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
+
 
 public class NewOfertaWidget extends FormWidget
 {
 	private static NewOfertaWidget instance;
 	private List<String> errMsgs;
 	private long projectId;
+	private String moneda;
 
 	public static NewOfertaWidget getInstance(Proyecto project)
 	{
 		if (instance == null)
-			instance = new NewOfertaWidget();
+			instance = new NewOfertaWidget(project);
 		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
 		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
 		instance.projectId = project.getId();
 		return instance;
 	}
 
-	private NewOfertaWidget()
+	private NewOfertaWidget(Proyecto project)
 	{
 		tituloWidget = "<b>Nueva oferta</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		dto = new OfertaDto();
 		errMsgs = new ArrayList<String>();
+		moneda=project.getMoneda();
 		init();
 	}
 
@@ -50,12 +55,31 @@ public class NewOfertaWidget extends FormWidget
 		widgets.put(OfertaFields.Proyecto, new Label());
 
 		widgets.put(OfertaFields.Usuario, new Label());
+		
+		FlowPanel p=new FlowPanel();
 
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(OfertaFields.Presupuesto.toString());
-		widgets.put(OfertaFields.Presupuesto, t);
+		p.add(t);
+		
+		final ListBox lisMonedas = new ListBox();
+		lisMonedas.setName(OfertaFields.Presupuesto.toString());
 
+		lisMonedas.clear();
+		lisMonedas.addItem("----Elija Moneda----", "");
+		int pos=0;
+		for (Moneda moneda : Moneda.values()){
+				lisMonedas.addItem(moneda.name(), moneda.getDescription());
+				if(moneda.name().compareTo(this.moneda)==0){
+					lisMonedas.setItemSelected(pos, true);
+				}
+				pos++;
+		}
+		//lisMonedas.setEnabled(false);
+		p.add(lisMonedas);
+		widgets.put(OfertaFields.Presupuesto, p);
+		
 		t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(OfertaFields.Dias.toString());
@@ -111,8 +135,9 @@ public class NewOfertaWidget extends FormWidget
 
 				ofertaDto.setDescripcion(((TextBox) instance.widgets.get(OfertaFields.Descripcion)).getText());
 
-				ofertaDto.setMonto(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Presupuesto))
-						.getText()));
+				FlowPanel f=(FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+				ofertaDto.setMonto(Integer.parseInt(((TextBox)f.getWidget(0)).getText()));
+				ofertaDto.setMoneda(((ListBox)f.getWidget(1)).getValue(((ListBox)f.getWidget(1)).getSelectedIndex()));
 				ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
 
 				ofertaDto.setProyecto(projectId);

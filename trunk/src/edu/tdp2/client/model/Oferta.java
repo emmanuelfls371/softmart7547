@@ -39,6 +39,9 @@ public class Oferta extends AbstractDomainObject
 
 	@OneToOne(mappedBy = "ofertaGanadora", fetch = FetchType.LAZY)
 	private Contrato contrato;
+	
+	@Column(name = "Moneda", nullable = false)
+	private String moneda;
 
 	public Contrato getContrato()
 	{
@@ -63,6 +66,7 @@ public class Oferta extends AbstractDomainObject
 		this.setNotificacion(dto.getNotificacion());
 		this.setProyecto(proyecto);
 		this.setUsuario(us);
+		this.setMoneda(dto.getMoneda());
 	}
 
 	public Usuario getUsuario()
@@ -131,5 +135,18 @@ public class Oferta extends AbstractDomainObject
 		proyecto = null;
 		usuario.prune();
 		contrato = null;
+	}
+
+	private void setMoneda(String moneda) {
+		boolean existe = false;
+		for (Moneda m : Moneda.values())
+			if (m.name().compareTo(moneda) == 0)
+				existe = true;
+		if (existe)
+			this.moneda = moneda;
+	}
+
+	public String getMoneda() {
+		return moneda;
 	}
 }
