@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
@@ -20,6 +21,7 @@ import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.utils.ClientUtils;
+import edu.tdp2.client.model.Moneda;
 
 public class NewProjectWidget extends FormWidget
 {
@@ -53,6 +55,8 @@ public class NewProjectWidget extends FormWidget
 		t.setName(ProjectFields.Nombre.toString());
 		widgets.put(ProjectFields.Nombre, t);
 
+		FlowPanel horiz=new FlowPanel();
+		
 		final ListBox lisRangos = new ListBox();
 		lisRangos.setName(ProjectFields.Presupuesto.toString());
 
@@ -72,7 +76,17 @@ public class NewProjectWidget extends FormWidget
 			}
 		};
 		ClientUtils.getSoftmartService().getPresupuestos(projectCallback);
-		widgets.put(ProjectFields.Presupuesto, lisRangos);
+		horiz.add(lisRangos);
+		
+		final ListBox lisMonedas = new ListBox();
+		lisMonedas.setName(ProjectFields.Presupuesto.toString());
+
+		lisMonedas.clear();
+		lisMonedas.addItem("----Elija Moneda----", "");
+		for (Moneda moneda : Moneda.values())
+				lisMonedas.addItem(moneda.name(), moneda.getDescription());	
+		horiz.add(lisMonedas);
+		widgets.put(ProjectFields.Presupuesto,horiz);
 
 		// Create a basic date picker
 		DateBox date = new DateBox();
@@ -179,10 +193,15 @@ public class NewProjectWidget extends FormWidget
 			dto = new ProyectoDto();
 			ProyectoDto proyectoDto = (ProyectoDto) dto;
 			proyectoDto.setNombre(((TextBox) instance.widgets.get(ProjectFields.Nombre)).getText());
-
-			ListBox lisRangos = (ListBox) instance.widgets.get(ProjectFields.Presupuesto);
+			
+			FlowPanel panel=(FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
+			
+			ListBox lisRangos = (ListBox) panel.getWidget(0);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
+			ListBox lisMonedas = (ListBox) panel.getWidget(1);
+			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+			
 			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
 			proyectoDto.setFecha(dateFecha.getValue());
 

@@ -37,6 +37,18 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 	private String archivo;
 
 	private String usuario;
+	
+	@NotEmpty(message = "Debe ingresar la moneda en que se presupuesta")
+	@NotNull(message = "Debe ingresar la moneda en que se presupuesta")
+	private String moneda;
+
+	public String getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
+	}
 
 	public Date getFecha()
 	{

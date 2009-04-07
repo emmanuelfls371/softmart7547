@@ -2,6 +2,7 @@ package edu.tdp2.client.dto;
 
 import java.io.Serializable;
 
+import com.google.gwt.validation.client.NotEmpty;
 import com.google.gwt.validation.client.NotNull;
 import com.google.gwt.validation.client.interfaces.IValidatable;
 
@@ -21,6 +22,10 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 	private long proyecto;
 
 	private String usuario;
+	
+	@NotEmpty(message = "Debe ingresar la moneda en que se oferta")
+	@NotNull(message = "Debe ingresar la moneda en que se oferta")
+	private String moneda;
 
 	public String getUsuario()
 	{
@@ -80,6 +85,14 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 	public void setNotificacion(String notificacion)
 	{
 		this.notificacion = notificacion;
+	}
+
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
+	}
+
+	public String getMoneda() {
+		return moneda;
 	}
 
 }
