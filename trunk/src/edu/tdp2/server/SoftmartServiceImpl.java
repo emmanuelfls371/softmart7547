@@ -10,7 +10,9 @@ import org.hibernate.Session;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.tdp2.client.SoftmartService;
+import edu.tdp2.client.TipoCalificacion;
 import edu.tdp2.client.dto.CalificacionDto;
+import edu.tdp2.client.dto.ContratoDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
@@ -389,6 +391,95 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+	
+	
+	public List<ContratoDto> getCalificacionesHechas(String user){
+		String sql = "FROM Contrato WHERE (califVendedor IS NOT NULL AND proyecto.usuario.login=?) OR (califComprador IS NOT NULL AND ofertaGanadora.usuario.login=?)";
+		return getCalificaciones(sql, user, TipoCalificacion.Hecha);
+	}
+	
+	public List<ContratoDto> getCalificacionesRecibidas(String user){
+		String sql = "FROM Contrato WHERE (califComprador IS NOT NULL AND proyecto.usuario.login=?) OR (califVendedor IS NOT NULL AND ofertaGanadora.usuario.login=?)";
+		return getCalificaciones(sql, user, TipoCalificacion.Recibida);
+	}
+	
+	private void setCalifVendedor(Contrato c, CalificacionDto calif){
+		calif.setCalificacion(c.getCalifAlVendedor().getCalificacion());
+		calif.setComentario(c.getCalifAlVendedor().getComentario());
+	}
+	
+	private void setCalifComprador(Contrato c, CalificacionDto calif){
+		calif.setCalificacion(c.getCalifAlComprador().getCalificacion());
+		calif.setComentario(c.getCalifAlComprador().getComentario());
+	}
+	
+	private CalificacionDto getCalif(TipoCalificacion tipo, Contrato c, String user){
+		CalificacionDto calif=new CalificacionDto();
+		if(tipo.name().compareTo(TipoCalificacion.Recibida.toString())==0){
+			if(c.getProyecto().getUsuario().getLogin().compareTo(user)==0){
+				setCalifComprador(c,calif);
+				calif.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
+			}else if(c.getOfertaGanadora().getUsuario().getLogin().compareTo(user)==0){
+				setCalifVendedor(c,calif);
+				calif.setUsuario(c.getProyecto().getUsuario().getLogin());
+			}
+		}else if (tipo.name().compareTo(TipoCalificacion.Hecha.toString())==0){
+			if(c.getProyecto().getUsuario().getLogin().compareTo(user)==0){
+				setCalifVendedor(c,calif);
+				calif.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
+			}else if(c.getOfertaGanadora().getUsuario().getLogin().compareTo(user)==0){
+				setCalifComprador(c,calif);
+				calif.setUsuario(c.getProyecto().getUsuario().getLogin());
+			}
+		}else{
+			return null;
+		}
+		return calif;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<ContratoDto> getCalificaciones(String sql, String user, TipoCalificacion tipo) {
+		
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			List<Contrato> contratos = (List<Contrato>) sess.createQuery(sql).setString(0, user).setString(1, user).list();
+			List<ContratoDto> dtos=new ArrayList<ContratoDto>();
+			for(Contrato c: contratos){
+				ContratoDto dto=new ContratoDto();			
+				dto.setCalif(getCalif(tipo, c, user));
+				dto.setIdContrato(c.getId());
+				ProyectoDto p=new ProyectoDto();
+				p.setArchivo(c.getProyecto().getPathArchivo());
+				p.setDescripcion(c.getProyecto().getDescripcion());
+				p.setDificultad(c.getProyecto().getDificultad());
+				p.setTamanio(c.getProyecto().getTamanio());
+				p.setFecha(c.getProyecto().getFecha());
+				p.setMoneda(c.getProyecto().getMoneda());
+				p.setNivel(c.getProyecto().getNivel());
+				p.setNombre(c.getProyecto().getNombre());
+				p.setPresupuesto(Presupuesto.armarRango(c.getProyecto().getMinPresupuesto(),c.getProyecto().getMaxPresupuesto()));
+				p.setUsuario(c.getProyecto().getUsuario().getLogin());
+				dto.setProyecto(p);
+				
+				OfertaDto f=new OfertaDto();
+				f.setDescripcion(c.getOfertaGanadora().getDescripcion());
+				f.setDias(c.getOfertaGanadora().getDias());
+				f.setMonto(c.getOfertaGanadora().getMonto());
+				f.setMoneda(c.getOfertaGanadora().getMoneda());
+				f.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
+				dto.setOferta(f);
+				
+				dtos.add(dto);
+			}
+			return dtos;
+		}
+		finally
+		{
+			sess.close();
+		}		
 	}
 
 	

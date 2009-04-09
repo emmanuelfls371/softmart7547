@@ -1,16 +1,17 @@
-package edu.tdp2.client.model;
+package edu.tdp2.client;
 
-public enum Moneda {
-	Peso, Dolar, Euro, Yen("Miles de Yenes"), Yuan;
+public enum TipoCalificacion {
+
+	Recibida ("De"),Hecha("A");
 	
-	private Moneda(String description)
+	private TipoCalificacion(String description)
 	{
 		this.description = description;
 	}
 
 	private String description;
 
-	private Moneda()
+	private TipoCalificacion()
 	{
 		this.description = name();
 	}
@@ -19,4 +20,5 @@ public enum Moneda {
 	{
 		return description;
 	}
+	
 }
