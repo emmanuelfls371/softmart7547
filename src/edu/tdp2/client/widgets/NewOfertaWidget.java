@@ -30,11 +30,25 @@ public class NewOfertaWidget extends FormWidget
 
 	public static NewOfertaWidget getInstance(Proyecto project)
 	{
+		
 		if (instance == null)
 			instance = new NewOfertaWidget(project);
 		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
 		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
 		instance.projectId = project.getId();
+		instance.moneda=project.getMoneda();
+		
+		FlowPanel f=(FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+		((ListBox)f.getWidget(1)).clear();
+		//lisMonedas.addItem("----Elija Moneda----", "");
+		for (Moneda moneda : Moneda.values()){
+				if(moneda.name().compareTo(instance.moneda)==0){
+					((ListBox)f.getWidget(1)).addItem(moneda.getDescription(), moneda.name());
+					((ListBox)f.getWidget(1)).setItemSelected(0, true);
+				}
+		}
+		((ListBox)f.getWidget(1)).setEnabled(false);
+		
 		return instance;
 	}
 
@@ -45,7 +59,6 @@ public class NewOfertaWidget extends FormWidget
 		anchoTabla = "100px";
 		dto = new OfertaDto();
 		errMsgs = new ArrayList<String>();
-		moneda=project.getMoneda();
 		init();
 	}
 
@@ -66,17 +79,7 @@ public class NewOfertaWidget extends FormWidget
 		final ListBox lisMonedas = new ListBox();
 		lisMonedas.setName(OfertaFields.Presupuesto.toString());
 
-		lisMonedas.clear();
-		lisMonedas.addItem("----Elija Moneda----", "");
-		int pos=0;
-		for (Moneda moneda : Moneda.values()){
-				lisMonedas.addItem(moneda.name(), moneda.getDescription());
-				if(moneda.name().compareTo(this.moneda)==0){
-					lisMonedas.setItemSelected(pos, true);
-				}
-				pos++;
-		}
-		//lisMonedas.setEnabled(false);
+		
 		p.add(lisMonedas);
 		widgets.put(OfertaFields.Presupuesto, p);
 		

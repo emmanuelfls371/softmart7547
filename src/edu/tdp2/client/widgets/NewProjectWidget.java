@@ -8,7 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
@@ -84,7 +84,7 @@ public class NewProjectWidget extends FormWidget
 		lisMonedas.clear();
 		lisMonedas.addItem("----Elija Moneda----", "");
 		for (Moneda moneda : Moneda.values())
-				lisMonedas.addItem(moneda.name(), moneda.getDescription());	
+				lisMonedas.addItem(moneda.getDescription(), moneda.name());	
 		horiz.add(lisMonedas);
 		widgets.put(ProjectFields.Presupuesto,horiz);
 

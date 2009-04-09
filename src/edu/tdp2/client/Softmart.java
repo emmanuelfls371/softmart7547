@@ -22,8 +22,11 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.dto.ContratoDto;
+
 import edu.tdp2.client.model.Proyecto;
-import edu.tdp2.client.widgets.CalificationWidget;
+import edu.tdp2.client.model.Usuario;
+import edu.tdp2.client.widgets.NewCalificationWidget;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
@@ -41,6 +44,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	private SoftmartMessages messages;
 	private VerticalPanel centerPanel;
 	private HorizontalPanel northPanel;
+	
+	private Proyecto projectOferta;
+	private ContratoDto contratoDto;
 
 	/**
 	 * This is the entry point method.
@@ -142,7 +148,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				if (proyecto == null)
 					Window.alert("Debe seleccionar un proyecto para calificar");
 				else
-					onShowCalificacion(proyecto);
+					onShowNewCalificacion(proyecto);
 			}
 		});
 		table.setWidget(2, 2, menuLink);
@@ -159,8 +165,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				Proyecto proyecto = ownOpenProjects.getSelectedItem();
 				if (proyecto == null)
 					Window.alert("Debe seleccionar un proyecto");
-				else
-					onShowOffers(proyecto);
+				else{
+					projectOferta=proyecto;
+					onShowOffers();
+				}
 			}
 		});
 		table.setWidget(3, 2, menuLink);
@@ -178,6 +186,110 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(3, 3, menuLink);
 		centerPanel.add(table);
+		
+		
+		table.setWidget(4, 0, new Label("Calificaciones recibidas"));
+		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
+		table.setWidget(4, 1, calif);
+		menuLink = new Anchor("Ver calificación");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else
+					onShowCalification(contrato, TipoCalificacion.Recibida);
+			}
+		});
+		table.setWidget(4, 2, menuLink);
+		menuLink = new Anchor("Ver Proyecto");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto para ver");
+				else{
+					Usuario us=new Usuario();
+					us.setLogin(contrato.getProyecto().getUsuario());
+					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
+				}
+			}
+		});
+		table.setWidget(4, 3, menuLink);
+		
+		menuLink = new Anchor("Ver Oferta Ganadora");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else{
+					contratoDto=contrato;
+					onShowOferta();
+				}
+			}
+		});
+		table.setWidget(4, 5, menuLink);
+		centerPanel.add(table);
+		
+		centerPanel.add(table);
+		
+		table.setWidget(5, 0, new Label("Calificaciones hechas"));
+		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
+		table.setWidget(5, 1, calif2);
+		menuLink = new Anchor("Ver calificación");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif2.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else
+					onShowCalification(contrato, TipoCalificacion.Hecha);
+			}
+		});
+		table.setWidget(5, 2, menuLink);
+		menuLink = new Anchor("Ver Proyecto");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif2.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto para ver");
+				else{
+					Usuario us=new Usuario();
+					us.setLogin(contrato.getProyecto().getUsuario());
+					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
+				}
+			}
+		});
+		table.setWidget(5, 3, menuLink);
+		
+		menuLink = new Anchor("Ver Oferta Ganadora");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif2.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto ");
+				else{
+					contratoDto=contrato;					
+					onShowOferta();
+				}
+			}
+		});
+		table.setWidget(5, 5, menuLink);
+		centerPanel.add(table);
+		
 	}
 
 	private Widget getWestPanel()
@@ -254,19 +366,27 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		putAlone(NewOfertaWidget.getInstance(project));
 	}
 
-	public void onShowCalificacion(Proyecto project)
+	public void onShowNewCalificacion(Proyecto project)
 	{
-		putAlone(CalificationWidget.getInstance(project));
+		putAlone(NewCalificationWidget.getInstance(project));
 	}
 
-	protected void onShowOffers(Proyecto project)
+	protected void onShowOffers()
 	{
-		putAlone(new OffersWidget(project));
+		putAlone(new OffersWidget(projectOferta), HistoryToken.onShowChooseOffer.toString());
 	}
 	
-	protected void onShowProyecto(Proyecto project)
+	private void onShowProyecto(Proyecto project)
 	{
 		putAlone(new ProjectWidget(project));
+	}
+	
+	private void onShowOferta(){
+		putAlone(new OfertaWidget(contratoDto.getOferta(), contratoDto.getProyecto().getNombre()), HistoryToken.onShowOferta.toString());
+	}
+	
+	protected void onShowCalification(ContratoDto contrato, TipoCalificacion tipo){
+		putAlone(new CalificationWidget(contrato.getCalif(), contrato.getProyecto().getNombre(),tipo));
 	}
 
 	private void putAlone(Widget widget)
@@ -280,6 +400,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		centerPanel.add(widget);
 	}
+
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
@@ -306,7 +427,13 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			case Welcome:
 				showWelcome();
 				break;
+			case onShowChooseOffer:
+				onShowOffers();
+				break;
+			case onShowOferta:
+				onShowOferta();
 			}
 		}
 	}
+	
 }
