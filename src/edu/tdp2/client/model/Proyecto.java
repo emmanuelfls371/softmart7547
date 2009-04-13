@@ -88,7 +88,7 @@ public class Proyecto extends AbstractDomainObject
 		if (of != null)
 		{
 			for (Oferta oferta : ofertas)
-				if (oferta.id == of.id)
+				if (oferta.equals(of))
 					return true;
 			return false;
 		}
