@@ -51,6 +51,11 @@ public class ProjectWidget  extends VerticalPanel{
 		table.setWidget(row, 5, new HTML(project.getDificultad()));
 		table.setWidget(row, 6, new HTML(project.getTamanio()));
 		table.setWidget(row, 7, new HTML(project.getDescripcion()));
+		if(project.getPathArchivo()!=null && !project.getPathArchivo().isEmpty()){
+			table.setWidget(row, 8, new Anchor("Bajar"));
+		}else{
+			table.setWidget(row, 8, new HTML("No se ha cargado un archivo"));
+		}
 
 		Anchor back = new Anchor("Volver");
 		table.setWidget(table.getRowCount(), 2, back);
