@@ -23,4 +23,28 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
    <res-type>javax.sql.DataSource</res-type>
    <res-auth>Container</res-auth>
  </resource-ref>
+ <servlet>
+ 	<servlet-name>newproject</servlet-name>
+ 	<servlet-class>edu.tdp2.server.FileUploadServlet</servlet-class>
+ </servlet>
+ <servlet-mapping>
+ 	<servlet-name>newproject</servlet-name>
+ 	<url-pattern>/newproject</url-pattern>
+ </servlet-mapping>
+ <servlet>
+ 	<servlet-name>registration</servlet-name>
+ 	<servlet-class>edu.tdp2.server.FileUploadServlet</servlet-class>
+ </servlet>
+ <servlet-mapping>
+ 	<servlet-name>registration</servlet-name>
+ 	<url-pattern>/registration</url-pattern>
+ </servlet-mapping>
+ <servlet>
+ 	<servlet-name>newoferta</servlet-name>
+ 	<servlet-class>edu.tdp2.server.FileUploadServlet</servlet-class>
+ </servlet>
+ <servlet-mapping>
+ 	<servlet-name>newoferta</servlet-name>
+ 	<url-pattern>/newoferta</url-pattern>
+ </servlet-mapping>
 </web-app>
