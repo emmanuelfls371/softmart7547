@@ -30,6 +30,7 @@ import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
+import edu.tdp2.client.widgets.MyAccountWidget;
 import edu.tdp2.client.widgets.NewCalificationWidget;
 import edu.tdp2.client.widgets.NewOfertaWidget;
 import edu.tdp2.client.widgets.NewProjectWidget;
@@ -96,8 +97,19 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
 
-		table.setWidget(0, 0, new Label("Nuevo proyecto"));
-		Anchor menuLink = new Anchor("Publicar");
+		table.setWidget(0, 0, new Label("Mi cuenta"));
+		Anchor menuLink = new Anchor("Ver datos");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				onShowMyAccount();
+			}
+		});
+		table.setWidget(0, 2, menuLink);
+
+		table.setWidget(1, 0, new Label("Nuevo proyecto"));
+		menuLink = new Anchor("Publicar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -105,11 +117,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				onShowNewProject();
 			}
 		});
-		table.setWidget(0, 2, menuLink);
+		table.setWidget(1, 2, menuLink);
 
-		table.setWidget(1, 0, new Label("Proyectos abiertos para ofertar"));
+		table.setWidget(2, 0, new Label("Proyectos abiertos para ofertar"));
 		final ProjectList unassignedProjects = new UnassignedProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(1, 1, unassignedProjects);
+		table.setWidget(2, 1, unassignedProjects);
 		menuLink = new Anchor("Ofertar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -122,7 +134,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowNewOferta(proyecto);
 			}
 		});
-		table.setWidget(1, 2, menuLink);
+		table.setWidget(2, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -135,11 +147,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowProyecto(proyecto);
 			}
 		});
-		table.setWidget(1, 3, menuLink);
+		table.setWidget(2, 3, menuLink);
 
-		table.setWidget(2, 0, new Label("Proyectos pendientes de calificar"));
+		table.setWidget(3, 0, new Label("Proyectos pendientes de calificar"));
 		final ProjectList qualifiableProjects = new QualifiableProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(2, 1, qualifiableProjects);
+		table.setWidget(3, 1, qualifiableProjects);
 		menuLink = new Anchor("Calificar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -152,11 +164,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowNewCalificacion(proyecto);
 			}
 		});
-		table.setWidget(2, 2, menuLink);
+		table.setWidget(3, 2, menuLink);
 
-		table.setWidget(3, 0, new Label("Proyectos propios abiertos"));
+		table.setWidget(4, 0, new Label("Proyectos propios abiertos"));
 		final ProjectList ownOpenProjects = new OwnOpenProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(3, 1, ownOpenProjects);
+		table.setWidget(4, 1, ownOpenProjects);
 		menuLink = new Anchor("Ver ofertas");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -172,7 +184,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				}
 			}
 		});
-		table.setWidget(3, 2, menuLink);
+		table.setWidget(4, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -185,7 +197,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowProyecto(proyecto);
 			}
 		});
-		table.setWidget(3, 3, menuLink);
+		table.setWidget(4, 3, menuLink);
 		menuLink = new Anchor("Cancelar Proyecto");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -218,11 +230,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				}
 			}
 		});
-		table.setWidget(3, 3, menuLink);
+		table.setWidget(4, 3, menuLink);
 
-		table.setWidget(4, 0, new Label("Calificaciones recibidas"));
+		table.setWidget(5, 0, new Label("Calificaciones recibidas"));
 		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
-		table.setWidget(4, 1, calif);
+		table.setWidget(5, 1, calif);
 		menuLink = new Anchor("Ver calificación");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -235,64 +247,13 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowCalification(contrato, TipoCalificacion.Recibida);
 			}
 		});
-		table.setWidget(4, 2, menuLink);
-		menuLink = new Anchor("Ver Proyecto");
-		menuLink.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				ContratoDto contrato = calif.getSelectedItem();
-				if (contrato == null)
-					Window.alert("Debe seleccionar un proyecto para ver");
-				else
-				{
-					Usuario us = new Usuario();
-					us.setLogin(contrato.getProyecto().getUsuario());
-					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
-				}
-			}
-		});
-		table.setWidget(4, 3, menuLink);
-
-		menuLink = new Anchor("Ver Oferta Ganadora");
-		menuLink.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				ContratoDto contrato = calif.getSelectedItem();
-				if (contrato == null)
-					Window.alert("Debe seleccionar un proyecto");
-				else
-				{
-					contratoDto = contrato;
-					onShowOferta();
-				}
-			}
-		});
-		table.setWidget(4, 5, menuLink);
-
-		table.setWidget(5, 0, new Label("Calificaciones hechas"));
-		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
-		table.setWidget(5, 1, calif2);
-		menuLink = new Anchor("Ver calificación");
-		menuLink.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				ContratoDto contrato = calif2.getSelectedItem();
-				if (contrato == null)
-					Window.alert("Debe seleccionar un proyecto");
-				else
-					onShowCalification(contrato, TipoCalificacion.Hecha);
-			}
-		});
 		table.setWidget(5, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
-				ContratoDto contrato = calif2.getSelectedItem();
+				ContratoDto contrato = calif.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto para ver");
 				else
@@ -310,6 +271,57 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		{
 			public void onClick(ClickEvent event)
 			{
+				ContratoDto contrato = calif.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else
+				{
+					contratoDto = contrato;
+					onShowOferta();
+				}
+			}
+		});
+		table.setWidget(5, 5, menuLink);
+
+		table.setWidget(6, 0, new Label("Calificaciones hechas"));
+		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
+		table.setWidget(6, 1, calif2);
+		menuLink = new Anchor("Ver calificación");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif2.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else
+					onShowCalification(contrato, TipoCalificacion.Hecha);
+			}
+		});
+		table.setWidget(6, 2, menuLink);
+		menuLink = new Anchor("Ver Proyecto");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				ContratoDto contrato = calif2.getSelectedItem();
+				if (contrato == null)
+					Window.alert("Debe seleccionar un proyecto para ver");
+				else
+				{
+					Usuario us = new Usuario();
+					us.setLogin(contrato.getProyecto().getUsuario());
+					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
+				}
+			}
+		});
+		table.setWidget(6, 3, menuLink);
+
+		menuLink = new Anchor("Ver Oferta Ganadora");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
 				ContratoDto contrato = calif2.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto ");
@@ -320,7 +332,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				}
 			}
 		});
-		table.setWidget(5, 5, menuLink);
+		table.setWidget(6, 5, menuLink);
 		centerPanel.add(table);
 	}
 
@@ -386,6 +398,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	public void onShowRegistration()
 	{
 		putAlone(RegistrationWidget.getInstance(), HistoryToken.onShowRegistration.toString());
+	}
+
+	private void onShowMyAccount()
+	{
+		putAlone(new MyAccountWidget(LoginWidget.getCurrentUser()), HistoryToken.onShowMyAccount.toString());
 	}
 
 	public void onShowNewProject()
@@ -466,6 +483,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				break;
 			case onShowOferta:
 				onShowOferta();
+				break;
+			case onShowMyAccount:
+				onShowMyAccount();
+				break;
 			}
 		}
 	}

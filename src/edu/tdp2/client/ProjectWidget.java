@@ -1,8 +1,5 @@
 package edu.tdp2.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -11,6 +8,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.utils.ClientUtils;
 
 public class ProjectWidget extends VerticalPanel
 {
@@ -28,6 +26,7 @@ public class ProjectWidget extends VerticalPanel
 	   $wnd.location.reload();
 	  }-*/;
 
+	@SuppressWarnings("deprecation")
 	private void load()
 	{
 		add(new Label("Proyecto " + project.getNombre()));
@@ -56,24 +55,11 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(row, 6, new HTML(project.getTamanio()));
 		table.setWidget(row, 7, new HTML(project.getDescripcion()));
 		if (project.getPathArchivo() != null && !project.getPathArchivo().isEmpty())
-		{
 			table.setWidget(row, 8, new Anchor("Bajar"));
-		}
 		else
-		{
 			table.setWidget(row, 8, new HTML("No se ha cargado un archivo"));
-		}
 
-		Anchor back = new Anchor("Volver");
-		table.setWidget(table.getRowCount(), 2, back);
-		back.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				History.back();
-			}
-		});
-
+		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
 }

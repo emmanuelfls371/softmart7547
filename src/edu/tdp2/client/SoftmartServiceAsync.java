@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.ContratoDto;
+import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
@@ -51,4 +52,6 @@ public interface SoftmartServiceAsync
 	public void getCalificacionesHechas(String user, AsyncCallback<List<ContratoDto>> callback);
 
 	public void cancelarProyecto(Long projectId, AsyncCallback<String> callback);
+
+	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
 }

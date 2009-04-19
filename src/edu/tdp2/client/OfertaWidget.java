@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.dto.OfertaDto;
+import edu.tdp2.client.utils.ClientUtils;
 
 public class OfertaWidget extends VerticalPanel
 {
@@ -59,16 +60,7 @@ public class OfertaWidget extends VerticalPanel
 		table.setWidget(row, 3, menuLink);
 		table.setWidget(row, 4, new HTML(oferta.getUsuario()));
 
-		Anchor back = new Anchor("Volver");
-		table.setWidget(table.getRowCount(), 2, back);
-		back.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				History.back();
-			}
-		});
-
+		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
 }

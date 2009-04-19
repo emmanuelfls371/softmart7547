@@ -46,6 +46,9 @@ public class Usuario extends AbstractDomainObject
 	@Column(name = "PathLogo", length = 255)
 	private String pathLogo;
 
+	@Column(name = "Nivel", length = 50, nullable = false)
+	private String nivel;
+
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Proyecto> proyectos;
 
@@ -205,6 +208,16 @@ public class Usuario extends AbstractDomainObject
 	public String getPathLogo()
 	{
 		return pathLogo;
+	}
+
+	public String getNivel()
+	{
+		return nivel;
+	}
+
+	public void setNivel(String nivel)
+	{
+		this.nivel = nivel;
 	}
 
 	@Override

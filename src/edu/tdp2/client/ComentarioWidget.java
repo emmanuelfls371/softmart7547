@@ -1,16 +1,12 @@
 package edu.tdp2.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.model.Oferta;
+import edu.tdp2.client.utils.ClientUtils;
 
 public class ComentarioWidget extends VerticalPanel
 {
@@ -43,16 +39,7 @@ public class ComentarioWidget extends VerticalPanel
 		int row = 1;
 		table.setWidget(row, 0, new HTML(c));
 
-		Anchor back = new Anchor("Volver");
-		table.setWidget(table.getRowCount(), 2, back);
-		back.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				History.back();
-			}
-		});
-
+		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
 }

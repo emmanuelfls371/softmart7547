@@ -8,9 +8,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -22,6 +20,7 @@ import com.google.gwt.validation.client.InvalidConstraint;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.Dto;
+import edu.tdp2.client.utils.ClientUtils;
 
 public abstract class FormWidget extends FormPanel
 {
@@ -53,15 +52,7 @@ public abstract class FormWidget extends FormPanel
 		FlexTable table = new FlexTable();
 		table.setWidget(0, 0, new HTML(tituloWidget));
 
-		Anchor back = new Anchor("Volver");
-		table.setWidget(0, 1, back);
-		back.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				History.back();
-			}
-		});
+		table.setWidget(0, 1, ClientUtils.getBackAnchor());
 
 		int row = 1;
 		table.getWidget(0, 0).setWidth(anchoWidget);

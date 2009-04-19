@@ -13,6 +13,7 @@ import edu.tdp2.client.SoftmartService;
 import edu.tdp2.client.TipoCalificacion;
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.ContratoDto;
+import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
@@ -447,9 +448,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			}
 		}
 		else
-		{
 			return null;
-		}
 		return calif;
 	}
 
@@ -468,28 +467,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				ContratoDto dto = new ContratoDto();
 				dto.setCalif(getCalif(tipo, c, user));
 				dto.setIdContrato(c.getId());
-				ProyectoDto p = new ProyectoDto();
-				p.setArchivo(c.getProyecto().getPathArchivo());
-				p.setDescripcion(c.getProyecto().getDescripcion());
-				p.setDificultad(c.getProyecto().getDificultad());
-				p.setTamanio(c.getProyecto().getTamanio());
-				p.setFecha(c.getProyecto().getFecha());
-				p.setMoneda(c.getProyecto().getMoneda());
-				p.setNivel(c.getProyecto().getNivel());
-				p.setNombre(c.getProyecto().getNombre());
-				p.setPresupuesto(Presupuesto.armarRango(c.getProyecto().getMinPresupuesto(), c.getProyecto()
-						.getMaxPresupuesto()));
-				p.setUsuario(c.getProyecto().getUsuario().getLogin());
-				dto.setProyecto(p);
-
-				OfertaDto f = new OfertaDto();
-				f.setDescripcion(c.getOfertaGanadora().getDescripcion());
-				f.setDias(c.getOfertaGanadora().getDias());
-				f.setMonto(c.getOfertaGanadora().getMonto());
-				f.setMoneda(c.getOfertaGanadora().getMoneda());
-				f.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
-				dto.setOferta(f);
-
+				dto.setProyecto(getProyectoDto(c.getProyecto()));
+				dto.setOferta(getOfertaDto(c.getOfertaGanadora()));
 				dtos.add(dto);
 			}
 			return dtos;
@@ -498,6 +477,33 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+
+	private ProyectoDto getProyectoDto(Proyecto p)
+	{
+		ProyectoDto dto = new ProyectoDto();
+		dto.setArchivo(p.getPathArchivo());
+		dto.setDescripcion(p.getDescripcion());
+		dto.setDificultad(p.getDificultad());
+		dto.setTamanio(p.getTamanio());
+		dto.setFecha(p.getFecha());
+		dto.setMoneda(p.getMoneda());
+		dto.setNivel(p.getNivel());
+		dto.setNombre(p.getNombre());
+		dto.setPresupuesto(Presupuesto.armarRango(p.getMinPresupuesto(), p.getMaxPresupuesto()));
+		dto.setUsuario(p.getUsuario().getLogin());
+		return dto;
+	}
+
+	private OfertaDto getOfertaDto(Oferta o)
+	{
+		OfertaDto dto = new OfertaDto();
+		dto.setDescripcion(o.getDescripcion());
+		dto.setDias(o.getDias());
+		dto.setMonto(o.getMonto());
+		dto.setMoneda(o.getMoneda());
+		dto.setUsuario(o.getUsuario().getLogin());
+		return dto;
 	}
 
 	public String cancelarProyecto(Long projectId)
@@ -523,5 +529,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+
+	@Override
+	public MyAccountDto getMyAccountData(String usuario)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

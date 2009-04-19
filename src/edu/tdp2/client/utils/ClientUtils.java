@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.user.client.ui.Anchor;
 
 import edu.tdp2.client.SoftmartService;
 import edu.tdp2.client.SoftmartServiceAsync;
@@ -38,5 +42,18 @@ public class ClientUtils
 			result.add(map);
 		}
 		return result;
+	}
+
+	public static Anchor getBackAnchor()
+	{
+		Anchor back = new Anchor("Volver");
+		back.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				History.back();
+			}
+		});
+		return back;
 	}
 }
