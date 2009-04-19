@@ -44,7 +44,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	private SoftmartMessages messages;
 	private VerticalPanel centerPanel;
 	private HorizontalPanel northPanel;
-	
+
 	private Proyecto projectOferta;
 	private ContratoDto contratoDto;
 
@@ -165,8 +165,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				Proyecto proyecto = ownOpenProjects.getSelectedItem();
 				if (proyecto == null)
 					Window.alert("Debe seleccionar un proyecto");
-				else{
-					projectOferta=proyecto;
+				else
+				{
+					projectOferta = proyecto;
 					onShowOffers();
 				}
 			}
@@ -186,8 +187,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(3, 3, menuLink);
 		centerPanel.add(table);
-		
-		
+
 		table.setWidget(4, 0, new Label("Calificaciones recibidas"));
 		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
 		table.setWidget(4, 1, calif);
@@ -212,15 +212,16 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				ContratoDto contrato = calif.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto para ver");
-				else{
-					Usuario us=new Usuario();
+				else
+				{
+					Usuario us = new Usuario();
 					us.setLogin(contrato.getProyecto().getUsuario());
 					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
 				}
 			}
 		});
 		table.setWidget(4, 3, menuLink);
-		
+
 		menuLink = new Anchor("Ver Oferta Ganadora");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -229,17 +230,18 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				ContratoDto contrato = calif.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto");
-				else{
-					contratoDto=contrato;
+				else
+				{
+					contratoDto = contrato;
 					onShowOferta();
 				}
 			}
 		});
 		table.setWidget(4, 5, menuLink);
 		centerPanel.add(table);
-		
+
 		centerPanel.add(table);
-		
+
 		table.setWidget(5, 0, new Label("Calificaciones hechas"));
 		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
 		table.setWidget(5, 1, calif2);
@@ -264,15 +266,16 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				ContratoDto contrato = calif2.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto para ver");
-				else{
-					Usuario us=new Usuario();
+				else
+				{
+					Usuario us = new Usuario();
 					us.setLogin(contrato.getProyecto().getUsuario());
 					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
 				}
 			}
 		});
 		table.setWidget(5, 3, menuLink);
-		
+
 		menuLink = new Anchor("Ver Oferta Ganadora");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -281,15 +284,16 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				ContratoDto contrato = calif2.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto ");
-				else{
-					contratoDto=contrato;					
+				else
+				{
+					contratoDto = contrato;
 					onShowOferta();
 				}
 			}
 		});
 		table.setWidget(5, 5, menuLink);
 		centerPanel.add(table);
-		
+
 	}
 
 	private Widget getWestPanel()
@@ -375,18 +379,21 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	{
 		putAlone(new OffersWidget(projectOferta), HistoryToken.onShowChooseOffer.toString());
 	}
-	
+
 	private void onShowProyecto(Proyecto project)
 	{
 		putAlone(new ProjectWidget(project));
 	}
-	
-	private void onShowOferta(){
-		putAlone(new OfertaWidget(contratoDto.getOferta(), contratoDto.getProyecto().getNombre()), HistoryToken.onShowOferta.toString());
+
+	private void onShowOferta()
+	{
+		putAlone(new OfertaWidget(contratoDto.getOferta(), contratoDto.getProyecto().getNombre()),
+				HistoryToken.onShowOferta.toString());
 	}
-	
-	protected void onShowCalification(ContratoDto contrato, TipoCalificacion tipo){
-		putAlone(new CalificationWidget(contrato.getCalif(), contrato.getProyecto().getNombre(),tipo));
+
+	protected void onShowCalification(ContratoDto contrato, TipoCalificacion tipo)
+	{
+		putAlone(new CalificationWidget(contrato.getCalif(), contrato.getProyecto().getNombre(), tipo));
 	}
 
 	private void putAlone(Widget widget)
@@ -400,7 +407,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		centerPanel.add(widget);
 	}
-
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
@@ -435,5 +441,5 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		}
 	}
-	
+
 }

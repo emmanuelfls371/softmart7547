@@ -20,7 +20,6 @@ import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 
-
 public class NewOfertaWidget extends FormWidget
 {
 	private static NewOfertaWidget instance;
@@ -30,25 +29,27 @@ public class NewOfertaWidget extends FormWidget
 
 	public static NewOfertaWidget getInstance(Proyecto project)
 	{
-		
+
 		if (instance == null)
 			instance = new NewOfertaWidget(project);
 		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
 		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
 		instance.projectId = project.getId();
-		instance.moneda=project.getMoneda();
-		
-		FlowPanel f=(FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-		((ListBox)f.getWidget(1)).clear();
-		//lisMonedas.addItem("----Elija Moneda----", "");
-		for (Moneda moneda : Moneda.values()){
-				if(moneda.name().compareTo(instance.moneda)==0){
-					((ListBox)f.getWidget(1)).addItem(moneda.getDescription(), moneda.name());
-					((ListBox)f.getWidget(1)).setItemSelected(0, true);
-				}
+		instance.moneda = project.getMoneda();
+
+		FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+		((ListBox) f.getWidget(1)).clear();
+		// lisMonedas.addItem("----Elija Moneda----", "");
+		for (Moneda moneda : Moneda.values())
+		{
+			if (moneda.name().compareTo(instance.moneda) == 0)
+			{
+				((ListBox) f.getWidget(1)).addItem(moneda.getDescription(), moneda.name());
+				((ListBox) f.getWidget(1)).setItemSelected(0, true);
+			}
 		}
-		((ListBox)f.getWidget(1)).setEnabled(false);
-		
+		((ListBox) f.getWidget(1)).setEnabled(false);
+
 		return instance;
 	}
 
@@ -68,21 +69,20 @@ public class NewOfertaWidget extends FormWidget
 		widgets.put(OfertaFields.Proyecto, new Label());
 
 		widgets.put(OfertaFields.Usuario, new Label());
-		
-		FlowPanel p=new FlowPanel();
+
+		FlowPanel p = new FlowPanel();
 
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(OfertaFields.Presupuesto.toString());
 		p.add(t);
-		
+
 		final ListBox lisMonedas = new ListBox();
 		lisMonedas.setName(OfertaFields.Presupuesto.toString());
 
-		
 		p.add(lisMonedas);
 		widgets.put(OfertaFields.Presupuesto, p);
-		
+
 		t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(OfertaFields.Dias.toString());
@@ -138,9 +138,9 @@ public class NewOfertaWidget extends FormWidget
 
 				ofertaDto.setDescripcion(((TextBox) instance.widgets.get(OfertaFields.Descripcion)).getText());
 
-				FlowPanel f=(FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-				ofertaDto.setMonto(Integer.parseInt(((TextBox)f.getWidget(0)).getText()));
-				ofertaDto.setMoneda(((ListBox)f.getWidget(1)).getValue(((ListBox)f.getWidget(1)).getSelectedIndex()));
+				FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+				ofertaDto.setMonto(Integer.parseInt(((TextBox) f.getWidget(0)).getText()));
+				ofertaDto.setMoneda(((ListBox) f.getWidget(1)).getValue(((ListBox) f.getWidget(1)).getSelectedIndex()));
 				ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
 
 				ofertaDto.setProyecto(projectId);

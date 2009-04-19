@@ -1,8 +1,9 @@
 package edu.tdp2.client.model;
 
-public enum Moneda {
+public enum Moneda
+{
 	Peso, Dolar, Euro, Yen("Miles de Yenes"), Yuan;
-	
+
 	private Moneda(String description)
 	{
 		this.description = description;

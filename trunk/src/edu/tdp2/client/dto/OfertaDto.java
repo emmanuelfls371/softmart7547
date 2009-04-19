@@ -22,7 +22,7 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 	private long proyecto;
 
 	private String usuario;
-	
+
 	@NotEmpty(message = "Debe ingresar la moneda en que se oferta")
 	@NotNull(message = "Debe ingresar la moneda en que se oferta")
 	private String moneda;
@@ -87,11 +87,13 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 		this.notificacion = notificacion;
 	}
 
-	public void setMoneda(String moneda) {
+	public void setMoneda(String moneda)
+	{
 		this.moneda = moneda;
 	}
 
-	public String getMoneda() {
+	public String getMoneda()
+	{
 		return moneda;
 	}
 

@@ -73,7 +73,7 @@ public class LoginWidget extends SimplePanel
 		FlexTable table = getTable();
 		panel.add(table);
 		add(panel);
-		
+
 	}
 
 	private FlexTable getTable()
@@ -87,9 +87,10 @@ public class LoginWidget extends SimplePanel
 		table.setWidget(3, 1, passwordTextBox);
 		table.setWidget(4, 1, getSubmitPanel());
 		table.setWidth("100px");
-		/*String sImage = "http://localhost:8888/edu.tdp2.Softmart/logo.jpg";
-		Image image = new Image(sImage);
-		table.setWidget(0, 0, image);*/
+		/*
+		 * String sImage = "http://localhost:8888/edu.tdp2.Softmart/logo.jpg"; Image image = new Image(sImage);
+		 * table.setWidget(0, 0, image);
+		 */
 		return table;
 	}
 

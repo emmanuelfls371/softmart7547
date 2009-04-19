@@ -10,11 +10,11 @@ import com.google.gwt.user.client.ui.ListBox;
 
 import edu.tdp2.client.dto.ContratoDto;
 
-
-public abstract class CalificacionList extends ListBox{
+public abstract class CalificacionList extends ListBox
+{
 
 	protected String user;
-	
+
 	private Map<String, ContratoDto> contratos = new HashMap<String, ContratoDto>();
 
 	protected CalificacionList(String user)
@@ -24,7 +24,7 @@ public abstract class CalificacionList extends ListBox{
 		setWidth("200px");
 		load();
 	}
-	
+
 	protected void load()
 	{
 		AsyncCallback<List<ContratoDto>> callback = new AsyncCallback<List<ContratoDto>>()
@@ -43,6 +43,7 @@ public abstract class CalificacionList extends ListBox{
 		};
 		doCall(callback);
 	}
+
 	private void addItem(ContratoDto contrato)
 	{
 		addItem(contrato.getProyecto().getNombre(), Long.toString(contrato.getIdContrato()));
@@ -50,7 +51,7 @@ public abstract class CalificacionList extends ListBox{
 	}
 
 	protected abstract void doCall(AsyncCallback<List<ContratoDto>> callback);
-	
+
 	public ContratoDto getSelectedItem()
 	{
 		int index = getSelectedIndex();
@@ -59,5 +60,5 @@ public abstract class CalificacionList extends ListBox{
 		else
 			return contratos.get(getValue(index));
 	}
-	
+
 }

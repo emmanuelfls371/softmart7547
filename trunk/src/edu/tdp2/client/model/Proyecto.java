@@ -46,7 +46,7 @@ public class Proyecto extends AbstractDomainObject
 
 	@Column(name = "PathArchivo", length = 255)
 	private String pathArchivo;
-	
+
 	@Column(name = "Moneda", nullable = false)
 	private String moneda;
 
@@ -59,12 +59,14 @@ public class Proyecto extends AbstractDomainObject
 
 	@OneToOne(mappedBy = "proyecto", fetch = FetchType.LAZY)
 	private Contrato contrato;
-	
-	public String getMoneda() {
+
+	public String getMoneda()
+	{
 		return moneda;
 	}
 
-	private void setMoneda(String moneda) {
+	private void setMoneda(String moneda)
+	{
 		boolean existe = false;
 		for (Moneda m : Moneda.values())
 			if (m.name().compareTo(moneda) == 0)

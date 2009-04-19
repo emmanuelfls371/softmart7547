@@ -55,8 +55,8 @@ public class NewProjectWidget extends FormWidget
 		t.setName(ProjectFields.Nombre.toString());
 		widgets.put(ProjectFields.Nombre, t);
 
-		FlowPanel horiz=new FlowPanel();
-		
+		FlowPanel horiz = new FlowPanel();
+
 		final ListBox lisRangos = new ListBox();
 		lisRangos.setName(ProjectFields.Presupuesto.toString());
 
@@ -77,16 +77,16 @@ public class NewProjectWidget extends FormWidget
 		};
 		ClientUtils.getSoftmartService().getPresupuestos(projectCallback);
 		horiz.add(lisRangos);
-		
+
 		final ListBox lisMonedas = new ListBox();
 		lisMonedas.setName(ProjectFields.Presupuesto.toString());
 
 		lisMonedas.clear();
 		lisMonedas.addItem("----Elija Moneda----", "");
 		for (Moneda moneda : Moneda.values())
-				lisMonedas.addItem(moneda.getDescription(), moneda.name());	
+			lisMonedas.addItem(moneda.getDescription(), moneda.name());
 		horiz.add(lisMonedas);
-		widgets.put(ProjectFields.Presupuesto,horiz);
+		widgets.put(ProjectFields.Presupuesto, horiz);
 
 		// Create a basic date picker
 		DateBox date = new DateBox();
@@ -193,15 +193,15 @@ public class NewProjectWidget extends FormWidget
 			dto = new ProyectoDto();
 			ProyectoDto proyectoDto = (ProyectoDto) dto;
 			proyectoDto.setNombre(((TextBox) instance.widgets.get(ProjectFields.Nombre)).getText());
-			
-			FlowPanel panel=(FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
-			
+
+			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
+
 			ListBox lisRangos = (ListBox) panel.getWidget(0);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
 			ListBox lisMonedas = (ListBox) panel.getWidget(1);
 			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
-			
+
 			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
 			proyectoDto.setFecha(dateFecha.getValue());
 

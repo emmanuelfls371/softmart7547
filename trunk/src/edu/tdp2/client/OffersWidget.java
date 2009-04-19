@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
 
@@ -67,8 +66,8 @@ public class OffersWidget extends VerticalPanel
 					table.setWidget(row, 0, new HTML(oferta.getUsuario().getLogin()));
 					table.setWidget(row, 1, new HTML(((Integer) oferta.getMonto()).toString()));
 					table.setWidget(row, 2, new HTML(((Integer) oferta.getDias()).toString()));
-					
-					Anchor menuLink=new Anchor("Ver Comentario");
+
+					Anchor menuLink = new Anchor("Ver Comentario");
 					menuLink.addClickHandler(new ClickHandler()
 					{
 						public void onClick(ClickEvent event)
@@ -78,9 +77,9 @@ public class OffersWidget extends VerticalPanel
 							add(new ComentarioWidget(oferta));
 						}
 					});
-					
+
 					table.setWidget(row, 3, menuLink);
-					
+
 					table.setWidget(row, COL_RADIO, new RadioButton("chooseOffer"));
 					table.setWidget(row, COL_HIDDEN, new Hidden("id" + row, oferta.getId().toString()));
 				}
