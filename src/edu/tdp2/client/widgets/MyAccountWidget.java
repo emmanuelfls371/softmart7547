@@ -46,6 +46,7 @@ public class MyAccountWidget extends SimplePanel
 		table.setCellPadding(10);
 		addRow(new HTML("<b>Datos de mi cuenta</b>"), ClientUtils.getBackAnchor());
 		addRow(new HTML("Nombre"), new HTML(dto.getNombre()));
+		addRow(new HTML("Apellido"), new HTML(dto.getApellido()));
 		addRow(new HTML("Pais"), new HTML(dto.getPais()));
 		addRow(new HTML("E-mail"), new HTML(dto.getEmail()));
 		addRow(new HTML("Usuario"), new HTML(dto.getUsuario()));
@@ -53,8 +54,8 @@ public class MyAccountWidget extends SimplePanel
 		addRow(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
 
 		MyCompradorAccount comprador = dto.getDatosComprador();
-		addRow(new HTML("Reputación como comprador"), new HTML(((Float) comprador.getReputacion()).toString()));
-		addRow(new HTML("Proyectos con ofertas aceptadas por mí donde no recibí calificación"), new ProjectList(
+		addRow(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
+		addRow(new HTML("Proyectos propios con ofertas aceptadas por mí donde no recibí calificación"), new ProjectList(
 				comprador.getProyectosSinRecibirCalif()));
 		addRow(new HTML("Proyectos propios pendientes de calificar"), new ProjectList(comprador
 				.getProyectosSinCalificar()));
@@ -63,14 +64,14 @@ public class MyAccountWidget extends SimplePanel
 		addRow(new HTML("Proyectos propios abiertos"), new ProjectList(comprador.getProyectosAbiertos()));
 
 		MyVendedorAccount vendedor = dto.getDatosVendedor();
-		addRow(new HTML("Reputación como vendedor"), new HTML(((Float) vendedor.getReputacion()).toString()));
+		addRow(new HTML("Reputación como vendedor"), new HTML(((Double) vendedor.getReputacion()).toString()));
 		addRow(new HTML("Proyectos adjudicados a mí donde no recibí calificación"), new ProjectList(vendedor
 				.getProyectosSinRecibirCalif()));
 		addRow(new HTML("Proyectos adjudicados a mí pendientes de calificar"), new ProjectList(vendedor
 				.getProyectosSinCalificar()));
 		addRow(new HTML("Proyectos cerrados adjudicados a mí"), new ProjectList(vendedor.getProyectosCerrados()));
 		addRow(new HTML("Proyectos cancelados adjudicados a mí"), new ProjectList(vendedor.getProyectosCancelados()));
-		addRow(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
+		//addRow(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada())); FIXME
 		addRow(new HTML("Ofertas abiertas"), new ProjectList(vendedor.getProyectosConOfertasAbiertas()));
 
 		add(table);
@@ -85,7 +86,7 @@ public class MyAccountWidget extends SimplePanel
 
 	public class EarningsMap extends Widget
 	{
-		public EarningsMap(Map<Moneda, Float> gananciaAcumulada)
+		public EarningsMap(Map<Moneda, Long> gananciaAcumulada)
 		{
 			VerticalPanel panel = new VerticalPanel();
 			for (Moneda moneda : gananciaAcumulada.keySet())

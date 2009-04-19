@@ -1,8 +1,8 @@
 package edu.tdp2.client.dto;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
@@ -11,15 +11,15 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 {
 	private static final long serialVersionUID = -6866869107363384714L;
 
-	private HashMap<Moneda, Float> gananciaAcumulada;
+	private Map<Moneda, Long> gananciaAcumulada;
 	private List<Proyecto> proyectosConOfertasAbiertas;
 
-	public HashMap<Moneda, Float> getGananciaAcumulada()
+	public Map<Moneda, Long> getGananciaAcumulada()
 	{
 		return gananciaAcumulada;
 	}
 
-	public void setGananciaAcumulada(HashMap<Moneda, Float> gananciaAcumulada)
+	public void setGananciaAcumulada(Map<Moneda, Long> gananciaAcumulada)
 	{
 		this.gananciaAcumulada = gananciaAcumulada;
 	}
@@ -31,6 +31,6 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 
 	public void setProyectosConOfertasAbiertas(List<Proyecto> ofertasAbiertas)
 	{
-		this.proyectosConOfertasAbiertas = ofertasAbiertas;
+		this.proyectosConOfertasAbiertas = prune(ofertasAbiertas);
 	}
 }

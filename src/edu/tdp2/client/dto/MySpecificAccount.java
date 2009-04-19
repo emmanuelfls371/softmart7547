@@ -1,12 +1,15 @@
 package edu.tdp2.client.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import edu.tdp2.client.model.Proyecto;
 
-public abstract class MySpecificAccount
+public abstract class MySpecificAccount implements Serializable
 {
-	private float reputacion;
+	private static final long serialVersionUID = -1998544287124768279L;
+
+	private double reputacion;
 
 	/**
 	 * Como comprador: Total de ofertas aceptadas sin recibir calificación.
@@ -25,12 +28,12 @@ public abstract class MySpecificAccount
 	private List<Proyecto> proyectosCerrados;
 	private List<Proyecto> proyectosCancelados;
 
-	public float getReputacion()
+	public double getReputacion()
 	{
 		return reputacion;
 	}
 
-	public void setReputacion(float reputacion)
+	public void setReputacion(double reputacion)
 	{
 		this.reputacion = reputacion;
 	}
@@ -42,7 +45,7 @@ public abstract class MySpecificAccount
 
 	public void setProyectosSinRecibirCalif(List<Proyecto> proyectosSinRecibirCalif)
 	{
-		this.proyectosSinRecibirCalif = proyectosSinRecibirCalif;
+		this.proyectosSinRecibirCalif = prune(proyectosSinRecibirCalif);
 	}
 
 	public List<Proyecto> getProyectosSinCalificar()
@@ -52,7 +55,7 @@ public abstract class MySpecificAccount
 
 	public void setProyectosSinCalificar(List<Proyecto> contratosSinCalificar)
 	{
-		this.proyectosSinCalificar = contratosSinCalificar;
+		this.proyectosSinCalificar = prune(contratosSinCalificar);
 	}
 
 	public List<Proyecto> getProyectosCerrados()
@@ -62,7 +65,7 @@ public abstract class MySpecificAccount
 
 	public void setProyectosCerrados(List<Proyecto> proyectosCerrados)
 	{
-		this.proyectosCerrados = proyectosCerrados;
+		this.proyectosCerrados = prune(proyectosCerrados);
 	}
 
 	public List<Proyecto> getProyectosCancelados()
@@ -72,6 +75,13 @@ public abstract class MySpecificAccount
 
 	public void setProyectosCancelados(List<Proyecto> proyectosCancelados)
 	{
-		this.proyectosCancelados = proyectosCancelados;
+		this.proyectosCancelados = prune(proyectosCancelados);
+	}
+
+	protected List<Proyecto> prune(List<Proyecto> proyectos)
+	{
+		for (Proyecto proyecto : proyectos)
+			proyecto.prune();
+		return proyectos;
 	}
 }

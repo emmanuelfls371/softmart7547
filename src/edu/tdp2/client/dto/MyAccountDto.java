@@ -10,12 +10,13 @@ public class MyAccountDto implements Serializable, Dto
 
 	private NivelReputacion nivel;
 	private String nombre;
+	private String apellido;
 	private String pais;
 	private String ciudad;
 	private String email;
 	private String usuario;
-	private MyVendedorAccount datosVendedor;
-	private MyCompradorAccount datosComprador;
+	private MyVendedorAccount datosVendedor = new MyVendedorAccount();
+	private MyCompradorAccount datosComprador = new MyCompradorAccount();
 
 	public NivelReputacion getNivel()
 	{
@@ -82,18 +83,28 @@ public class MyAccountDto implements Serializable, Dto
 		return datosVendedor;
 	}
 
-	public void setDatosVendedor(MyVendedorAccount datosVendedor)
-	{
-		this.datosVendedor = datosVendedor;
-	}
-
 	public MyCompradorAccount getDatosComprador()
 	{
 		return datosComprador;
 	}
 
+	public void setDatosVendedor(MyVendedorAccount datosVendedor)
+	{
+		this.datosVendedor = datosVendedor;
+	}
+
 	public void setDatosComprador(MyCompradorAccount datosComprador)
 	{
 		this.datosComprador = datosComprador;
+	}
+
+	public void setApellido(String apellido)
+	{
+		this.apellido = apellido;
+	}
+
+	public String getApellido()
+	{
+		return apellido;
 	}
 }

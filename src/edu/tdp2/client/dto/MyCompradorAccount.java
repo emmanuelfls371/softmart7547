@@ -18,6 +18,6 @@ public class MyCompradorAccount extends MySpecificAccount implements Serializabl
 
 	public void setProyectosAbiertos(List<Proyecto> proyectosAbiertos)
 	{
-		this.proyectosAbiertos = proyectosAbiertos;
+		this.proyectosAbiertos = prune(proyectosAbiertos);
 	}
 }
