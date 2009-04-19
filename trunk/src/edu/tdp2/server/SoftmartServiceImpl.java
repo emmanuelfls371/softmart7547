@@ -1,7 +1,9 @@
 package edu.tdp2.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.NonUniqueResultException;
 
@@ -14,6 +16,8 @@ import edu.tdp2.client.TipoCalificacion;
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.ContratoDto;
 import edu.tdp2.client.dto.MyAccountDto;
+import edu.tdp2.client.dto.MyCompradorAccount;
+import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
@@ -21,6 +25,7 @@ import edu.tdp2.client.model.Calificacion;
 import edu.tdp2.client.model.Ciudad;
 import edu.tdp2.client.model.Contrato;
 import edu.tdp2.client.model.DificultadProyecto;
+import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.NivelReputacion;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Presupuesto;
@@ -531,10 +536,80 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public MyAccountDto getMyAccountData(String usuario)
+	public MyAccountDto getMyAccountData(String login)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Session sess = HibernateUtil.getSession();
+		MyAccountDto dto = new MyAccountDto();
+
+		try
+		{
+			Usuario usuario = (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, login)
+					.uniqueResult();
+			if (usuario == null)
+				throw new SoftmartServerException("No se encuentra el usuario con login: " + login);
+			dto.setNombre(usuario.getNombre());
+			dto.setApellido(usuario.getApellido());
+			dto.setPais(usuario.getCiudad().getPais().getNombre());
+			dto.setEmail(usuario.getEmail());
+			dto.setUsuario(login);
+			dto.setCiudad(usuario.getCiudad().getNombre());
+			dto.setNivel(NivelReputacion.valueOf(usuario.getNivel()));
+
+			MyCompradorAccount comprador = dto.getDatosComprador();
+			comprador.setReputacion((Double) sess.createQuery(
+					"SELECT AVG(califAlComprador.calificacion) FROM Contrato WHERE proyecto.usuario = ?").setParameter(
+					0, usuario).uniqueResult());
+			comprador.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NULL").setParameter(0, usuario)
+					.list());
+			comprador.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE usuario = ? AND contrato.califAlVendedor IS NULL").setParameter(0, usuario)
+					.list());
+			comprador.setProyectosCerrados((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NOT NULL "
+							+ "AND contrato.califAlVendedor IS NOT NULL").setParameter(0, usuario).list());
+			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE usuario = ? AND cancelado = true").setParameter(0, usuario).list());
+			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE usuario = ? AND (contrato IS NULL OR contrato.califAlComprador IS NULL "
+							+ "OR contrato.califAlVendedor IS NULL)").setParameter(0, usuario).list());
+
+			MyVendedorAccount vendedor = dto.getDatosVendedor();
+			vendedor.setReputacion((Double) sess.createQuery(
+					"SELECT AVG(califAlVendedor.calificacion) FROM Contrato WHERE ofertaGanadora.usuario = ?")
+					.setParameter(0, usuario).uniqueResult());
+			vendedor.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NULL")
+					.setParameter(0, usuario).list());
+			vendedor.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlVendedor IS NULL")
+					.setParameter(0, usuario).list());
+			vendedor.setProyectosCerrados((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
+							+ "AND contrato.califAlVendedor IS NOT NULL").setParameter(0, usuario).list());
+			vendedor.setProyectosCancelados((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND cancelado = true").setParameter(0,
+					usuario).list());
+			vendedor.setProyectosConOfertasAbiertas((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto proy JOIN proy.ofertas AS oferta "
+							+ "WHERE oferta.usuario = ? AND oferta.contrato IS NULL").setParameter(0, usuario).list());
+			List<Object[]> ganancia = (List<Object[]>) sess.createQuery(
+					"SELECT contrato.ofertaGanadora.moneda, SUM(contrato.ofertaGanadora.monto) AS monto FROM Proyecto "
+							+ "WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
+							+ "AND contrato.califAlVendedor IS NOT NULL GROUP BY contrato.ofertaGanadora.moneda")
+					.setParameter(0, usuario).list();
+			Map<Moneda, Long> gananciaAcumulada = new HashMap<Moneda, Long>();
+			for (Object[] row : ganancia)
+				gananciaAcumulada.put(Moneda.valueOf((String) row[0]), (Long) row[1]);
+			vendedor.setGananciaAcumulada(gananciaAcumulada);
+
+			return dto;
+		}
+		finally
+		{
+			sess.close();
+		}
 	}
 }
