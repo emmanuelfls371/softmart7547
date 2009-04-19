@@ -50,4 +50,5 @@ public interface SoftmartServiceAsync
 
 	public void getCalificacionesHechas(String user, AsyncCallback<List<ContratoDto>> callback);
 
+	public void cancelarProyecto(Long projectId, AsyncCallback<String> callback);
 }

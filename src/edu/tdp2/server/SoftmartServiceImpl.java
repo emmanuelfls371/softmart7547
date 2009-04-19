@@ -283,10 +283,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Proyecto> projects = (List<Proyecto>) sess
-					.createQuery(
-							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date() AND usuario.login != ?")
-					.setString(0, usuario).list();
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
+					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
+							+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false").setString(0,
+					usuario).list();
 			for (Proyecto project : projects)
 			{
 				project.prune();
@@ -314,7 +314,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			String sql = "FROM Proyecto WHERE ((contrato.ofertaGanadora.usuario.login = :usr "
 					+ "AND contrato.califAlComprador IS NULL) OR (contrato.proyecto.usuario.login = :usr "
-					+ "AND contrato.califAlVendedor IS NULL))";
+					+ "AND contrato.califAlVendedor IS NULL)) AND cancelado = false";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString("usr", user).list();
 			for (Proyecto project : projects)
 				project.prune();
@@ -334,7 +334,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			String sql = "FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-					+ "AND fecha >= current_date() AND proy.usuario.login = ?";
+					+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString(0, user).list();
 			for (Proyecto project : projects)
 				project.prune();
@@ -456,7 +456,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	@SuppressWarnings("unchecked")
 	private List<ContratoDto> getCalificaciones(String sql, String user, TipoCalificacion tipo)
 	{
-
 		Session sess = HibernateUtil.getSession();
 
 		try
@@ -501,4 +500,28 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
+	public String cancelarProyecto(Long projectId)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Proyecto project = (Proyecto) sess.get(Proyecto.class, projectId);
+			if (project == null)
+				throw new SoftmartServerException("No se encuentra el proyecto con id: " + projectId);
+			if (project.isCancelado())
+				throw new SoftmartServerException("El proyecto ya esta cancelado");
+			project.setCancelado(true);
+			TransactionWrapper.save(sess, project);
+			return null;
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 }

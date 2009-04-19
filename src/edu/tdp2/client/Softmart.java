@@ -9,6 +9,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -23,13 +24,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.dto.ContratoDto;
-
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.Usuario;
-import edu.tdp2.client.widgets.NewCalificationWidget;
+import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
+import edu.tdp2.client.widgets.NewCalificationWidget;
 import edu.tdp2.client.widgets.NewOfertaWidget;
 import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
@@ -152,7 +153,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		table.setWidget(2, 2, menuLink);
-		centerPanel.add(table);
 
 		table.setWidget(3, 0, new Label("Proyectos propios abiertos"));
 		final ProjectList ownOpenProjects = new OwnOpenProjectList(LoginWidget.getCurrentUser());
@@ -186,7 +186,38 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		table.setWidget(3, 3, menuLink);
-		centerPanel.add(table);
+		menuLink = new Anchor("Cancelar Proyecto");
+		menuLink.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				if (ownOpenProjects.getSelectedItem() != null
+						&& Window.confirm("¿Seguro de que desea cancelar el proyecto?"))
+				{
+					AsyncCallback<String> projectCallback = new AsyncCallback<String>()
+					{
+						public void onFailure(Throwable caught)
+						{
+							Window.alert("No se pudo cancelar el proyecto");
+						}
+
+						public void onSuccess(String errMsg)
+						{
+							if (errMsg != null)
+								Window.alert(errMsg);
+							else
+							{
+								ownOpenProjects.removeItem(ownOpenProjects.getSelectedIndex());
+								Window.alert("Proyecto cancelado");
+							}
+						}
+					};
+					ClientUtils.getSoftmartService().cancelarProyecto(ownOpenProjects.getSelectedItem().getId(),
+							projectCallback);
+				}
+			}
+		});
+		table.setWidget(3, 3, menuLink);
 
 		table.setWidget(4, 0, new Label("Calificaciones recibidas"));
 		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
@@ -238,9 +269,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		table.setWidget(4, 5, menuLink);
-		centerPanel.add(table);
-
-		centerPanel.add(table);
 
 		table.setWidget(5, 0, new Label("Calificaciones hechas"));
 		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
@@ -293,7 +321,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(5, 5, menuLink);
 		centerPanel.add(table);
-
 	}
 
 	private Widget getWestPanel()
