@@ -71,7 +71,7 @@ public class MyAccountWidget extends SimplePanel
 				.getProyectosSinCalificar()));
 		addRow(new HTML("Proyectos cerrados adjudicados a mí"), new ProjectList(vendedor.getProyectosCerrados()));
 		addRow(new HTML("Proyectos cancelados adjudicados a mí"), new ProjectList(vendedor.getProyectosCancelados()));
-		//addRow(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada())); FIXME
+		addRow(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
 		addRow(new HTML("Ofertas abiertas"), new ProjectList(vendedor.getProyectosConOfertasAbiertas()));
 
 		add(table);
@@ -82,15 +82,15 @@ public class MyAccountWidget extends SimplePanel
 		int row = table.getRowCount();
 		for (int i = 0; i < widgets.length; i++)
 			table.setWidget(row, i, widgets[i]);
+		table.getWidget(row, 0).setWidth("200px");
 	}
 
-	public class EarningsMap extends Widget
+	public class EarningsMap extends VerticalPanel
 	{
 		public EarningsMap(Map<Moneda, Long> gananciaAcumulada)
 		{
-			VerticalPanel panel = new VerticalPanel();
 			for (Moneda moneda : gananciaAcumulada.keySet())
-				panel.add(new HTML(moneda.getDescription() + ": " + gananciaAcumulada.get(moneda)));
+				add(new HTML(moneda.getDescription() + ": " + gananciaAcumulada.get(moneda)));
 		}
 	}
 }
