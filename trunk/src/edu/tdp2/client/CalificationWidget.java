@@ -1,15 +1,12 @@
 package edu.tdp2.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.dto.CalificacionDto;
+import edu.tdp2.client.utils.ClientUtils;
 
 public class CalificationWidget extends VerticalPanel
 {
@@ -45,16 +42,7 @@ public class CalificationWidget extends VerticalPanel
 		table.setWidget(row, 1, new HTML(calif.getComentario()));
 		table.setWidget(row, 2, new HTML(calif.getUsuario()));
 
-		Anchor back = new Anchor("Volver");
-		table.setWidget(table.getRowCount(), 2, back);
-		back.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				History.back();
-			}
-		});
-
+		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
 }

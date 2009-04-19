@@ -152,6 +152,7 @@ public class Oferta extends AbstractDomainObject
 		return moneda;
 	}
 
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj != null && obj instanceof Oferta)

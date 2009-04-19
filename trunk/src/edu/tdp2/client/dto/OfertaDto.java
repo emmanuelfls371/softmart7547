@@ -96,5 +96,4 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 	{
 		return moneda;
 	}
-
 }

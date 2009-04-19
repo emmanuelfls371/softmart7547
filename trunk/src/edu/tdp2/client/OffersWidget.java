@@ -84,15 +84,7 @@ public class OffersWidget extends VerticalPanel
 					table.setWidget(row, COL_HIDDEN, new Hidden("id" + row, oferta.getId().toString()));
 				}
 
-				Anchor back = new Anchor("Volver");
-				table.setWidget(table.getRowCount(), 2, back);
-				back.addClickHandler(new ClickHandler()
-				{
-					public void onClick(ClickEvent event)
-					{
-						History.back();
-					}
-				});
+				table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 
 				table.setWidget(table.getRowCount() - 1, 4, getSubmitButton());
 			}

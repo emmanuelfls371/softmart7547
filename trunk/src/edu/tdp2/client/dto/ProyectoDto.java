@@ -9,9 +9,10 @@ import com.google.gwt.validation.client.interfaces.IValidatable;
 
 public class ProyectoDto implements IValidatable, Serializable, Dto
 {
-
 	private static final long serialVersionUID = 111116217892037317L;
 
+	private long id;
+	
 	@NotEmpty(message = "Debe ingresar el nombre")
 	@NotNull(message = "Debe ingresar el nombre")
 	private String nombre;
@@ -22,14 +23,14 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 
 	private Date Fecha;
 
-	@NotEmpty(message = "Debe ingresar el nivel de reputación")
-	@NotNull(message = "Debe ingresar el nivel de reputación")
+	@NotEmpty(message = "Debe ingresar el nivel de reputaciÃ³n")
+	@NotNull(message = "Debe ingresar el nivel de reputaciÃ³n")
 	private String nivel;
 
 	@NotNull(message = "Debe ingresar la dificultad")
 	private String dificultad;
 
-	@NotNull(message = "Debe ingresar el tamaño")
+	@NotNull(message = "Debe ingresar el tamaÃ±o")
 	private String tamanio;
 
 	private String descripcion;
@@ -142,4 +143,13 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 		this.archivo = archivo;
 	}
 
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+
+	public long getId()
+	{
+		return id;
+	}
 }
