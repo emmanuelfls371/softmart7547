@@ -191,8 +191,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		{
 			public void onClick(ClickEvent event)
 			{
-				if (ownOpenProjects.getSelectedItem() != null
-						&& Window.confirm("¿Seguro de que desea cancelar el proyecto?"))
+				if (ownOpenProjects.getSelectedItem() == null)
+					Window.alert("Debe seleccionar un proyecto para cancelar");
+				else if (Window.confirm("¿Seguro de que desea cancelar el proyecto?"))
 				{
 					AsyncCallback<String> projectCallback = new AsyncCallback<String>()
 					{
