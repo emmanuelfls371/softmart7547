@@ -50,4 +50,5 @@ public interface SoftmartService extends RemoteService
 
 	public List<ContratoDto> getCalificacionesHechas(String user);
 
+	public String cancelarProyecto(Long projectId);
 }

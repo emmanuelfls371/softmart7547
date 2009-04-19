@@ -60,6 +60,29 @@ public class Proyecto extends AbstractDomainObject
 	@OneToOne(mappedBy = "proyecto", fetch = FetchType.LAZY)
 	private Contrato contrato;
 
+	@Column(name = "Cancelado", nullable = false)
+	private boolean cancelado;
+
+	public List<Oferta> getOfertas()
+	{
+		return ofertas;
+	}
+
+	public void setOfertas(List<Oferta> ofertas)
+	{
+		this.ofertas = ofertas;
+	}
+
+	public boolean isCancelado()
+	{
+		return cancelado;
+	}
+
+	public void setCancelado(boolean cancelado)
+	{
+		this.cancelado = cancelado;
+	}
+
 	public String getMoneda()
 	{
 		return moneda;
