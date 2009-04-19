@@ -45,8 +45,9 @@ public interface SoftmartServiceAsync
 	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
 
 	public void chooseOffer(long offerId, AsyncCallback<String> callback);
-	
+
 	public void getCalificacionesRecibidas(String user, AsyncCallback<List<ContratoDto>> callback);
+
 	public void getCalificacionesHechas(String user, AsyncCallback<List<ContratoDto>> callback);
 
 }

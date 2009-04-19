@@ -229,8 +229,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	@SuppressWarnings("unchecked")
 	private Contrato getContrato(Session sess, long projectId)
 	{
-		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.id = ?").setLong(0, projectId)
-				.list();
+		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.id = ?").setLong(0, projectId).list();
 		if (result.size() > 0)
 			return result.get(0);
 		else
@@ -286,10 +285,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			List<Proyecto> projects = (List<Proyecto>) sess
 					.createQuery(
-							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date() AND usuario.login != ?").setString(0, usuario)
-					.list();
-			for (Proyecto project : projects){
-				project.prune();				
+							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND fecha >= current_date() AND usuario.login != ?")
+					.setString(0, usuario).list();
+			for (Proyecto project : projects)
+			{
+				project.prune();
 			}
 			return projects;
 		}
@@ -392,66 +392,84 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
-	
-	
-	public List<ContratoDto> getCalificacionesHechas(String user){
+
+	public List<ContratoDto> getCalificacionesHechas(String user)
+	{
 		String sql = "FROM Contrato WHERE (califVendedor IS NOT NULL AND proyecto.usuario.login=?) OR (califComprador IS NOT NULL AND ofertaGanadora.usuario.login=?)";
 		return getCalificaciones(sql, user, TipoCalificacion.Hecha);
 	}
-	
-	public List<ContratoDto> getCalificacionesRecibidas(String user){
+
+	public List<ContratoDto> getCalificacionesRecibidas(String user)
+	{
 		String sql = "FROM Contrato WHERE (califComprador IS NOT NULL AND proyecto.usuario.login=?) OR (califVendedor IS NOT NULL AND ofertaGanadora.usuario.login=?)";
 		return getCalificaciones(sql, user, TipoCalificacion.Recibida);
 	}
-	
-	private void setCalifVendedor(Contrato c, CalificacionDto calif){
+
+	private void setCalifVendedor(Contrato c, CalificacionDto calif)
+	{
 		calif.setCalificacion(c.getCalifAlVendedor().getCalificacion());
 		calif.setComentario(c.getCalifAlVendedor().getComentario());
 	}
-	
-	private void setCalifComprador(Contrato c, CalificacionDto calif){
+
+	private void setCalifComprador(Contrato c, CalificacionDto calif)
+	{
 		calif.setCalificacion(c.getCalifAlComprador().getCalificacion());
 		calif.setComentario(c.getCalifAlComprador().getComentario());
 	}
-	
-	private CalificacionDto getCalif(TipoCalificacion tipo, Contrato c, String user){
-		CalificacionDto calif=new CalificacionDto();
-		if(tipo.name().compareTo(TipoCalificacion.Recibida.toString())==0){
-			if(c.getProyecto().getUsuario().getLogin().compareTo(user)==0){
-				setCalifComprador(c,calif);
+
+	private CalificacionDto getCalif(TipoCalificacion tipo, Contrato c, String user)
+	{
+		CalificacionDto calif = new CalificacionDto();
+		if (tipo.name().compareTo(TipoCalificacion.Recibida.toString()) == 0)
+		{
+			if (c.getProyecto().getUsuario().getLogin().compareTo(user) == 0)
+			{
+				setCalifComprador(c, calif);
 				calif.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
-			}else if(c.getOfertaGanadora().getUsuario().getLogin().compareTo(user)==0){
-				setCalifVendedor(c,calif);
+			}
+			else if (c.getOfertaGanadora().getUsuario().getLogin().compareTo(user) == 0)
+			{
+				setCalifVendedor(c, calif);
 				calif.setUsuario(c.getProyecto().getUsuario().getLogin());
 			}
-		}else if (tipo.name().compareTo(TipoCalificacion.Hecha.toString())==0){
-			if(c.getProyecto().getUsuario().getLogin().compareTo(user)==0){
-				setCalifVendedor(c,calif);
+		}
+		else if (tipo.name().compareTo(TipoCalificacion.Hecha.toString()) == 0)
+		{
+			if (c.getProyecto().getUsuario().getLogin().compareTo(user) == 0)
+			{
+				setCalifVendedor(c, calif);
 				calif.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
-			}else if(c.getOfertaGanadora().getUsuario().getLogin().compareTo(user)==0){
-				setCalifComprador(c,calif);
+			}
+			else if (c.getOfertaGanadora().getUsuario().getLogin().compareTo(user) == 0)
+			{
+				setCalifComprador(c, calif);
 				calif.setUsuario(c.getProyecto().getUsuario().getLogin());
 			}
-		}else{
+		}
+		else
+		{
 			return null;
 		}
 		return calif;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<ContratoDto> getCalificaciones(String sql, String user, TipoCalificacion tipo) {
-		
+	private List<ContratoDto> getCalificaciones(String sql, String user, TipoCalificacion tipo)
+	{
+
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
-			List<Contrato> contratos = (List<Contrato>) sess.createQuery(sql).setString(0, user).setString(1, user).list();
-			List<ContratoDto> dtos=new ArrayList<ContratoDto>();
-			for(Contrato c: contratos){
-				ContratoDto dto=new ContratoDto();			
+			List<Contrato> contratos = (List<Contrato>) sess.createQuery(sql).setString(0, user).setString(1, user)
+					.list();
+			List<ContratoDto> dtos = new ArrayList<ContratoDto>();
+			for (Contrato c : contratos)
+			{
+				ContratoDto dto = new ContratoDto();
 				dto.setCalif(getCalif(tipo, c, user));
 				dto.setIdContrato(c.getId());
-				ProyectoDto p=new ProyectoDto();
+				ProyectoDto p = new ProyectoDto();
 				p.setArchivo(c.getProyecto().getPathArchivo());
 				p.setDescripcion(c.getProyecto().getDescripcion());
 				p.setDificultad(c.getProyecto().getDificultad());
@@ -460,18 +478,19 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				p.setMoneda(c.getProyecto().getMoneda());
 				p.setNivel(c.getProyecto().getNivel());
 				p.setNombre(c.getProyecto().getNombre());
-				p.setPresupuesto(Presupuesto.armarRango(c.getProyecto().getMinPresupuesto(),c.getProyecto().getMaxPresupuesto()));
+				p.setPresupuesto(Presupuesto.armarRango(c.getProyecto().getMinPresupuesto(), c.getProyecto()
+						.getMaxPresupuesto()));
 				p.setUsuario(c.getProyecto().getUsuario().getLogin());
 				dto.setProyecto(p);
-				
-				OfertaDto f=new OfertaDto();
+
+				OfertaDto f = new OfertaDto();
 				f.setDescripcion(c.getOfertaGanadora().getDescripcion());
 				f.setDias(c.getOfertaGanadora().getDias());
 				f.setMonto(c.getOfertaGanadora().getMonto());
 				f.setMoneda(c.getOfertaGanadora().getMoneda());
 				f.setUsuario(c.getOfertaGanadora().getUsuario().getLogin());
 				dto.setOferta(f);
-				
+
 				dtos.add(dto);
 			}
 			return dtos;
@@ -479,8 +498,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		finally
 		{
 			sess.close();
-		}		
+		}
 	}
 
-	
 }

@@ -11,12 +11,13 @@ import edu.tdp2.client.utils.ClientUtils;
 public class UnassignedProjectList extends ProjectList
 {
 	private String usuario;
+
 	public UnassignedProjectList(String usuario)
 	{
 		super();
-		this.usuario=usuario;
+		this.usuario = usuario;
 		load();
-		
+
 	}
 
 	@Override

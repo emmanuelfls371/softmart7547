@@ -20,7 +20,7 @@ public class ClientUtils
 		endpoint.setServiceEntryPoint(GWT.getModuleBaseURL() + "softmart");
 		return softmartService;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<Map<String, String>> deserializeResults(List serialized)
 	{

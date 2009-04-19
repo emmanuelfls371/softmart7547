@@ -1,9 +1,10 @@
 package edu.tdp2.client;
 
-public enum TipoCalificacion {
+public enum TipoCalificacion
+{
 
-	Recibida ("De"),Hecha("A");
-	
+	Recibida("De"), Hecha("A");
+
 	private TipoCalificacion(String description)
 	{
 		this.description = description;
@@ -20,5 +21,5 @@ public enum TipoCalificacion {
 	{
 		return description;
 	}
-	
+
 }

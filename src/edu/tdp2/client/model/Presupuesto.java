@@ -70,19 +70,22 @@ public final class Presupuesto
 			}
 		return null;
 	}
-	
+
 	public static String armarRango(int min, int max)
 	{
-		String presup=new String();
-		if(max!=-1){
-			presup=presup.concat(String.valueOf(min));
-			presup=presup.concat(separador);
-			presup=presup.concat(String.valueOf(max));
-		}else{
-			presup=presup.concat(rangoFinal);
-			presup=presup.concat(String.valueOf(min));
+		String presup = new String();
+		if (max != -1)
+		{
+			presup = presup.concat(String.valueOf(min));
+			presup = presup.concat(separador);
+			presup = presup.concat(String.valueOf(max));
+		}
+		else
+		{
+			presup = presup.concat(rangoFinal);
+			presup = presup.concat(String.valueOf(min));
 		}
 		return presup;
 	}
-	
+
 }

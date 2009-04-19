@@ -39,7 +39,7 @@ public class Oferta extends AbstractDomainObject
 
 	@OneToOne(mappedBy = "ofertaGanadora", fetch = FetchType.LAZY)
 	private Contrato contrato;
-	
+
 	@Column(name = "Moneda", nullable = false)
 	private String moneda;
 
@@ -137,7 +137,8 @@ public class Oferta extends AbstractDomainObject
 		contrato = null;
 	}
 
-	private void setMoneda(String moneda) {
+	private void setMoneda(String moneda)
+	{
 		boolean existe = false;
 		for (Moneda m : Moneda.values())
 			if (m.name().compareTo(moneda) == 0)
@@ -146,22 +147,32 @@ public class Oferta extends AbstractDomainObject
 			this.moneda = moneda;
 	}
 
-	public String getMoneda() {
+	public String getMoneda()
+	{
 		return moneda;
 	}
-	
-	public boolean equals(Object obj){
-		if(obj!=null && obj instanceof Oferta){
-			Oferta o=(Oferta) obj;
-			if(o.getDias()!=this.getDias())return false;
-			if(o.getMonto()!=this.getMonto())return false;
-			if(!o.getMoneda().equals(this.getMoneda()))return false;
-			if(o.getUsuario().getId()!=this.getUsuario().getId())return false;
-			if(o.getProyecto().getId()!=this.getProyecto().getId())return false;
+
+	public boolean equals(Object obj)
+	{
+		if (obj != null && obj instanceof Oferta)
+		{
+			Oferta o = (Oferta) obj;
+			if (o.getDias() != this.getDias())
+				return false;
+			if (o.getMonto() != this.getMonto())
+				return false;
+			if (!o.getMoneda().equals(this.getMoneda()))
+				return false;
+			if (o.getUsuario().getId() != this.getUsuario().getId())
+				return false;
+			if (o.getProyecto().getId() != this.getProyecto().getId())
+				return false;
 			return true;
-		}else{
+		}
+		else
+		{
 			return false;
 		}
 	}
-	
+
 }
