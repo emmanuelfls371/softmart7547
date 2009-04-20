@@ -35,6 +35,7 @@ import edu.tdp2.client.widgets.NewCalificationWidget;
 import edu.tdp2.client.widgets.NewOfertaWidget;
 import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
+import edu.tdp2.client.widgets.SearchWidget;
 import edu.tdp2.client.widgets.UnassignedProjectList;
 
 /**
@@ -107,6 +108,17 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		table.setWidget(0, 2, menuLink);
+		
+		table.setWidget(1, 0, new Label("Buscar por filtros"));
+		Anchor menuLinkBuscar = new Anchor("Buscar");
+		menuLinkBuscar.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				onShowSearch();
+			}
+		});
+		table.setWidget(1, 2, menuLinkBuscar);
 
 		table.setWidget(1, 0, new Label("Nuevo proyecto"));
 		menuLink = new Anchor("Publicar");
@@ -185,7 +197,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			{
 				if (ownOpenProjects.getSelectedItem() == null)
 					Window.alert("Debe seleccionar un proyecto para cancelar");
-				else if (Window.confirm("¿Seguro de que desea cancelar el proyecto?"))
+				else if (Window.confirm("Â¿Seguro de que desea cancelar el proyecto?"))
 				{
 					AsyncCallback<String> projectCallback = new AsyncCallback<String>()
 					{
@@ -215,7 +227,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		table.setWidget(5, 0, new Label("Calificaciones recibidas"));
 		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
 		table.setWidget(5, 1, calif);
-		menuLink = new Anchor("Ver calificación");
+		menuLink = new Anchor("Ver calificaciÃ³n");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -239,7 +251,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		table.setWidget(6, 0, new Label("Calificaciones hechas"));
 		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
 		table.setWidget(6, 1, calif2);
-		menuLink = new Anchor("Ver calificación");
+		menuLink = new Anchor("Ver calificaciÃ³n");
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -418,6 +430,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	{
 		putAlone(new CalificationWidget(contrato.getCalif(), contrato.getProyecto().getNombre(), tipo));
 	}
+	
+	private void onShowSearch()
+	{
+		putAlone(SearchWidget.getInstance(), HistoryToken.onShowSearch.toString());
+	}
 
 	private void putAlone(Widget widget)
 	{
@@ -430,6 +447,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		centerPanel.add(widget);
 	}
+	
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
@@ -464,6 +482,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				break;
 			case onShowMyAccount:
 				onShowMyAccount();
+				break;
+			case onShowSearch:
+				onShowSearch();
 				break;
 			}
 		}

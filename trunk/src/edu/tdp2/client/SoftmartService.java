@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.ContratoDto;
+import edu.tdp2.client.dto.FiltroDto;
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
@@ -54,4 +55,6 @@ public interface SoftmartService extends RemoteService
 	public String cancelarProyecto(Long projectId);
 
 	public MyAccountDto getMyAccountData(String usuario);
+	
+	public List<Proyecto> filterProject(FiltroDto filtro);
 }
