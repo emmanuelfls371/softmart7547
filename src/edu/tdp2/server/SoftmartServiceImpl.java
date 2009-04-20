@@ -15,6 +15,7 @@ import edu.tdp2.client.SoftmartService;
 import edu.tdp2.client.TipoCalificacion;
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.ContratoDto;
+import edu.tdp2.client.dto.FiltroDto;
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.MyCompradorAccount;
 import edu.tdp2.client.dto.MyVendedorAccount;
@@ -606,6 +607,57 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			vendedor.setGananciaAcumulada(gananciaAcumulada);
 
 			return dto;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Proyecto> filterProject(FiltroDto filtro) {
+		
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			String consulta=new String();
+			if(filtro.getPresupuesto()!=null&&filtro.getMoneda()!=null){
+	
+			}
+			if(filtro.getComplejidad()!=null){
+				consulta+=" AND dificultad = '"+filtro.getComplejidad()+"'";
+			}
+			if(filtro.getFechaDesde()!=null){
+				consulta+=" AND fecha >= ?";
+			}else{
+				consulta+=" AND fecha >= current_date()";
+			}			
+			if(filtro.getFechaHasta()!=null){
+				consulta+=" AND fecha <= ?";
+			}
+			if(filtro.getReputacion()!=null && !filtro.getReputacion().isEmpty()){
+				consulta+=" AND nivel = '"+filtro.getReputacion()+"'";
+			}
+			if(filtro.getTamanio()!=null){
+				consulta+=" AND tamanio = '"+filtro.getTamanio()+"'";
+			}
+			
+			if(filtro.getFechaDesde()!=null){
+				
+				
+			}
+			
+			
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
+					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
+							+ "AND usuario.login != ? AND cancelado = false"+consulta).setString(0,
+					filtro.getUsuario()).list();
+			for (Proyecto project : projects)
+			{
+				project.prune();
+			}
+			return projects;
 		}
 		finally
 		{

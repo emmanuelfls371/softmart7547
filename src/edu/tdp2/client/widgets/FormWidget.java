@@ -33,7 +33,7 @@ public abstract class FormWidget extends FormPanel
 	protected Map<FormFields, Widget> widgets = new HashMap<FormFields, Widget>();
 
 	protected native void reload() /*-{
-	   $wnd.location.reload();
+	  $wnd.location.reload();
 	  }-*/;
 
 	protected void buildWidget()

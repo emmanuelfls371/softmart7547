@@ -20,7 +20,7 @@ public class ProjectList extends ListBox
 		setWidth();
 		loadProjects(projects);
 	}
-
+	
 	protected ProjectList()
 	{
 		super();

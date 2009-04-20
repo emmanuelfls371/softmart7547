@@ -142,7 +142,7 @@ public class NewProjectWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar las dificultades");
+				Window.alert("No se pudo recuperar los tamanios");
 			}
 
 			public void onSuccess(List<String> tamanios)
