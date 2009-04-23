@@ -120,7 +120,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		});
 		table.setWidget(1, 2, menuLinkBuscar);
 
-		table.setWidget(1, 0, new Label("Nuevo proyecto"));
+		table.setWidget(2, 0, new Label("Nuevo proyecto"));
 		menuLink = new Anchor("Publicar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -129,11 +129,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				onShowNewProject();
 			}
 		});
-		table.setWidget(1, 2, menuLink);
+		table.setWidget(2, 2, menuLink);
 
-		table.setWidget(2, 0, new Label("Proyectos abiertos para ofertar"));
+		table.setWidget(3, 0, new Label("Proyectos abiertos para ofertar"));
 		final ProjectList unassignedProjects = new UnassignedProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(2, 1, unassignedProjects);
+		table.setWidget(3, 1, unassignedProjects);
 		menuLink = new Anchor("Ofertar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -146,14 +146,14 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowNewOferta(proyecto);
 			}
 		});
-		table.setWidget(2, 2, menuLink);
+		table.setWidget(3, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(getHandlerFormProjectList(unassignedProjects));
-		table.setWidget(2, 3, menuLink);
+		table.setWidget(3, 3, menuLink);
 
-		table.setWidget(3, 0, new Label("Proyectos pendientes de calificar"));
+		table.setWidget(4, 0, new Label("Proyectos pendientes de calificar"));
 		final ProjectList qualifiableProjects = new QualifiableProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(3, 1, qualifiableProjects);
+		table.setWidget(4, 1, qualifiableProjects);
 		menuLink = new Anchor("Calificar");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -166,11 +166,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowNewCalificacion(proyecto);
 			}
 		});
-		table.setWidget(3, 2, menuLink);
+		table.setWidget(4, 2, menuLink);
 
-		table.setWidget(4, 0, new Label("Proyectos propios abiertos"));
+		table.setWidget(5, 0, new Label("Proyectos propios abiertos"));
 		final ProjectList ownOpenProjects = new OwnOpenProjectList(LoginWidget.getCurrentUser());
-		table.setWidget(4, 1, ownOpenProjects);
+		table.setWidget(5, 1, ownOpenProjects);
 		menuLink = new Anchor("Ver ofertas");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -186,10 +186,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				}
 			}
 		});
-		table.setWidget(4, 2, menuLink);
+		table.setWidget(5, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(getHandlerFormProjectList(ownOpenProjects));
-		table.setWidget(4, 3, menuLink);
+		table.setWidget(5, 3, menuLink);
 		menuLink = new Anchor("Cancelar Proyecto");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -222,11 +222,11 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 				}
 			}
 		});
-		table.setWidget(4, 3, menuLink);
+		table.setWidget(5, 3, menuLink);
 
-		table.setWidget(5, 0, new Label("Calificaciones recibidas"));
+		table.setWidget(6, 0, new Label("Calificaciones recibidas"));
 		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
-		table.setWidget(5, 1, calif);
+		table.setWidget(6, 1, calif);
 		menuLink = new Anchor("Ver calificaciÃ³n");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -239,18 +239,18 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowCalification(contrato, TipoCalificacion.Recibida);
 			}
 		});
-		table.setWidget(5, 2, menuLink);
+		table.setWidget(6, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(getHandlerForProjectFromCalifList(calif));
-		table.setWidget(5, 3, menuLink);
+		table.setWidget(6, 3, menuLink);
 
 		menuLink = new Anchor("Ver Oferta Ganadora");
 		menuLink.addClickHandler(getHandlerForOfferFromCalifList(calif));
-		table.setWidget(5, 5, menuLink);
+		table.setWidget(6, 5, menuLink);
 
-		table.setWidget(6, 0, new Label("Calificaciones hechas"));
+		table.setWidget(7, 0, new Label("Calificaciones hechas"));
 		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
-		table.setWidget(6, 1, calif2);
+		table.setWidget(7, 1, calif2);
 		menuLink = new Anchor("Ver calificaciÃ³n");
 		menuLink.addClickHandler(new ClickHandler()
 		{
@@ -263,14 +263,14 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 					onShowCalification(contrato, TipoCalificacion.Hecha);
 			}
 		});
-		table.setWidget(6, 2, menuLink);
+		table.setWidget(7, 2, menuLink);
 		menuLink = new Anchor("Ver Proyecto");
 		menuLink.addClickHandler(getHandlerForProjectFromCalifList(calif2));
-		table.setWidget(6, 3, menuLink);
+		table.setWidget(7, 3, menuLink);
 
 		menuLink = new Anchor("Ver Oferta Ganadora");
 		menuLink.addClickHandler(getHandlerForOfferFromCalifList(calif2));
-		table.setWidget(6, 5, menuLink);
+		table.setWidget(7, 5, menuLink);
 		centerPanel.add(table);
 	}
 
