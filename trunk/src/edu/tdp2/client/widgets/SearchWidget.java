@@ -8,16 +8,18 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -25,19 +27,28 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.Format;
-import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.SoftmartConstants;
-import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.FiltroDto;
-import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 
 
-public class SearchWidget extends FormWidget{
+public class SearchWidget extends VerticalPanel{
+	
+	
+	protected String tituloWidget;
+	protected String anchoWidget;
+	protected String anchoTabla;
+	
+	private ProjectList projectList;
+
+	protected FiltroDto dto;
+	protected Map<FormFields, Widget> widgets = new HashMap<FormFields, Widget>();
+	private FormPanel panelBusqueda;
+	
 	
 	private static SearchWidget instance;
 	private static final Format DATE_FORMAT = new DateFormat();
@@ -56,12 +67,129 @@ public class SearchWidget extends FormWidget{
 		tituloWidget = "<b>Búsqueda por filtros</b>";
 		anchoWidget = "200px";
 		anchoTabla = "100px";
-		url = "search";
 		dto = new FiltroDto();
 		init();
 	}
 
-	@Override
+	private void buildWidget()
+	{
+		panelBusqueda=new FormPanel();
+		FlexTable table = getTabla();
+		panelBusqueda.add(table);
+		//panelBusqueda.addSubmitHandler(new SearchSubmitHandler());
+		//panelBusqueda.addSubmitCompleteHandler(new SearchSubmitCompleteHandler());
+		add(panelBusqueda);
+	}
+	
+	private FlexTable getTabla()
+	{
+		FlexTable table = new FlexTable();
+		table.setWidget(0, 0, new HTML(tituloWidget));
+
+		table.setWidget(0, 1, ClientUtils.getBackAnchor());
+
+		int row = 1;
+		table.getWidget(0, 0).setWidth(anchoWidget);
+		for (FormFields field : this.values())
+		{
+			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));
+			table.setWidget(row, 1, widgets.get(field));
+			row++;
+		}
+		table.setWidget(row, 1, getSubmitPanel());
+		table.setWidth(anchoTabla);
+		return table;
+	}
+	
+	private void init()
+	{
+		this.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+		populateWidgets();
+		buildWidget();
+	}
+	
+	private HorizontalPanel getSubmitPanel()
+	{
+		HorizontalPanel submitPanel = new HorizontalPanel();
+		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		submitPanel.setWidth("100%");
+		Button submit = new Button("Buscar", new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				this.onSubmit(event);
+			}
+
+			private void onSubmit(ClickEvent event) {
+				
+					dto = new FiltroDto();
+					FiltroDto filtroDto = (FiltroDto) dto;
+						
+					FlowPanel panel = (FlowPanel) instance.widgets.get(SearchFields.Presupuesto);
+
+					TextBox rango = (TextBox) panel.getWidget(0);
+					filtroDto.setPresupuesto(rango.getValue());
+
+					ListBox lisMonedas = (ListBox) panel.getWidget(1);
+					filtroDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+
+					DateBox dateFecha = (DateBox) instance.widgets.get(SearchFields.FechaDesde);
+					filtroDto.setFechaDesde(dateFecha.getValue());
+					
+					DateBox dateFecha2 = (DateBox) instance.widgets.get(SearchFields.FechaHasta);
+					filtroDto.setFechaHasta(dateFecha2.getValue());
+					
+					ListBox lisNivel = (ListBox) instance.widgets.get(SearchFields.Nivel);
+					filtroDto.setReputacion(lisNivel.getValue(lisNivel.getSelectedIndex()));
+
+					FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(SearchFields.Dificultad);
+					for (Widget widget : panelDificultad)
+					{
+						RadioButton b = (RadioButton) widget;
+						if (b.getValue())
+							filtroDto.setComplejidad(b.getHTML());
+					}
+
+					FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(SearchFields.Tamanio);
+					for (Widget widget : panelTamanio)
+					{
+						RadioButton b = (RadioButton) widget;
+						if (b.getValue())
+							filtroDto.setTamanio(b.getHTML());
+					}
+					
+					filtroDto.setUsuario(LoginWidget.getCurrentUser());
+					
+					final FiltroDto filtro= (FiltroDto)dto;
+					ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<List<Proyecto>>()
+					{					
+						
+						public void onFailure(Throwable caught)
+						{
+							Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+						}
+					
+
+						public void onSuccess(List<Proyecto> listaProy)
+						{
+							if (listaProy == null)
+								Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+							else{									
+								if(projectList!=null)remove(projectList);
+								projectList=new ProjectList(listaProy);
+								add(projectList);
+							}
+						}
+					});
+
+				
+			}				
+		});
+		submitPanel.add(submit);
+		return submitPanel;
+	}
+
+	
 	protected void populateWidgets()
 	{
 		FlowPanel horiz = new FlowPanel();
@@ -155,161 +283,19 @@ public class SearchWidget extends FormWidget{
 		widgets.put(SearchFields.Tamanio, panel2);
 		
 	}
-	@Override
-	protected void buildWidget()
-	{
-		super.buildWidget();
-		addSubmitHandler(new ProjectSubmitHandler());
-		addSubmitCompleteHandler(new ProjectSubmitCompleteHandler());
-	}
-
-	@Override
-	protected void validate(List<String> errMsgs)
-	{
-		
-	}
-
-	@Override
+	
+	
 	protected FormFields[] values()
 	{
 		return SearchFields.values();
 	}
 
-	private final class ProjectSubmitHandler implements SubmitHandler
-	{
-		public void onSubmit(SubmitEvent event)
-		{
-			dto = new FiltroDto();
-			FiltroDto filtroDto = (FiltroDto) dto;
-				
-			FlowPanel panel = (FlowPanel) instance.widgets.get(SearchFields.Presupuesto);
-
-			TextBox rango = (TextBox) panel.getWidget(0);
-			filtroDto.setPresupuesto(rango.getValue());
-
-			ListBox lisMonedas = (ListBox) panel.getWidget(1);
-			filtroDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
-
-			DateBox dateFecha = (DateBox) instance.widgets.get(SearchFields.FechaDesde);
-			filtroDto.setFechaDesde(dateFecha.getValue());
-			
-			DateBox dateFecha2 = (DateBox) instance.widgets.get(SearchFields.FechaHasta);
-			filtroDto.setFechaHasta(dateFecha2.getValue());
-			
-			ListBox lisNivel = (ListBox) instance.widgets.get(SearchFields.Nivel);
-			filtroDto.setReputacion(lisNivel.getValue(lisNivel.getSelectedIndex()));
-
-			FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(SearchFields.Dificultad);
-			for (Widget widget : panelDificultad)
-			{
-				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					filtroDto.setComplejidad(b.getHTML());
-			}
-
-			FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(SearchFields.Tamanio);
-			for (Widget widget : panelTamanio)
-			{
-				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					filtroDto.setTamanio(b.getHTML());
-			}
-			
-			filtroDto.setUsuario(LoginWidget.getCurrentUser());
-			
-			if (!validate())
-				event.cancel();
-		}
-	}
-	private final class ProjectSubmitCompleteHandler implements SubmitCompleteHandler
-	{
-		public void onSubmitComplete(SubmitCompleteEvent event)
-		{
-			String results = event.getResults();
-			if (results.startsWith("OK:"))
-			{
-
-				final FiltroDto filtro= (FiltroDto)dto;
-				ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<List<Proyecto>>()
-				{					
-					
-					public void onFailure(Throwable caught)
-					{
-						Window.alert("Error inesperado, no se pudo realizar la búsqueda");
-					}
-				
-
-					public void onSuccess(List<Proyecto> listaProy)
-					{
-						if (listaProy == null)
-							Window.alert("Error inesperado, no se pudo realizar la búsqueda");
-						else{
-													
-							clear();
-							setMethod(METHOD_POST);
-							setEncoding(FormPanel.ENCODING_MULTIPART);
-							setAction(GWT.getModuleBaseURL() + url);
-							populateWidgets();
-							
-							//History.newItem("");
-							ProjectList projectList=new ProjectList(listaProy);
-							//add(projectList);
-							widgets.put(SearchFields.ListaProy, projectList);
-							
-							FlowPanel panel = (FlowPanel) instance.widgets.get(SearchFields.Presupuesto);
-							((TextBox)panel.getWidget(0)).setValue(filtro.getPresupuesto());
-							//((ListBox) panel.getWidget(1)).setItemSelected(index, selected);
-							
-							((DateBox) instance.widgets.get(SearchFields.FechaDesde)).setValue(filtro.getFechaDesde());
-							((DateBox) instance.widgets.get(SearchFields.FechaHasta)).setValue(filtro.getFechaHasta());
-							
-							if(filtro.getReputacion()!=null&&!filtro.getReputacion().isEmpty()){							
-								int i=0;
-								boolean encontrado=false;
-								while (i<((ListBox) instance.widgets.get(SearchFields.Nivel)).getItemCount()-1&&encontrado){
-									if(filtro.getReputacion().equals(((ListBox) instance.widgets.get(SearchFields.Nivel)).getValue(i)))
-										encontrado=true;
-									else
-										i++;
-								}
-								((ListBox) instance.widgets.get(SearchFields.Nivel)).setItemSelected(i, true);
-							}
-							if(filtro.getComplejidad()!=null){
-								FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(SearchFields.Dificultad);
-								for (Widget widget : panelDificultad)
-								{
-									RadioButton b = (RadioButton) widget;
-									if (b.getHTML().equals(filtro.getComplejidad()))
-										b.setValue(true);
-								}
-							}
-							if(filtro.getTamanio()!=null){
-								FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(SearchFields.Tamanio);
-								for (Widget widget : panelTamanio)
-								{
-									RadioButton b = (RadioButton) widget;
-									if (b.getHTML().equals(filtro.getTamanio()))
-										b.setValue(true);
-								}
-							}
-							buildWidget();
-							
-						}
-					}
-				});
-
-			}
-			else if (results.startsWith("ERROR:"))
-				Window.alert(results.split(":", 2)[1]);
-			else
-				Window.alert(results);
-		}
-	}
+	
 	
 	private enum SearchFields implements FormFields
 	{
 		Presupuesto, FechaDesde("Fecha desde de cierre de la oferta"), FechaHasta("Fecha hasta de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
-				"Tama&ntilde;o"), ListaProy("Proyectos encontrados");
+				"Tama&ntilde;o");
 
 		private SearchFields(String description)
 		{
@@ -329,9 +315,4 @@ public class SearchWidget extends FormWidget{
 		}
 	}
 
-	@Override
-	protected IValidator<Dto> getValidator()
-	{
-		return GWT.create(FiltroDto.class);
-	}	
 }
