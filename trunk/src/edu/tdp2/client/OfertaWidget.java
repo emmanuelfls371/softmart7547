@@ -44,7 +44,10 @@ public class OfertaWidget extends VerticalPanel
 			public void onSuccess(Oferta oferta)
 			{
 				if (oferta == null)
+				{
 					Window.alert("Este proyecto no tiene una oferta ganadora");
+					History.back();
+				}
 				else
 				{
 					ow.oferta = OfertaDto.fromOferta(oferta);

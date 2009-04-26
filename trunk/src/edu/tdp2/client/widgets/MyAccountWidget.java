@@ -2,30 +2,36 @@ package edu.tdp2.client.widgets;
 
 import java.util.Map;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
-import edu.tdp2.client.ProjectWidget;
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.MyCompradorAccount;
 import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
+import edu.tdp2.client.utils.OneParamDelegate;
 
-public class MyAccountWidget extends SimplePanel
+public class MyAccountWidget extends NavigablePanel
 {
-	FlexTable table = new FlexTable();
+	private FlexTable table = new FlexTable();
+
+	private OneParamDelegate<Proyecto> onShowOwnOfertaDelegate = new OneParamDelegate<Proyecto>()
+	{
+		public void invoke(Proyecto p)
+		{
+			onShowOwnOferta(p);
+		}
+	};
 
 	public MyAccountWidget(String usuario)
 	{
@@ -122,20 +128,6 @@ public class MyAccountWidget extends SimplePanel
 		}
 	}
 
-	private Anchor getAnchorForProjects(final ProjectList projects)
-	{
-		Anchor anchor = new Anchor("Ver proyecto");
-		anchor.addClickHandler(getHandlerFormProjectList(projects));
-		return anchor;
-	}
-
-	private Anchor getOfferAnchorForProjects(final ProjectList projects)
-	{
-		Anchor anchor = new Anchor("Ver oferta ganadora");
-		anchor.addClickHandler(getOfferHandlerFormProjectList(projects));
-		return anchor;
-	}
-
 	private Widget getOwnOfferAnchorForProjects(ProjectList projects)
 	{
 		Anchor anchor = new Anchor("Ver mi oferta");
@@ -145,67 +137,11 @@ public class MyAccountWidget extends SimplePanel
 
 	private ClickHandler getOwnOfferHandlerFormProjectList(final ProjectList projects)
 	{
-		return new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Proyecto proyecto = projects.getSelectedItem();
-				if (proyecto == null)
-					Window.alert("Debe seleccionar un proyecto");
-				else
-					onShowOwnOferta(proyecto);
-			}
-		};
-	}
-
-	private ClickHandler getOfferHandlerFormProjectList(final ProjectList projects)
-	{
-		return new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Proyecto proyecto = projects.getSelectedItem();
-				if (proyecto == null)
-					Window.alert("Debe seleccionar un proyecto");
-				else
-					onShowOferta(proyecto);
-			}
-		};
-	}
-
-	private ClickHandler getHandlerFormProjectList(final ProjectList projects)
-	{
-		return new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Proyecto proyecto = projects.getSelectedItem();
-				if (proyecto == null)
-					Window.alert("Debe seleccionar un proyecto");
-				else
-					onShowProyecto(proyecto);
-			}
-		};
-	}
-
-	private void onShowProyecto(Proyecto project)
-	{
-		putAlone(new ProjectWidget(project));
-	}
-
-	protected void onShowOferta(Proyecto project)
-	{
-		putAlone(new OfertaWidget(project));
+		return ClientUtils.getHandlerForProjects(projects, onShowOwnOfertaDelegate);
 	}
 
 	protected void onShowOwnOferta(Proyecto project)
 	{
 		putAlone(new OfertaWidget(project, LoginWidget.getCurrentUser()));
-	}
-
-	private void putAlone(Widget widget)
-	{
-		clear();
-		add(widget);
 	}
 }

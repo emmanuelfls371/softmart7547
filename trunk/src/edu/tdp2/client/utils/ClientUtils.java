@@ -9,11 +9,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Anchor;
 
+import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.SoftmartService;
 import edu.tdp2.client.SoftmartServiceAsync;
+import edu.tdp2.client.model.Proyecto;
 
 public class ClientUtils
 {
@@ -63,5 +66,21 @@ public class ClientUtils
 			if (t != null)
 				return t;
 		return null;
+	}
+
+	public static ClickHandler getHandlerForProjects(final ProjectList projects,
+			final OneParamDelegate<Proyecto> delegate)
+	{
+		return new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Proyecto proyecto = projects.getSelectedItem();
+				if (proyecto == null)
+					Window.alert("Debe seleccionar un proyecto");
+				else
+					delegate.invoke(proyecto);
+			}
+		};
 	}
 }
