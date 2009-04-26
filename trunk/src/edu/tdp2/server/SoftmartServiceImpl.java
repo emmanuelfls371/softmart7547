@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.management.Query;
 import javax.persistence.NonUniqueResultException;
 
 import org.hibernate.Session;
@@ -640,6 +639,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	Moneda buscarMoneda(String nombre){
 		Session sess = HibernateUtil.getSession();
 
@@ -693,8 +693,16 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 						consulta+= ")";
 				}
 			}
-			if(filtro.getComplejidad()!=null){
-				consulta+=" AND dificultad = '"+filtro.getComplejidad()+"'";
+			if(filtro.getComplejidad()!=null&&!filtro.getComplejidad().isEmpty()){
+				consulta+=" AND (";
+				int pos=0;
+				for(String c: filtro.getComplejidad()){
+					consulta+="dificultad = '"+c+"'";
+					pos++;
+					if(pos!= filtro.getComplejidad().size())
+						consulta+=" OR ";
+				}
+				consulta+=")";
 			}
 			if(filtro.getFechaDesde()!=null){
 				consulta+=" AND fecha >= :fecha_desde";
@@ -707,8 +715,16 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if(filtro.getReputacion()!=null && !filtro.getReputacion().isEmpty()){
 				consulta+=" AND nivel = '"+filtro.getReputacion()+"'";
 			}
-			if(filtro.getTamanio()!=null){
-				consulta+=" AND tamanio = '"+filtro.getTamanio()+"'";
+			if(filtro.getTamanio()!=null&&!filtro.getTamanio().isEmpty()){
+				consulta+=" AND (";
+				int pos=0;
+				for(String t: filtro.getTamanio()){
+					consulta+="tamanio = '"+t+"'";
+					pos++;
+					if(pos!= filtro.getTamanio().size())
+						consulta+=" OR ";
+				}
+				consulta+=")";
 			}
 			List<Proyecto> projects = null;
 			if(filtro.getFechaDesde()!=null&&filtro.getFechaHasta()==null){
