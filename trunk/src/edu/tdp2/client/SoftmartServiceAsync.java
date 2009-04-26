@@ -11,6 +11,7 @@ import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
 
@@ -28,7 +29,7 @@ public interface SoftmartServiceAsync
 
 	public void getNiveles(AsyncCallback<List<String>> callback);
 
-	public void getPresupuestos(AsyncCallback<List<String>> callback);
+	public void getPresupuestos(Float conversion, AsyncCallback<List<String>> callback);
 
 	public void getDificultades(AsyncCallback<List<String>> callback);
 
@@ -57,5 +58,6 @@ public interface SoftmartServiceAsync
 	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
 
 	public void filterProject(FiltroDto filtro, AsyncCallback<List<Proyecto>> callback);
-
+	
+	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
 }

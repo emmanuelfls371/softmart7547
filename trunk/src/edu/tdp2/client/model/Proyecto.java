@@ -47,8 +47,9 @@ public class Proyecto extends AbstractDomainObject
 	@Column(name = "PathArchivo", length = 255)
 	private String pathArchivo;
 
-	@Column(name = "Moneda", nullable = false)
-	private String moneda;
+	@ManyToOne()
+	@JoinColumn(name = "Moneda", nullable = false)
+	private Moneda moneda;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "Usuario", nullable = false)
@@ -83,19 +84,14 @@ public class Proyecto extends AbstractDomainObject
 		this.cancelado = cancelado;
 	}
 
-	public String getMoneda()
+	public Moneda getMoneda()
 	{
 		return moneda;
 	}
 
-	private void setMoneda(String moneda)
+	private void setMoneda(Moneda moneda)
 	{
-		boolean existe = false;
-		for (Moneda m : Moneda.values())
-			if (m.name().compareTo(moneda) == 0)
-				existe = true;
-		if (existe)
-			this.moneda = moneda;
+		this.moneda = moneda;
 	}
 
 	public Contrato getContrato()
@@ -136,7 +132,7 @@ public class Proyecto extends AbstractDomainObject
 	{
 	}
 
-	public Proyecto(ProyectoDto dto, Usuario usuario)
+	public Proyecto(ProyectoDto dto, Usuario usuario, Moneda moneda)
 	{
 		this.setNombre(dto.getNombre());
 		this.setNivel(dto.getNivel());
@@ -148,7 +144,7 @@ public class Proyecto extends AbstractDomainObject
 		this.setMaxPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(1));
 		this.setUsuario(usuario);
 		this.setFecha(dto.getFecha());
-		this.setMoneda(dto.getMoneda());
+		this.setMoneda(moneda);
 	}
 
 	public Usuario getUsuario()

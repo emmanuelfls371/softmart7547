@@ -11,6 +11,7 @@ import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
 
@@ -32,7 +33,7 @@ public interface SoftmartService extends RemoteService
 
 	public List<String> getNiveles();
 
-	public List<String> getPresupuestos();
+	public List<String> getPresupuestos(Float conversion);
 
 	public List<String> getDificultades();
 
@@ -57,4 +58,6 @@ public interface SoftmartService extends RemoteService
 	public MyAccountDto getMyAccountData(String usuario);
 	
 	public List<Proyecto> filterProject(FiltroDto filtro);
+	
+	public List<Moneda> buscarMonedas();
 }

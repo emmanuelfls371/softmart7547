@@ -21,10 +21,6 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.Format;
 
@@ -76,8 +72,6 @@ public class SearchWidget extends VerticalPanel{
 		panelBusqueda=new FormPanel();
 		FlexTable table = getTabla();
 		panelBusqueda.add(table);
-		//panelBusqueda.addSubmitHandler(new SearchSubmitHandler());
-		//panelBusqueda.addSubmitCompleteHandler(new SearchSubmitCompleteHandler());
 		add(panelBusqueda);
 	}
 	
@@ -128,9 +122,12 @@ public class SearchWidget extends VerticalPanel{
 					FlowPanel panel = (FlowPanel) instance.widgets.get(SearchFields.Presupuesto);
 
 					TextBox rango = (TextBox) panel.getWidget(0);
-					filtroDto.setPresupuesto(rango.getValue());
+					filtroDto.setPresupuestoDesde(rango.getValue());
+					
+					TextBox rango2 = (TextBox) panel.getWidget(1);
+					filtroDto.setPresupuestoHasta(rango2.getValue());
 
-					ListBox lisMonedas = (ListBox) panel.getWidget(1);
+					ListBox lisMonedas = (ListBox) panel.getWidget(2);
 					filtroDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
 
 					DateBox dateFecha = (DateBox) instance.widgets.get(SearchFields.FechaDesde);
@@ -160,53 +157,89 @@ public class SearchWidget extends VerticalPanel{
 					
 					filtroDto.setUsuario(LoginWidget.getCurrentUser());
 					
-					final FiltroDto filtro= (FiltroDto)dto;
-					ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<List<Proyecto>>()
-					{					
+					try
+					{
+						if(!(filtroDto.getPresupuestoDesde()==null || filtroDto.getPresupuestoDesde().isEmpty()))
+							Float.parseFloat(filtroDto.getPresupuestoDesde());
 						
-						public void onFailure(Throwable caught)
-						{
+						if(!(filtroDto.getPresupuestoHasta()==null || filtroDto.getPresupuestoHasta().isEmpty()))
+							Float.parseFloat(filtroDto.getPresupuestoHasta());
+						
+						if(!(filtroDto.getPresupuestoDesde()==null||filtroDto.getPresupuestoDesde().isEmpty())&&(filtroDto.getMoneda()==null||filtroDto.getMoneda().isEmpty()))
 							Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+						else if(!(filtroDto.getPresupuestoHasta()==null||filtroDto.getPresupuestoHasta().isEmpty())&&(filtroDto.getMoneda()==null||filtroDto.getMoneda().isEmpty()))
+							Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+						else{			
+							final FiltroDto filtro= (FiltroDto)dto;
+							ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<List<Proyecto>>()
+							{					
+								
+								public void onFailure(Throwable caught)
+								{
+									Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+								}
+							
+		
+								public void onSuccess(List<Proyecto> listaProy)
+								{
+									if (listaProy == null)
+										Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+									else{									
+										if(projectList!=null)remove(projectList);
+										projectList=new ProjectList(listaProy);
+										add(projectList);
+									}
+								}
+							});
 						}
+					}catch (NumberFormatException e)
+					{
+						Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+					}
+			}
 					
-
-						public void onSuccess(List<Proyecto> listaProy)
-						{
-							if (listaProy == null)
-								Window.alert("Error inesperado, no se pudo realizar la búsqueda");
-							else{									
-								if(projectList!=null)remove(projectList);
-								projectList=new ProjectList(listaProy);
-								add(projectList);
-							}
-						}
-					});
-
-				
-			}				
 		});
 		submitPanel.add(submit);
-		return submitPanel;
+		return submitPanel;	
+		
 	}
 
 	
 	protected void populateWidgets()
 	{
-		FlowPanel horiz = new FlowPanel();
+		final FlowPanel horiz = new FlowPanel();
 				
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(SearchFields.Presupuesto.toString());
 		horiz.add(t);
 		
+		TextBox t2 = new TextBox();
+		t2.setMaxLength(50);
+		t2.setName(SearchFields.Presupuesto.toString());
+		horiz.add(t2);
+		
 		final ListBox lisMonedas = new ListBox();
-		lisMonedas.setName(SearchFields.Presupuesto.toString());
+		
+		AsyncCallback<List<Moneda>> callback = new AsyncCallback<List<Moneda>>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert("No se pudo recuperar las monedas");
+			}
 
-		lisMonedas.clear();
-		lisMonedas.addItem("----Elija Moneda----", "");
-		for (Moneda moneda : Moneda.values())
-			lisMonedas.addItem(moneda.getDescription(), moneda.name());
-		horiz.add(lisMonedas);
+			public void onSuccess(List<Moneda> monedas)
+			{
+				lisMonedas.setName(SearchFields.Presupuesto.toString());
+		
+				lisMonedas.clear();
+				lisMonedas.addItem("----Elija Moneda----", "");
+				for (Moneda moneda : monedas)
+					lisMonedas.addItem(moneda.getDescription(), moneda.getDescription());
+				horiz.add(lisMonedas);
+			}
+		};
+		ClientUtils.getSoftmartService().buscarMonedas(callback);
 		widgets.put(SearchFields.Presupuesto, horiz);
 		
 		// Create a basic date picker
@@ -294,7 +327,7 @@ public class SearchWidget extends VerticalPanel{
 	
 	private enum SearchFields implements FormFields
 	{
-		Presupuesto, FechaDesde("Fecha desde de cierre de la oferta"), FechaHasta("Fecha hasta de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
+		Presupuesto ("Presupuesto Desde-Hasta"), FechaDesde("Fecha desde de cierre de la oferta"), FechaHasta("Fecha hasta de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
 				"Tama&ntilde;o");
 
 		private SearchFields(String description)
