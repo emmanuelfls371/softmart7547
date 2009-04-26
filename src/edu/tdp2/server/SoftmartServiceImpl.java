@@ -372,7 +372,51 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
+	public Oferta getOfertaGanadora(Proyecto project)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Oferta offer = (Oferta) sess.createQuery("SELECT ofertaGanadora FROM Contrato AS c WHERE c.proyecto = ?")
+					.setParameter(0, project).uniqueResult();
+			offer.prune();
+			return offer;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	/**
+	 * Obtiene la ultima oferta que el usuario (obtenido por login) haya realizado para el proyecto
+	 */
+	@SuppressWarnings("unchecked")
+	public Oferta getOfertaDeUsuario(Proyecto project, String login)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			List<Oferta> offers = (List<Oferta>) sess.createQuery(
+					"SELECT oferta FROM Proyecto AS proy JOIN proy.ofertas AS oferta "
+							+ "WHERE proy = ? AND oferta.usuario.login = ? ORDER BY oferta.id DESC").setParameter(0,
+					project).setString(1, login).list();
+			if (offers.size() > 0)
+			{
+				offers.get(0).prune();
+				return offers.get(0);
+			}
+			else
+				return null;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
 	public String chooseOffer(long offerId)
 	{
 		Session sess = HibernateUtil.getSession();
@@ -559,10 +603,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			dto.setNivel(NivelReputacion.valueOf(usuario.getNivel()));
 
 			MyCompradorAccount comprador = dto.getDatosComprador();
-			Double reputacionComp=(Double) sess.createQuery("SELECT AVG(califAlComprador.calificacion) FROM Contrato WHERE proyecto.usuario = ?").setParameter(
-			0, usuario).uniqueResult();
-			if(reputacionComp!=null)
-				comprador.setReputacion(reputacionComp);					
+			Double reputacionComp = (Double) sess.createQuery(
+					"SELECT AVG(califAlComprador.calificacion) FROM Contrato WHERE proyecto.usuario = ?").setParameter(
+					0, usuario).uniqueResult();
+			if (reputacionComp != null)
+				comprador.setReputacion(reputacionComp);
 			comprador.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NULL").setParameter(0, usuario)
 					.list());
@@ -579,10 +624,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							+ "OR contrato.califAlVendedor IS NULL)").setParameter(0, usuario).list());
 
 			MyVendedorAccount vendedor = dto.getDatosVendedor();
-			Double reputacionVend=(Double) sess.createQuery(
-			"SELECT AVG(califAlVendedor.calificacion) FROM Contrato WHERE ofertaGanadora.usuario = ?")
-			.setParameter(0, usuario).uniqueResult();
-			if( reputacionVend!=null)
+			Double reputacionVend = (Double) sess.createQuery(
+					"SELECT AVG(califAlVendedor.calificacion) FROM Contrato WHERE ofertaGanadora.usuario = ?")
+					.setParameter(0, usuario).uniqueResult();
+			if (reputacionVend != null)
 				vendedor.setReputacion(reputacionVend);
 			vendedor.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NULL")
@@ -597,12 +642,13 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND cancelado = true").setParameter(0,
 					usuario).list());
 			vendedor.setProyectosConOfertasAbiertas((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto proy JOIN proy.ofertas AS oferta "
-							+ "WHERE oferta.usuario = ? AND oferta.contrato IS NULL").setParameter(0, usuario).list());
-			List<Object[]> ganancia = (List<Object[]>) sess.createQuery(
-					"SELECT contrato.ofertaGanadora.moneda.description, SUM(contrato.ofertaGanadora.monto) AS monto FROM Proyecto "
-							+ "WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
-							+ "AND contrato.califAlVendedor IS NOT NULL GROUP BY contrato.ofertaGanadora.moneda.description")
+					"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
+							+ "WHERE oferta.usuario = ? AND proy.contrato IS EMPTY").setParameter(0, usuario).list());
+			List<Object[]> ganancia = (List<Object[]>) sess
+					.createQuery(
+							"SELECT contrato.ofertaGanadora.moneda.description, SUM(contrato.ofertaGanadora.monto) AS monto FROM Proyecto "
+									+ "WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
+									+ "AND contrato.califAlVendedor IS NOT NULL GROUP BY contrato.ofertaGanadora.moneda.description")
 					.setParameter(0, usuario).list();
 			Map<Moneda, Long> gananciaAcumulada = new HashMap<Moneda, Long>();
 			for (Object[] row : ganancia)
@@ -617,25 +663,25 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Moneda> buscarMonedas(){
+	public List<Moneda> buscarMonedas()
+	{
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
 			return (List<Moneda>) sess.createQuery("FROM Moneda").list();
-			
 		}
 		finally
 		{
 			sess.close();
 		}
 	}
-	
-	Moneda buscarMoneda(String nombre,List<Moneda>  monedas){
-		for(Moneda m: monedas){
-			if(m.getDescription().equals(nombre))
+
+	private Moneda buscarMoneda(String nombre, List<Moneda> monedas)
+	{
+		for (Moneda m : monedas)
+			if (m.getDescription().equals(nombre))
 				return m;
-		}
 		return null;
 	}
 	
@@ -645,52 +691,61 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Moneda> monedas= sess.createQuery("FROM Moneda WHERE nombre = ?").setString(0,nombre).list();
-			if(monedas!=null){
+			List<Moneda> monedas = sess.createQuery("FROM Moneda WHERE nombre = ?").setString(0, nombre).list();
+			if (monedas != null)
 				return monedas.get(0);
-			}else{
+			else
 				return null;
-			}
 		}
 		finally
 		{
 			sess.close();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Proyecto> filterProject(FiltroDto filtro) {
-		
+	public List<Proyecto> filterProject(FiltroDto filtro)
+	{
+
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
-			String consulta=new String();
-			if(filtro.getMoneda()!=null&&!filtro.getMoneda().isEmpty()){
-				List<Moneda> monedas=buscarMonedas();
-				if(filtro.getPresupuestoDesde()!=null&&!filtro.getPresupuestoDesde().isEmpty()){
-						consulta+=" AND (";
-						int pos=0;
-						for(Moneda m: monedas){
-							int rango=(int) (Float.parseFloat(filtro.getPresupuestoDesde())*m.getConversion()/(buscarMoneda(filtro.getMoneda(), monedas).getConversion()));
-							consulta+="((presupuestoMin >= '"+String.valueOf(rango)+"') AND (moneda.description = '"+m.getDescription()+"'))";
-							pos++;
-							if(pos!=monedas.size())
-								consulta+=" OR ";
-						}
-						consulta+= ")";
+			String consulta = new String();
+			if (filtro.getMoneda() != null && !filtro.getMoneda().isEmpty())
+			{
+				List<Moneda> monedas = buscarMonedas();
+				if (filtro.getPresupuestoDesde() != null && !filtro.getPresupuestoDesde().isEmpty())
+				{
+					consulta += " AND (";
+					int pos = 0;
+					for (Moneda m : monedas)
+					{
+						int rango = (int) (Float.parseFloat(filtro.getPresupuestoDesde()) * m.getConversion() / (buscarMoneda(
+								filtro.getMoneda(), monedas).getConversion()));
+						consulta += "((presupuestoMin >= '" + String.valueOf(rango) + "') AND (moneda.description = '"
+								+ m.getDescription() + "'))";
+						pos++;
+						if (pos != monedas.size())
+							consulta += " OR ";
+					}
+					consulta += ")";
 				}
-				if(filtro.getPresupuestoHasta()!=null&&!filtro.getPresupuestoHasta().isEmpty()){
-						consulta+=" AND (";
-						int pos=0;
-						for(Moneda m: monedas){
-							int rango=(int) (Float.parseFloat(filtro.getPresupuestoHasta())/m.getConversion()*(buscarMoneda(filtro.getMoneda(), monedas).getConversion()));
-							consulta+="((presupuestoMax <= '"+String.valueOf(rango)+"') AND (moneda.description = '"+m.getDescription()+"'))";
-							pos++;
-							if(pos!=monedas.size())
-								consulta+=" OR ";
-						}
-						consulta+= ")";
+				if (filtro.getPresupuestoHasta() != null && !filtro.getPresupuestoHasta().isEmpty())
+				{
+					consulta += " AND (";
+					int pos = 0;
+					for (Moneda m : monedas)
+					{
+						int rango = (int) (Float.parseFloat(filtro.getPresupuestoHasta()) / m.getConversion() * (buscarMoneda(
+								filtro.getMoneda(), monedas).getConversion()));
+						consulta += "((presupuestoMax <= '" + String.valueOf(rango) + "') AND (moneda.description = '"
+								+ m.getDescription() + "'))";
+						pos++;
+						if (pos != monedas.size())
+							consulta += " OR ";
+					}
+					consulta += ")";
 				}
 			}
 			if(filtro.getComplejidad()!=null&&!filtro.getComplejidad().isEmpty()){
@@ -727,39 +782,30 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				consulta+=")";
 			}
 			List<Proyecto> projects = null;
-			if(filtro.getFechaDesde()!=null&&filtro.getFechaHasta()==null){
-				
+			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() == null)
 				projects = (List<Proyecto>) sess.createQuery(
 						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false"+consulta).setString("us",
-						filtro.getUsuario()).setDate("fecha_desde",filtro.getFechaDesde()).list();
-				
-			}
-			if(filtro.getFechaHasta()!=null&&filtro.getFechaDesde()==null){
+								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
+						filtro.getUsuario()).setDate("fecha_desde", filtro.getFechaDesde()).list();
+			if (filtro.getFechaHasta() != null && filtro.getFechaDesde() == null)
 				projects = (List<Proyecto>) sess.createQuery(
 						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false"+consulta).setString("us",
-						filtro.getUsuario()).setDate("fecha_hasta",filtro.getFechaHasta()).list();
-			}
-			if(filtro.getFechaDesde()!=null&&filtro.getFechaHasta()!=null){
+								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
+						filtro.getUsuario()).setDate("fecha_hasta", filtro.getFechaHasta()).list();
+			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() != null)
 				projects = (List<Proyecto>) sess.createQuery(
 						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false"+consulta).setString("us",
-						filtro.getUsuario()).setDate("fecha_desde",filtro.getFechaDesde()).setDate("fecha_hasta",filtro.getFechaHasta()).list();
-			
-			}			
-			if(filtro.getFechaHasta()==null&&filtro.getFechaDesde()==null){
+								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
+						filtro.getUsuario()).setDate("fecha_desde", filtro.getFechaDesde()).setDate("fecha_hasta",
+						filtro.getFechaHasta()).list();
+			if (filtro.getFechaHasta() == null && filtro.getFechaDesde() == null)
 				projects = (List<Proyecto>) sess.createQuery(
 						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false"+consulta).setString("us",
+								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
 						filtro.getUsuario()).list();
-			}
-			
-			
+
 			for (Proyecto project : projects)
-			{
 				project.prune();
-			}
 			return projects;
 		}
 		finally

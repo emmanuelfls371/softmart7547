@@ -15,6 +15,7 @@ public class CalificacionRecibidaList extends CalificacionList
 		super(user);
 	}
 
+	@Override
 	protected void doCall(AsyncCallback<List<ContratoDto>> callback)
 	{
 		ClientUtils.getSoftmartService().getCalificacionesRecibidas(user, callback);
