@@ -621,8 +621,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE usuario = ? AND cancelado = true").setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND (contrato IS NULL OR contrato.califAlComprador IS NULL "
-							+ "OR contrato.califAlVendedor IS NULL)").setParameter(0, usuario).list());
+					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
+							+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false").setParameter(0, usuario.getLogin()).list());
 
 			MyVendedorAccount vendedor = dto.getDatosVendedor();
 			Double reputacionVend = (Double) sess.createQuery(
@@ -712,13 +712,19 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
+			boolean primero=true;
 			String consulta = new String();
 			if (filtro.getMoneda() != null && !filtro.getMoneda().isEmpty())
 			{
 				List<Moneda> monedas = buscarMonedas();
 				if (filtro.getPresupuestoDesde() != null && !filtro.getPresupuestoDesde().isEmpty())
 				{
-					consulta += " AND (";
+					if(!primero)
+						consulta += " AND (";
+					else{
+						consulta += " (";
+						primero=true;
+					}
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
@@ -734,7 +740,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				}
 				if (filtro.getPresupuestoHasta() != null && !filtro.getPresupuestoHasta().isEmpty())
 				{
-					consulta += " AND (";
+					if(!primero)
+						consulta += " AND (";
+					else{
+						consulta += " (";
+						primero=true;
+					}
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
@@ -750,7 +761,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				}
 			}
 			if(filtro.getComplejidad()!=null&&!filtro.getComplejidad().isEmpty()){
-				consulta += " AND (";
+				if(!primero)
+					consulta += " AND (";
+				else{
+					consulta += " (";
+					primero=true;
+				}
 				int pos = 0;
 				for(String c: filtro.getComplejidad()){
 					consulta += "dificultad = '" + c + "'";
@@ -761,18 +777,43 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				consulta += ")";
 			}
 			if(filtro.getFechaDesde()!=null){
-				consulta += " AND fecha >= :fecha_desde";
+				if(!primero)
+					consulta += " AND fecha >= :fecha_desde";
+				else{
+					consulta += " fecha >= :fecha_desde";
+					primero=true;
+				}				
 			}else{
-				consulta += " AND fecha >= current_date()";
+				if(!primero)
+					consulta += " AND fecha >= current_date()";
+				else{
+					consulta += " fecha >= current_date()";
+					primero=true;
+				}	
 			}			
 			if(filtro.getFechaHasta()!=null){
-				consulta += " AND fecha <= :fecha_hasta";
+				if(!primero)
+					consulta += " AND fecha <= :fecha_hasta";
+				else{
+					consulta += " fecha <= :fecha_hasta";
+					primero=true;
+				}					
 			}
 			if(filtro.getReputacion()!=null && !filtro.getReputacion().isEmpty()){
-				consulta += " AND nivel = '" + filtro.getReputacion() + "'";
+				if(!primero)
+					consulta += " AND nivel = '" + filtro.getReputacion() + "'";
+				else{
+					consulta += " nivel = '" + filtro.getReputacion() + "'";
+					primero=true;
+				}					
 			}
 			if(filtro.getTamanio()!=null&&!filtro.getTamanio().isEmpty()){
-				consulta += " AND (";
+				if(!primero)
+					consulta += " AND (";
+				else{
+					consulta += " (";
+					primero=true;
+				}
 				int pos = 0;
 				for(String t: filtro.getTamanio()){
 					consulta += "tamanio = '" + t + "'";
@@ -785,25 +826,17 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			List<Proyecto> projects = null;
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() == null)
 				projects = (List<Proyecto>) sess.createQuery(
-						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
-						filtro.getUsuario()).setDate("fecha_desde", filtro.getFechaDesde()).list();
+						"FROM Proyecto WHERE" + consulta).setDate("fecha_desde", filtro.getFechaDesde()).list();
 			if (filtro.getFechaHasta() != null && filtro.getFechaDesde() == null)
 				projects = (List<Proyecto>) sess.createQuery(
-						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
-						filtro.getUsuario()).setDate("fecha_hasta", filtro.getFechaHasta()).list();
+						"FROM Proyecto WHERE" + consulta).setDate("fecha_hasta", filtro.getFechaHasta()).list();
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() != null)
 				projects = (List<Proyecto>) sess.createQuery(
-						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
-						filtro.getUsuario()).setDate("fecha_desde", filtro.getFechaDesde()).setDate("fecha_hasta",
+						"FROM Proyecto WHERE" + consulta).setDate("fecha_desde", filtro.getFechaDesde()).setDate("fecha_hasta",
 						filtro.getFechaHasta()).list();
 			if (filtro.getFechaHasta() == null && filtro.getFechaDesde() == null)
 				projects = (List<Proyecto>) sess.createQuery(
-						"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-								+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
-						filtro.getUsuario()).list();
+						"FROM Proyecto WHERE" + consulta).list();
 
 			for (Proyecto project : projects)
 				project.prune();

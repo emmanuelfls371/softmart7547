@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -23,7 +24,9 @@ import edu.tdp2.client.utils.OneParamDelegate;
 
 public class MyAccountWidget extends NavigablePanel
 {
-	private FlexTable table = new FlexTable();
+	private FlexTable tableDatos = new FlexTable();
+	private FlexTable tableComp = new FlexTable();
+	private FlexTable tableVend = new FlexTable();
 
 	private OneParamDelegate<Proyecto> onShowOwnOfertaDelegate = new OneParamDelegate<Proyecto>()
 	{
@@ -53,65 +56,80 @@ public class MyAccountWidget extends NavigablePanel
 
 	private void init(MyAccountDto dto)
 	{
+		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
-		addRow(new HTML("<b>Datos de mi cuenta</b>"), ClientUtils.getBackAnchor());
-		addRow(new HTML("Nombre"), new HTML(dto.getNombre()));
-		addRow(new HTML("Apellido"), new HTML(dto.getApellido()));
-		addRow(new HTML("Pais"), new HTML(dto.getPais()));
-		addRow(new HTML("E-mail"), new HTML(dto.getEmail()));
-		addRow(new HTML("Usuario"), new HTML(dto.getUsuario()));
-		addRow(new HTML("Ciudad"), new HTML(dto.getCiudad()));
-		addRow(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
+		addRow(table,new HTML("<b>Datos de mi cuenta</b>"),ClientUtils.getBackAnchor());
+		add(table);
+		
+		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
+		tabPanel.setAnimationEnabled(true);
+
+		tableDatos.setCellPadding(10);
+		tableComp.setCellPadding(10);
+		tableVend.setCellPadding(10);
+		
+		addRowDatos(new HTML("Nombre"), new HTML(dto.getNombre()));
+		addRowDatos(new HTML("Apellido"), new HTML(dto.getApellido()));
+		addRowDatos(new HTML("Pais"), new HTML(dto.getPais()));
+		addRowDatos(new HTML("E-mail"), new HTML(dto.getEmail()));
+		addRowDatos(new HTML("Usuario"), new HTML(dto.getUsuario()));
+		addRowDatos(new HTML("Ciudad"), new HTML(dto.getCiudad()));
+		addRowDatos(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
 
 		MyCompradorAccount comprador = dto.getDatosComprador();
-		addRow(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
+		addRowComp(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
 
 		ProjectList projs = new ProjectList(comprador.getProyectosSinRecibirCalif());
-		addRow(new HTML("Proyectos propios con ofertas aceptadas por mí donde no recibí calificación"), projs,
+		addRowComp(new HTML("Proyectos propios con ofertas aceptadas por mí donde no recibí calificación"), projs,
 				getAnchorForProjects(projs), getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(comprador.getProyectosSinCalificar());
-		addRow(new HTML("Proyectos propios pendientes de calificar"), projs, getAnchorForProjects(projs),
+		addRowComp(new HTML("Proyectos propios pendientes de calificar"), projs, getAnchorForProjects(projs),
 				getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(comprador.getProyectosCerrados());
-		addRow(new HTML("Proyectos propios cerrados"), projs, getAnchorForProjects(projs),
+		addRowComp(new HTML("Proyectos propios cerrados"), projs, getAnchorForProjects(projs),
 				getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(comprador.getProyectosCancelados());
-		addRow(new HTML("Proyectos propios cancelados"), projs, getAnchorForProjects(projs));
+		addRowComp(new HTML("Proyectos propios cancelados"), projs, getAnchorForProjects(projs));
 
 		projs = new ProjectList(comprador.getProyectosAbiertos());
-		addRow(new HTML("Proyectos propios abiertos"), projs, getAnchorForProjects(projs));
+		addRowComp(new HTML("Proyectos propios abiertos"), projs, getAnchorForProjects(projs));
 
 		MyVendedorAccount vendedor = dto.getDatosVendedor();
-		addRow(new HTML("Reputación como vendedor"), new HTML(((Double) vendedor.getReputacion()).toString()));
+		addRowVend(new HTML("Reputación como vendedor"), new HTML(((Double) vendedor.getReputacion()).toString()));
 
 		projs = new ProjectList(vendedor.getProyectosSinRecibirCalif());
-		addRow(new HTML("Proyectos adjudicados a mí donde no recibí calificación"), projs, getAnchorForProjects(projs),
+		addRowVend(new HTML("Proyectos adjudicados a mí donde no recibí calificación"), projs, getAnchorForProjects(projs),
 				getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(vendedor.getProyectosSinCalificar());
-		addRow(new HTML("Proyectos adjudicados a mí pendientes de calificar"), projs, getAnchorForProjects(projs),
+		addRowVend(new HTML("Proyectos adjudicados a mí pendientes de calificar"), projs, getAnchorForProjects(projs),
 				getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(vendedor.getProyectosCerrados());
-		addRow(new HTML("Proyectos cerrados adjudicados a mí"), projs, getAnchorForProjects(projs),
+		addRowVend(new HTML("Proyectos cerrados adjudicados a mí"), projs, getAnchorForProjects(projs),
 				getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(vendedor.getProyectosCancelados());
-		addRow(new HTML("Proyectos cancelados adjudicados a mí"), projs, getAnchorForProjects(projs));
+		addRowVend(new HTML("Proyectos cancelados adjudicados a mí"), projs, getAnchorForProjects(projs));
 
-		addRow(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
+		addRowVend(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
 
 		projs = new ProjectList(vendedor.getProyectosConOfertasAbiertas());
-		addRow(new HTML("Proyectos con ofertas abiertas"), projs, getAnchorForProjects(projs),
+		addRowVend(new HTML("Proyectos con ofertas abiertas"), projs, getAnchorForProjects(projs),
 				getOwnOfferAnchorForProjects(projs));
 
-		add(table);
+		tabPanel.add(tableDatos, "Datos Personales");
+		tabPanel.add(tableComp, "Datos Comprador");
+		tabPanel.add(tableVend, "Datos Vendedor");
+		tabPanel.selectTab(0);
+
+		add(tabPanel);
 	}
 
-	private void addRow(Widget... widgets)
+	private void addRow(FlexTable table,Widget... widgets)
 	{
 		int row = table.getRowCount();
 		for (int i = 0; i < widgets.length; i++)
@@ -119,6 +137,18 @@ public class MyAccountWidget extends NavigablePanel
 		table.getWidget(row, 0).setWidth("200px");
 	}
 
+	private void addRowDatos(Widget... widgets){
+		addRow(tableDatos,widgets);
+	}
+	
+	private void addRowComp(Widget... widgets){
+		addRow(tableComp,widgets);
+	}
+	
+	private void addRowVend(Widget... widgets){
+		addRow(tableVend,widgets);
+	}
+	
 	public class EarningsMap extends VerticalPanel
 	{
 		public EarningsMap(Map<Moneda, Long> gananciaAcumulada)

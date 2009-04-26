@@ -41,6 +41,7 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(0, 6, new HTML("Tama&ntilde;o"));
 		table.setWidget(0, 7, new HTML("Descripci&oacute;n"));
 		table.setWidget(0, 8, new HTML("Archivo"));
+		table.setWidget(0, 9, new HTML("¿Cancelado?"));
 
 		int row = 1;
 		table.setWidget(row, 0, new HTML(project.getUsuario().getLogin()));
@@ -58,7 +59,10 @@ public class ProjectWidget extends VerticalPanel
 			table.setWidget(row, 8, new Anchor("Bajar"));
 		else
 			table.setWidget(row, 8, new HTML("No se ha cargado un archivo"));
-
+		if(project.isCancelado())
+			table.setWidget(row, 9, new HTML("Si"));
+		else
+			table.setWidget(row, 9, new HTML("No"));
 		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
