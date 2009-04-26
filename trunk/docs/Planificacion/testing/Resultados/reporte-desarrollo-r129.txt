@@ -1,0 +1,13 @@
+Reporte de desarrollo
+
+19-ERROR-FIX
+22-Fixed
+23-Se ve en la oferta ganadora de cada proy cerrado
+24-Fixed
+25-VER-FIX
+27-Se ve a quien pertenece la oferta
+29-Cambiado. Hay que ver si se arregló
+30-VER-FIX
+34-Es la suma de todo
+35-Son los adjudicados a mi como comprador
+36-Son los adjudicados a mi como vendedor
