@@ -35,20 +35,31 @@ public class NewOfertaWidget extends FormWidget
 		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
 		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
 		instance.projectId = project.getId();
-		instance.moneda = project.getMoneda();
+		instance.moneda = project.getMoneda().getDescription();
 
-		FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-		((ListBox) f.getWidget(1)).clear();
-		// lisMonedas.addItem("----Elija Moneda----", "");
-		for (Moneda moneda : Moneda.values())
+		final FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+		AsyncCallback<List<Moneda>> callback = new AsyncCallback<List<Moneda>>()
 		{
-			if (moneda.name().compareTo(instance.moneda) == 0)
+			public void onFailure(Throwable caught)
 			{
-				((ListBox) f.getWidget(1)).addItem(moneda.getDescription(), moneda.name());
-				((ListBox) f.getWidget(1)).setItemSelected(0, true);
+				Window.alert("No se pudo recuperar las monedas");
 			}
-		}
-		((ListBox) f.getWidget(1)).setEnabled(false);
+
+			public void onSuccess(List<Moneda> monedas)
+			{
+				((ListBox) f.getWidget(1)).clear();
+				for (Moneda moneda : monedas)
+				{
+					if (moneda.getDescription().compareTo(instance.moneda) == 0)
+					{						
+						((ListBox) f.getWidget(1)).addItem(moneda.getDescription(), moneda.getDescription());
+						((ListBox) f.getWidget(1)).setItemSelected(0, true);
+					}
+				}
+				((ListBox) f.getWidget(1)).setEnabled(false);
+			}
+		};
+		ClientUtils.getSoftmartService().buscarMonedas(callback);
 
 		return instance;
 	}

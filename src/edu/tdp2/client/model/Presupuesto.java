@@ -10,7 +10,7 @@ public final class Presupuesto
 	private static String rangoFinal = "Mayor a ";
 	public static int infinito = -1;
 
-	public static List<String> armarRangos()
+	public static List<String> armarRangos(Float conversion)
 	{
 		List<String> lista = new ArrayList<String>();
 		for (int i = 0; i < rangos.length; i++)
@@ -18,16 +18,16 @@ public final class Presupuesto
 			String rango = new String();
 			if (i + 1 != rangos.length)
 			{
-				rango = rango.concat(String.valueOf(rangos[i]));
+				rango = rango.concat(String.valueOf(Float.valueOf(rangos[i]*conversion).intValue()));
 				rango = rango.concat(separador);
-				rango = rango.concat(String.valueOf(rangos[i + 1]));
+				rango = rango.concat(String.valueOf(Float.valueOf(rangos[i + 1]*conversion).intValue()));
 
 				lista.add(rango);
 			}
 		}
 		String rango = new String();
 		rango = rango.concat(rangoFinal);
-		rango = rango.concat(String.valueOf(rangos[rangos.length - 1]));
+		rango = rango.concat(String.valueOf(Float.valueOf(rangos[rangos.length - 1]*conversion).intValue()));
 		lista.add(rango);
 		return lista;
 	}

@@ -1,5 +1,7 @@
 package edu.tdp2.client;
 
+import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -24,6 +26,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.dto.ContratoDto;
+import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.Usuario;
 import edu.tdp2.client.utils.ClientUtils;
@@ -298,14 +301,38 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		{
 			public void onClick(ClickEvent event)
 			{
-				ContratoDto contrato = califs.getSelectedItem();
+				final ContratoDto contrato = califs.getSelectedItem();
 				if (contrato == null)
 					Window.alert("Debe seleccionar un proyecto para ver");
 				else
 				{
-					Usuario us = new Usuario();
+					final Usuario us = new Usuario();
 					us.setLogin(contrato.getProyecto().getUsuario());
-					onShowProyecto(new Proyecto(contrato.getProyecto(), us));
+					AsyncCallback<List<Moneda>> callback = new AsyncCallback<List<Moneda>>()
+					{
+						public void onFailure(Throwable caught)
+						{
+							Window.alert("No se pudo recuperar las monedas");
+						}
+
+						@SuppressWarnings("null")
+						public void onSuccess(List<Moneda> monedas)
+						{
+							if (monedas != null)
+								Window.alert("No se pudo recuperar las monedas");
+							else
+							{
+								Moneda monedaEncontrada=null;
+								for(Moneda m: monedas){
+									if(m.getDescription().equals(contrato.getProyecto().getMoneda()))
+										monedaEncontrada=m;
+								}
+								onShowProyecto(new Proyecto(contrato.getProyecto(), us, monedaEncontrada));
+							}
+						}
+					};
+					ClientUtils.getSoftmartService().buscarMonedas(callback);
+					
 				}
 			}
 		};

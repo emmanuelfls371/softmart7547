@@ -1,19 +1,36 @@
 package edu.tdp2.client.model;
 
-public enum Moneda
-{
-	Peso, Dolar, Euro, Yen("Miles de Yenes"), Yuan;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-	private Moneda(String description)
+
+@Entity
+@Table(name = "Moneda")
+public class Moneda  extends AbstractDomainObject
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Column(name = "Nombre", nullable = false)
+	private String description;
+	@Column(name = "Conversion", nullable = false)
+	private float conversion;
+	
+	public Moneda(){
+		
+	}
+	
+	public Moneda(String description, float conversion)
 	{
 		this.description = description;
+		this.conversion=conversion;
 	}
 
-	private String description;
-
-	private Moneda()
-	{
-		this.description = name();
+	public float getConversion() {
+		return conversion;
 	}
 
 	public String getDescription()

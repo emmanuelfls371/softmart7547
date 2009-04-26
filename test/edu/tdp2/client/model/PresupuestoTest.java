@@ -13,7 +13,7 @@ public class PresupuestoTest extends TestCase
 
 	public void testArmarRangos()
 	{
-		List<String> lista = Presupuesto.armarRangos();
+		List<String> lista = Presupuesto.armarRangos(new Float(1));
 		assertNotNull(lista);
 		int pos = 0;
 		for (String i : lista)

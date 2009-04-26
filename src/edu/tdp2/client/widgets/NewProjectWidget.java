@@ -1,9 +1,13 @@
 package edu.tdp2.client.widgets;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -28,6 +32,8 @@ public class NewProjectWidget extends FormWidget
 	private static NewProjectWidget instance;
 	private static final Format DATE_FORMAT = new DateFormat();
 	private SoftmartConstants constants;
+	
+	protected Map<String, Float> mapMonedas = new HashMap<String, Float>();
 
 	public static NewProjectWidget getInstance()
 	{
@@ -55,37 +61,65 @@ public class NewProjectWidget extends FormWidget
 		t.setName(ProjectFields.Nombre.toString());
 		widgets.put(ProjectFields.Nombre, t);
 
-		FlowPanel horiz = new FlowPanel();
+		final FlowPanel horiz = new FlowPanel();
 
-		final ListBox lisRangos = new ListBox();
-		lisRangos.setName(ProjectFields.Presupuesto.toString());
+		final ListBox lisMonedas = new ListBox();
 
-		AsyncCallback<List<String>> projectCallback = new AsyncCallback<List<String>>()
+		AsyncCallback<List<Moneda>> callback = new AsyncCallback<List<Moneda>>()
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los rangos de presupuesto");
+				Window.alert("No se pudo recuperar las monedas");
 			}
 
-			public void onSuccess(List<String> presupuestos)
+			public void onSuccess(List<Moneda> monedas)
 			{
-				lisRangos.clear();
-				lisRangos.addItem(constants.elijaRango(), "");
-				for (String presup : presupuestos)
-					lisRangos.addItem(presup, presup);
+				lisMonedas.setName(ProjectFields.Presupuesto.toString());
+		
+				lisMonedas.clear();
+				mapMonedas.clear();
+				lisMonedas.addItem("----Elija Moneda----", "");
+				for (Moneda moneda : monedas){
+					lisMonedas.addItem(moneda.getDescription(), moneda.getDescription());
+					mapMonedas.put(moneda.getDescription(), moneda.getConversion());
+				}
+				horiz.add(lisMonedas);
 			}
 		};
-		ClientUtils.getSoftmartService().getPresupuestos(projectCallback);
-		horiz.add(lisRangos);
+		ClientUtils.getSoftmartService().buscarMonedas(callback);
+		
+		final ListBox lisRangos = new ListBox();
+		lisRangos.setName(ProjectFields.Presupuesto.toString());
+		
+		lisMonedas.addChangeHandler(new ChangeHandler(){
+		
+			public void onChange(ChangeEvent event) {
 
-		final ListBox lisMonedas = new ListBox();
-		lisMonedas.setName(ProjectFields.Presupuesto.toString());
+				Float c=mapMonedas.get(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+				
+				AsyncCallback<List<String>> projectCallback = new AsyncCallback<List<String>>()
+				{
+					public void onFailure(Throwable caught)
+					{
+						Window.alert("No se pudo recuperar los rangos de presupuesto");
+					}
 
-		lisMonedas.clear();
-		lisMonedas.addItem("----Elija Moneda----", "");
-		for (Moneda moneda : Moneda.values())
-			lisMonedas.addItem(moneda.getDescription(), moneda.name());
-		horiz.add(lisMonedas);
+					public void onSuccess(List<String> presupuestos)
+					{
+						lisRangos.clear();
+						lisRangos.addItem(constants.elijaRango(), "");
+						for (String presup : presupuestos)
+							lisRangos.addItem(presup, presup);
+					}
+				};
+				if(c!=null){
+					ClientUtils.getSoftmartService().getPresupuestos(c,projectCallback);
+					horiz.add(lisRangos);
+				}
+			}
+		});
+		
+	
 		widgets.put(ProjectFields.Presupuesto, horiz);
 
 		// Create a basic date picker
