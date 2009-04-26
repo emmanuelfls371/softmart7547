@@ -380,7 +380,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			Oferta offer = (Oferta) sess.createQuery("SELECT ofertaGanadora FROM Contrato AS c WHERE c.proyecto = ?")
 					.setParameter(0, project).uniqueResult();
-			offer.prune();
+			if (offer != null)
+				offer.prune();
 			return offer;
 		}
 		finally
@@ -684,7 +685,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				return m;
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	Moneda buscarMoneda(String nombre){
 		Session sess = HibernateUtil.getSession();
@@ -749,37 +750,37 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				}
 			}
 			if(filtro.getComplejidad()!=null&&!filtro.getComplejidad().isEmpty()){
-				consulta+=" AND (";
-				int pos=0;
+				consulta += " AND (";
+				int pos = 0;
 				for(String c: filtro.getComplejidad()){
-					consulta+="dificultad = '"+c+"'";
+					consulta += "dificultad = '" + c + "'";
 					pos++;
-					if(pos!= filtro.getComplejidad().size())
-						consulta+=" OR ";
+					if (pos != filtro.getComplejidad().size())
+						consulta += " OR ";
 				}
-				consulta+=")";
+				consulta += ")";
 			}
 			if(filtro.getFechaDesde()!=null){
-				consulta+=" AND fecha >= :fecha_desde";
+				consulta += " AND fecha >= :fecha_desde";
 			}else{
-				consulta+=" AND fecha >= current_date()";
+				consulta += " AND fecha >= current_date()";
 			}			
 			if(filtro.getFechaHasta()!=null){
-				consulta+=" AND fecha <= :fecha_hasta";
+				consulta += " AND fecha <= :fecha_hasta";
 			}
 			if(filtro.getReputacion()!=null && !filtro.getReputacion().isEmpty()){
-				consulta+=" AND nivel = '"+filtro.getReputacion()+"'";
+				consulta += " AND nivel = '" + filtro.getReputacion() + "'";
 			}
 			if(filtro.getTamanio()!=null&&!filtro.getTamanio().isEmpty()){
-				consulta+=" AND (";
-				int pos=0;
+				consulta += " AND (";
+				int pos = 0;
 				for(String t: filtro.getTamanio()){
-					consulta+="tamanio = '"+t+"'";
+					consulta += "tamanio = '" + t + "'";
 					pos++;
-					if(pos!= filtro.getTamanio().size())
-						consulta+=" OR ";
+					if (pos != filtro.getTamanio().size())
+						consulta += " OR ";
 				}
-				consulta+=")";
+				consulta += ")";
 			}
 			List<Proyecto> projects = null;
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() == null)

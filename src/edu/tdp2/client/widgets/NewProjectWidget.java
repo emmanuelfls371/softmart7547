@@ -32,7 +32,7 @@ public class NewProjectWidget extends FormWidget
 	private static NewProjectWidget instance;
 	private static final Format DATE_FORMAT = new DateFormat();
 	private SoftmartConstants constants;
-	
+
 	protected Map<String, Float> mapMonedas = new HashMap<String, Float>();
 
 	public static NewProjectWidget getInstance()
@@ -75,11 +75,12 @@ public class NewProjectWidget extends FormWidget
 			public void onSuccess(List<Moneda> monedas)
 			{
 				lisMonedas.setName(ProjectFields.Presupuesto.toString());
-		
+
 				lisMonedas.clear();
 				mapMonedas.clear();
 				lisMonedas.addItem("----Elija Moneda----", "");
-				for (Moneda moneda : monedas){
+				for (Moneda moneda : monedas)
+				{
 					lisMonedas.addItem(moneda.getDescription(), moneda.getDescription());
 					mapMonedas.put(moneda.getDescription(), moneda.getConversion());
 				}
@@ -87,16 +88,18 @@ public class NewProjectWidget extends FormWidget
 			}
 		};
 		ClientUtils.getSoftmartService().buscarMonedas(callback);
-		
+
 		final ListBox lisRangos = new ListBox();
 		lisRangos.setName(ProjectFields.Presupuesto.toString());
-		
-		lisMonedas.addChangeHandler(new ChangeHandler(){
-		
-			public void onChange(ChangeEvent event) {
 
-				Float c=mapMonedas.get(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
-				
+		lisMonedas.addChangeHandler(new ChangeHandler()
+		{
+
+			public void onChange(ChangeEvent event)
+			{
+
+				Float c = mapMonedas.get(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+
 				AsyncCallback<List<String>> projectCallback = new AsyncCallback<List<String>>()
 				{
 					public void onFailure(Throwable caught)
@@ -112,14 +115,14 @@ public class NewProjectWidget extends FormWidget
 							lisRangos.addItem(presup, presup);
 					}
 				};
-				if(c!=null){
-					ClientUtils.getSoftmartService().getPresupuestos(c,projectCallback);
+				if (c != null)
+				{
+					ClientUtils.getSoftmartService().getPresupuestos(c, projectCallback);
 					horiz.add(lisRangos);
 				}
 			}
 		});
-		
-	
+
 		widgets.put(ProjectFields.Presupuesto, horiz);
 
 		// Create a basic date picker

@@ -111,7 +111,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 			}
 		});
 		table.setWidget(0, 2, menuLink);
-		
+
 		table.setWidget(1, 0, new Label("Buscar por filtros"));
 		Anchor menuLinkBuscar = new Anchor("Buscar");
 		menuLinkBuscar.addClickHandler(new ClickHandler()
@@ -230,7 +230,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		table.setWidget(6, 0, new Label("Calificaciones recibidas"));
 		final CalificacionList calif = new CalificacionRecibidaList(LoginWidget.getCurrentUser());
 		table.setWidget(6, 1, calif);
-		menuLink = new Anchor("Ver calificaciÃ³n");
+		menuLink = new Anchor("Ver calificaci&oacute;n", true);
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -254,7 +254,7 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		table.setWidget(7, 0, new Label("Calificaciones hechas"));
 		final CalificacionList calif2 = new CalificacionHechaList(LoginWidget.getCurrentUser());
 		table.setWidget(7, 1, calif2);
-		menuLink = new Anchor("Ver calificaciÃ³n");
+		menuLink = new Anchor("Ver calificaci&oacute;n", true);
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -322,17 +322,17 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 								Window.alert("No se pudo recuperar las monedas");
 							else
 							{
-								Moneda monedaEncontrada=null;
+								Moneda monedaEncontrada = null;
 								for(Moneda m: monedas){
-									if(m.getDescription().equals(contrato.getProyecto().getMoneda()))
-										monedaEncontrada=m;
+									if (m.getDescription().equals(contrato.getProyecto().getMoneda()))
+										monedaEncontrada = m;
 								}
 								onShowProyecto(new Proyecto(contrato.getProyecto(), us, monedaEncontrada));
 							}
 						}
 					};
 					ClientUtils.getSoftmartService().buscarMonedas(callback);
-					
+
 				}
 			}
 		};
@@ -457,10 +457,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	{
 		putAlone(new CalificationWidget(contrato.getCalif(), contrato.getProyecto().getNombre(), tipo));
 	}
-	
+
 	private void onShowSearch()
 	{
-		putAlone(SearchWidget.getInstance(), HistoryToken.onShowSearch.toString());
+		putAlone(new SearchWidget(), HistoryToken.onShowSearch.toString());
 	}
 
 	private void putAlone(Widget widget)
@@ -474,7 +474,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		centerPanel.clear();
 		centerPanel.add(widget);
 	}
-	
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
