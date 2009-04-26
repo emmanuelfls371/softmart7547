@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -142,17 +143,17 @@ public class SearchWidget extends VerticalPanel{
 					FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(SearchFields.Dificultad);
 					for (Widget widget : panelDificultad)
 					{
-						RadioButton b = (RadioButton) widget;
+						CheckBox b = (CheckBox) widget;
 						if (b.getValue())
-							filtroDto.setComplejidad(b.getHTML());
+							filtroDto.addComplejidad(b.getHTML());
 					}
 
 					FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(SearchFields.Tamanio);
 					for (Widget widget : panelTamanio)
 					{
-						RadioButton b = (RadioButton) widget;
+						CheckBox b = (CheckBox) widget;
 						if (b.getValue())
-							filtroDto.setTamanio(b.getHTML());
+							filtroDto.addTamanio(b.getHTML());
 					}
 					
 					filtroDto.setUsuario(LoginWidget.getCurrentUser());
@@ -208,14 +209,19 @@ public class SearchWidget extends VerticalPanel{
 	protected void populateWidgets()
 	{
 		final FlowPanel horiz = new FlowPanel();
-				
+		
 		TextBox t = new TextBox();
-		t.setMaxLength(50);
+		t.setMaxLength(10);
 		t.setName(SearchFields.Presupuesto.toString());
+		t.setWidth("100px");
 		horiz.add(t);
 		
+		/*HTML label=new HTML("-");
+		horiz.add(label);*/
+		
 		TextBox t2 = new TextBox();
-		t2.setMaxLength(50);
+		t2.setMaxLength(10);
+		t2.setWidth("100px");
 		t2.setName(SearchFields.Presupuesto.toString());
 		horiz.add(t2);
 		
@@ -289,7 +295,7 @@ public class SearchWidget extends VerticalPanel{
 			{
 				panel.clear();
 				for (String d : dificultades)
-					panel.add(new RadioButton(SearchFields.Dificultad.toString(), d));
+					panel.add(new CheckBox(d));
 			}
 		};
 		ClientUtils.getSoftmartService().getDificultades(dificultadesCallback);
@@ -309,7 +315,7 @@ public class SearchWidget extends VerticalPanel{
 			{
 				panel2.clear();
 				for (String tamanio : tamanios)
-					panel2.add(new RadioButton(SearchFields.Tamanio.toString(), tamanio));
+					panel2.add(new CheckBox(tamanio));
 			}
 		};
 		ClientUtils.getSoftmartService().getTamanios(tamaniosCallback);
