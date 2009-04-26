@@ -47,6 +47,10 @@ public interface SoftmartService extends RemoteService
 
 	public List<Oferta> getOffers(Proyecto project);
 
+	public Oferta getOfertaGanadora(Proyecto project);
+
+	public Oferta getOfertaDeUsuario(Proyecto proyecto, String usuario);
+
 	public String chooseOffer(long offerId);
 
 	public List<ContratoDto> getCalificacionesRecibidas(String user);
@@ -59,5 +63,5 @@ public interface SoftmartService extends RemoteService
 	
 	public List<Proyecto> filterProject(FiltroDto filtro);
 	
-	public List<Moneda> buscarMonedas();
+	public List<Moneda> buscarMonedas();	
 }

@@ -47,6 +47,8 @@ public interface SoftmartServiceAsync
 
 	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
 
+	public void getOfertaGanadora(Proyecto project, AsyncCallback<Oferta> callback);
+
 	public void chooseOffer(long offerId, AsyncCallback<String> callback);
 
 	public void getCalificacionesRecibidas(String user, AsyncCallback<List<ContratoDto>> callback);
@@ -58,6 +60,8 @@ public interface SoftmartServiceAsync
 	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
 
 	public void filterProject(FiltroDto filtro, AsyncCallback<List<Proyecto>> callback);
-	
+
 	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
+
+	public void getOfertaDeUsuario(Proyecto proyecto, String usuario, AsyncCallback<Oferta> callback);
 }
