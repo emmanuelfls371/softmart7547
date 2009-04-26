@@ -51,14 +51,14 @@ public class SearchWidget extends NavigablePanel
 		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
 		tituloWidget = "<b>Búsqueda por filtros</b>";
 		anchoWidget = "200px";
-		anchoTabla = "100px";
+		anchoTabla = "200px";
 		dto = new FiltroDto();
 		init();
 	}
 
 	private void buildWidget()
 	{
-		panelBusqueda = new FormPanel();
+		panelBusqueda = new FormPanel();		
 		FlexTable table = getTabla();
 		panelBusqueda.add(table);
 		add(panelBusqueda);
@@ -68,11 +68,9 @@ public class SearchWidget extends NavigablePanel
 	{
 		FlexTable table = new FlexTable();
 		table.setWidget(0, 0, new HTML(tituloWidget));
-
 		table.setWidget(0, 1, ClientUtils.getBackAnchor());
-
+	
 		int row = 1;
-		table.getWidget(0, 0).setWidth(anchoWidget);
 		for (FormFields field : this.values())
 		{
 			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));
@@ -80,7 +78,7 @@ public class SearchWidget extends NavigablePanel
 			row++;
 		}
 		table.setWidget(row, 1, getSubmitPanel());
-		table.setWidth(anchoTabla);
+		
 		return table;
 	}
 
@@ -109,15 +107,15 @@ public class SearchWidget extends NavigablePanel
 				dto = new FiltroDto();
 				FiltroDto filtroDto = (FiltroDto) dto;
 
-				FlowPanel panel = (FlowPanel) instance.widgets.get(SearchFields.Presupuesto);
+				HorizontalPanel panel = (HorizontalPanel) instance.widgets.get(SearchFields.Presupuesto);
 
 				TextBox rango = (TextBox) panel.getWidget(0);
 				filtroDto.setPresupuestoDesde(rango.getValue());
 
-				TextBox rango2 = (TextBox) panel.getWidget(1);
+				TextBox rango2 = (TextBox) panel.getWidget(2);
 				filtroDto.setPresupuestoHasta(rango2.getValue());
 
-				ListBox lisMonedas = (ListBox) panel.getWidget(2);
+				ListBox lisMonedas = (ListBox) panel.getWidget(3);
 				filtroDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
 
 				DateBox dateFecha = (DateBox) instance.widgets.get(SearchFields.FechaDesde);
@@ -186,9 +184,10 @@ public class SearchWidget extends NavigablePanel
 								FlexTable table = new FlexTable();
 								table.setCellPadding(10);
 								ProjectList projs = new ProjectList(listaProy);
-								table.setWidget(0, 0, projs);
-								table.setWidget(0, 1, getAnchorForProjects(projs));
-								table.setWidget(0, 2, getOfferAnchorForProjects(projs));
+								table.setWidget(0, 0,new HTML("<b>Resultados de la búsqueda</b>"));
+								table.setWidget(1, 1, projs);
+								table.setWidget(1, 2, getAnchorForProjects(projs));
+								table.setWidget(1, 3, getOfferAnchorForProjects(projs));
 								return table;
 							}
 						});
@@ -205,17 +204,17 @@ public class SearchWidget extends NavigablePanel
 
 	protected void populateWidgets()
 	{
-		final FlowPanel horiz = new FlowPanel();
-
+		final HorizontalPanel horiz = new HorizontalPanel();
+		horiz.setSpacing(5);
 		TextBox t = new TextBox();
 		t.setMaxLength(10);
 		t.setName(SearchFields.Presupuesto.toString());
-		t.setWidth("100px");
 		horiz.add(t);
-
+		
+		horiz.add(new HTML(" - "));
+		
 		TextBox t2 = new TextBox();
 		t2.setMaxLength(10);
-		t2.setWidth("100px");
 		t2.setName(SearchFields.Presupuesto.toString());
 		horiz.add(t2);
 
