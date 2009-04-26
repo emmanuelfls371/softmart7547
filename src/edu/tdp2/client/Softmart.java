@@ -315,10 +315,10 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 							Window.alert("No se pudo recuperar las monedas");
 						}
 
-						@SuppressWarnings("null")
+				
 						public void onSuccess(List<Moneda> monedas)
 						{
-							if (monedas != null)
+							if (monedas == null)
 								Window.alert("No se pudo recuperar las monedas");
 							else
 							{
