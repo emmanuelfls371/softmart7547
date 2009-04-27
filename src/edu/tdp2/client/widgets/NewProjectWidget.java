@@ -233,10 +233,10 @@ public class NewProjectWidget extends FormWidget
 
 			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
 
-			ListBox lisRangos = (ListBox) panel.getWidget(0);
+			ListBox lisRangos = (ListBox) panel.getWidget(1);
 			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
 
-			ListBox lisMonedas = (ListBox) panel.getWidget(1);
+			ListBox lisMonedas = (ListBox) panel.getWidget(0);
 			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
 
 			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);

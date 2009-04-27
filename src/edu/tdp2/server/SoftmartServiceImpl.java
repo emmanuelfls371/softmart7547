@@ -583,7 +583,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
+
 	public MyAccountDto getMyAccountData(String login)
 	{
 		Session sess = HibernateUtil.getSession();
@@ -616,13 +616,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					"FROM Proyecto WHERE usuario = ? AND contrato.califAlVendedor IS NULL").setParameter(0, usuario)
 					.list());
 			comprador.setProyectosCerrados((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NOT NULL "
-							+ "AND contrato.califAlVendedor IS NOT NULL").setParameter(0, usuario).list());
+					"FROM Proyecto AS proy WHERE usuario = ? AND proy IN (SELECT proyecto FROM Contrato) AND proy.cancelado = false").setParameter(0, usuario).list());
 			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE usuario = ? AND cancelado = true").setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
-							+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false").setParameter(0, usuario.getLogin()).list());
+					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
+					+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false").setParameter(0, usuario.getLogin()).list());
 
 			MyVendedorAccount vendedor = dto.getDatosVendedor();
 			Double reputacionVend = (Double) sess.createQuery(
