@@ -64,6 +64,9 @@ public class Proyecto extends AbstractDomainObject
 	@Column(name = "Cancelado", nullable = false)
 	private boolean cancelado;
 
+	@Column(name = "Revisado", nullable = false)
+	private boolean revisado;
+
 	public List<Oferta> getOfertas()
 	{
 		return ofertas;
@@ -265,6 +268,16 @@ public class Proyecto extends AbstractDomainObject
 	public void setNombre(String nombre)
 	{
 		this.nombre = nombre;
+	}
+
+	public void setRevisado(boolean revisado)
+	{
+		this.revisado = revisado;
+	}
+
+	public boolean isRevisado()
+	{
+		return revisado;
 	}
 
 	@Override

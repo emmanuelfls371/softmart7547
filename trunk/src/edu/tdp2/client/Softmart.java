@@ -30,7 +30,6 @@ import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.Usuario;
 import edu.tdp2.client.utils.ClientUtils;
-import edu.tdp2.client.widgets.ChangePwListener;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
 import edu.tdp2.client.widgets.MyAccountWidget;
@@ -44,7 +43,7 @@ import edu.tdp2.client.widgets.UnassignedProjectList;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Softmart implements EntryPoint, LoginListener, ChangePwListener
+public class Softmart implements EntryPoint, LoginListener
 {
 	private SoftmartConstants constants;
 	private SoftmartMessages messages;
@@ -59,6 +58,9 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 	 */
 	public void onModuleLoad()
 	{
+		if (RootPanel.get("SoftmartIdentifierDiv") == null)
+			return;
+
 		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
 		messages = (SoftmartMessages) GWT.create(SoftmartMessages.class);
 		History.addValueChangeHandler(new SoftmartHistoryHandler());
@@ -404,12 +406,6 @@ public class Softmart implements EntryPoint, LoginListener, ChangePwListener
 		LoginWidget.setCurrentUser(null);
 		northPanel.clear();
 		showWelcome();
-	}
-
-	public void onChangePw()
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public void onShowRegistration()
