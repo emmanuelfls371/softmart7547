@@ -3,15 +3,11 @@ package edu.tdp2.client.widgets;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
@@ -23,7 +19,6 @@ import edu.tdp2.client.utils.ClientUtils;
 public class RegistrationWidget extends FormWidget
 {
 	private static RegistrationWidget instance;
-	private SuggestCallback suggestCallback;
 
 	public static RegistrationWidget getInstance()
 	{
@@ -94,20 +89,12 @@ public class RegistrationWidget extends FormWidget
 			}
 		};
 		ClientUtils.getSoftmartService().getPaises(callback);
-		lisPaises.addChangeHandler(new ChangeHandler()
-		{
-			public void onChange(ChangeEvent event)
-			{
-				ClientUtils.getSoftmartService().getCiudades(lisPaises.getItemText(lisPaises.getSelectedIndex()),
-						suggestCallback);
-			}
-		});
 		widgets.put(RegistrationFields.Pais, lisPaises);
 
-		MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-		SuggestBox suggestBox = new SuggestBox(oracle);
-		suggestCallback = new SuggestCallback(oracle);
-		widgets.put(RegistrationFields.Ciudad, suggestBox);
+		t = new TextBox();
+		t.setMaxLength(50);
+		t.setName(RegistrationFields.Ciudad.toString());
+		widgets.put(RegistrationFields.Ciudad, t);
 
 		t = new TextBox();
 		t.setName(RegistrationFields.CodPostal.toString());
@@ -138,7 +125,7 @@ public class RegistrationWidget extends FormWidget
 		String fileName = ((FileUpload) widgets.get(RegistrationFields.Logo)).getFilename().toUpperCase();
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
 				&& !fileName.endsWith("JPEG"))
-			errMsgs.add("El archivo debe tener extensión PNG, GIF, JPG o JPEG");
+			errMsgs.add("El archivo debe tener extensiï¿½n PNG, GIF, JPG o JPEG");
 	}
 
 	private final class RegistrationSubmitHandler implements SubmitHandler
@@ -153,7 +140,7 @@ public class RegistrationWidget extends FormWidget
 			((UsuarioDto) dto).setClave(((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText());
 			ListBox lisPaises = (ListBox) instance.widgets.get(RegistrationFields.Pais);
 			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
-			((UsuarioDto) dto).setCiudad(((SuggestBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
+			((UsuarioDto) dto).setCiudad(((TextBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
 			((UsuarioDto) dto).setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
 			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil))
 					.getText());
@@ -218,29 +205,6 @@ public class RegistrationWidget extends FormWidget
 			return description;
 		}
 
-	}
-
-	private class SuggestCallback implements AsyncCallback<List<String>>
-	{
-		private MultiWordSuggestOracle oracle;
-
-		public SuggestCallback(MultiWordSuggestOracle oracle)
-		{
-			this.oracle = oracle;
-		}
-
-		public void onFailure(Throwable caught)
-		{
-			Window.alert("No se pudo recuperar las ciudades");
-		}
-
-		public void onSuccess(List<String> paises)
-		{
-			if (oracle == null)
-				throw new RuntimeException("El oracle no puede ser nulo");
-			oracle.clear();
-			oracle.addAll(paises);
-		}
 	}
 
 	@Override

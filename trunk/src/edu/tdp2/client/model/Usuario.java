@@ -34,8 +34,11 @@ public class Usuario extends AbstractDomainObject
 	private String passwordHash;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Ciudad")
-	private Ciudad ciudad;
+	@JoinColumn(name = "Pais")
+	private Pais pais;
+
+	@Column(name = "Ciudad", length = 50, nullable = false)
+	private String ciudad;
 
 	@Column(name = "CodPostal", length = 10, nullable = false)
 	private String codPostal;
@@ -51,7 +54,7 @@ public class Usuario extends AbstractDomainObject
 
 	@Column(name = "Bloqueado", nullable = false)
 	private boolean bloqueado;
-	
+
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Proyecto> proyectos;
 
@@ -117,7 +120,8 @@ public class Usuario extends AbstractDomainObject
 		email = dto.getEmail();
 		login = dto.getUsuario();
 		passwordHash = dto.getClave();
-		ciudad = (Ciudad) dto.getCiudad();
+		pais = (Pais) dto.getPais();
+		ciudad = dto.getCiudad();
 		codPostal = dto.getCodPostal();
 		descripPerfil = dto.getDescripPerfil();
 		pathLogo = dto.getLogo().isEmpty() ? null : dto.getLogo();
@@ -153,12 +157,12 @@ public class Usuario extends AbstractDomainObject
 		this.login = login;
 	}
 
-	public Ciudad getCiudad()
+	public String getCiudad()
 	{
 		return ciudad;
 	}
 
-	public void setCiudad(Ciudad ciudad)
+	public void setCiudad(String ciudad)
 	{
 		this.ciudad = ciudad;
 	}
@@ -181,6 +185,16 @@ public class Usuario extends AbstractDomainObject
 	public String getPasswordHash()
 	{
 		return passwordHash;
+	}
+
+	public void setPais(Pais pais)
+	{
+		this.pais = pais;
+	}
+
+	public Pais getPais()
+	{
+		return pais;
 	}
 
 	public void setCodPostal(String codPostal)
@@ -237,7 +251,7 @@ public class Usuario extends AbstractDomainObject
 	public void prune()
 	{
 		proyectos = null;
-		ciudad = null;
+		pais = null;
 		ofertas = null;
 	}
 }

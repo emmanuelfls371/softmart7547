@@ -98,6 +98,7 @@ public class SoftmartServiceTest extends TestCase
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Proyecto getProyecto(Session sess, long projectId)
 	{
 		try{
@@ -112,6 +113,7 @@ public class SoftmartServiceTest extends TestCase
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private long getIdProyecto(Session sess, String nombre){
 		try{
 		List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, nombre).list();
@@ -163,6 +165,7 @@ public class SoftmartServiceTest extends TestCase
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public void testGetMyAccountData()
 	{
 		Session sess = HibernateUtil.getSession();
@@ -176,10 +179,10 @@ public class SoftmartServiceTest extends TestCase
 				throw new SoftmartServerException("No se encuentra el usuario con login: " + login);
 			dto.setNombre(usuario.getNombre());
 			dto.setApellido(usuario.getApellido());
-			dto.setPais(usuario.getCiudad().getPais().getNombre());
+			dto.setPais(usuario.getPais().getNombre());
 			dto.setEmail(usuario.getEmail());
 			dto.setUsuario(login);
-			dto.setCiudad(usuario.getCiudad().getNombre());
+			dto.setCiudad(usuario.getCiudad());
 			dto.setNivel(NivelReputacion.valueOf(usuario.getNivel()));
 
 			MyCompradorAccount comprador = dto.getDatosComprador();
@@ -240,6 +243,7 @@ public class SoftmartServiceTest extends TestCase
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Moneda> buscarMonedas(){
 		Session sess = HibernateUtil.getSession();
 
@@ -262,6 +266,7 @@ public class SoftmartServiceTest extends TestCase
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testFilterProject(){
 		Session sess = HibernateUtil.getSession();
 		String consulta=new String();

@@ -35,15 +35,15 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 	@NotNull
 	private String clave;
 
-	@NotEmpty(message = "Debe ingresar el país")
+	@NotEmpty(message = "Debe ingresar el paï¿½s")
 	@NotNull
-	private String pais;
+	private Serializable pais;
 
 	@NotEmpty(message = "Debe ingresar la ciudad")
 	@NotNull
-	private Serializable ciudad;
+	private String ciudad;
 
-	@NotEmpty(message = "Debe ingresar el código postal")
+	@NotEmpty(message = "Debe ingresar el cï¿½digo postal")
 	@NotNull
 	private String codPostal;
 
@@ -91,22 +91,22 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 		this.clave = clave.isEmpty() ? "" : MD5.md5(clave);
 	}
 
-	public String getPais()
+	public Serializable getPais()
 	{
 		return pais;
 	}
 
-	public void setPais(String pais)
+	public void setPais(Serializable pais)
 	{
 		this.pais = pais;
 	}
 
-	public Serializable getCiudad()
+	public String getCiudad()
 	{
 		return ciudad;
 	}
 
-	public void setCiudad(Serializable ciudad)
+	public void setCiudad(String ciudad)
 	{
 		this.ciudad = ciudad;
 	}
