@@ -2,8 +2,10 @@ package edu.tdp2.client.widgets;
 
 import java.util.Map;
 
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -13,6 +15,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.HistoryToken;
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.dto.MyAccountDto;
@@ -22,6 +25,7 @@ import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.utils.OneParamDelegate;
+
 
 public class MyAccountWidget extends NavigablePanel
 {
@@ -57,6 +61,7 @@ public class MyAccountWidget extends NavigablePanel
 
 	private void init(MyAccountDto dto)
 	{
+		
 		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
 		addRow(table,new HTML("<b>Datos de mi cuenta</b>"),ClientUtils.getBackAnchor());
@@ -123,6 +128,7 @@ public class MyAccountWidget extends NavigablePanel
 		addRowVend(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
 
 		projs = new ProjectList(vendedor.getProyectosConOfertasAbiertas());
+		//History.addValueChangeHandler(new MyAccountHistoryHandler());
 		addRowVend(new HTML("Proyectos con ofertas abiertas"), projs, getAnchorForProjects(projs),
 				getOwnOfferAnchorForProjects(projs));
 
@@ -132,6 +138,9 @@ public class MyAccountWidget extends NavigablePanel
 		tabPanel.selectTab(0);
 
 		add(tabPanel);
+		
+		
+		
 	}
 
 	private void addRow(FlexTable table,Widget... widgets)
@@ -163,10 +172,10 @@ public class MyAccountWidget extends NavigablePanel
 		}
 	}
 
-	private Widget getOwnOfferAnchorForProjects(ProjectList projects)
+	private Widget getOwnOfferAnchorForProjects(ProjectList projs)
 	{
 		Anchor anchor = new Anchor("Ver mi oferta");
-		anchor.addClickHandler(getOwnOfferHandlerFormProjectList(projects));
+		anchor.addClickHandler(getOwnOfferHandlerFormProjectList(projs));
 		return anchor;
 	}
 
@@ -175,9 +184,9 @@ public class MyAccountWidget extends NavigablePanel
 		return ClientUtils.getHandlerForProjects(projects, onShowOwnOfertaDelegate);
 	}
 
-	protected void onShowOwnOferta(Proyecto project)
+	protected void onShowOwnOferta(Proyecto proyectoActual)
 	{
-		putAlone(new OfertaWidget(project, LoginWidget.getCurrentUser()));
+		putAlone(new OfertaWidget(proyectoActual, LoginWidget.getCurrentUser()));
 	}
 	
 	private Widget getModificationAnchor(final MyAccountDto dto)
@@ -193,5 +202,37 @@ public class MyAccountWidget extends NavigablePanel
 		return anchor;
 	}
 	
+	public void onModuleLoad(){
+		
+	}
+	
+	/*
+	private class MyAccountHistoryHandler implements ValueChangeHandler<String>
+	{
+		public void onValueChange(ValueChangeEvent<String> event)
+		{
+			HistoryToken token;
+			try
+			{
+				token = HistoryToken.valueOf(event.getValue());
+			}
+			catch (IllegalArgumentException e)
+			{
+				return;
+			}
+
+			switch (token)
+			{
+				case onShowOfertaMyAccount:
+					onShowOferta();
+					break;
+				case onShowOwnOferta:
+					//onShowOwnOferta();
+					getOwnOfferAnchorForProjects();
+					break;
+			}
+		}
+	}
+	*/
 	
 }
