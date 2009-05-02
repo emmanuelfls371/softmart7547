@@ -2,7 +2,6 @@ package edu.tdp2.client;
 
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.tdp2.client.dto.CalificacionDto;
@@ -15,6 +14,7 @@ import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.model.Usuario;
 
 public interface SoftmartService extends RemoteService
 {
@@ -71,4 +71,8 @@ public interface SoftmartService extends RemoteService
 	public String setProyectoRevisado(Long projectId, Boolean value);
 
 	public List<Proyecto> getActiveProjects();
+
+	public List<Usuario> getUsers();
+
+	public String setUsuarioBloqueado(Long id, Boolean value);
 }
