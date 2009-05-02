@@ -23,12 +23,12 @@ import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.model.Calificacion;
-import edu.tdp2.client.model.Ciudad;
 import edu.tdp2.client.model.Contrato;
 import edu.tdp2.client.model.DificultadProyecto;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.NivelReputacion;
 import edu.tdp2.client.model.Oferta;
+import edu.tdp2.client.model.Pais;
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.TamanioProyecto;
@@ -80,21 +80,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> getCiudades(String pais)
-	{
-		Session sess = HibernateUtil.getSession();
-
-		try
-		{
-			return sess.createQuery("SELECT nombre FROM Ciudad WHERE pais.nombre = ?").setString(0, pais).list();
-		}
-		finally
-		{
-			sess.close();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	public List<String> getPaises()
 	{
 		Session sess = HibernateUtil.getSession();
@@ -117,8 +102,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			if (sess.createQuery("FROM Usuario WHERE login = ?").setString(0, usuarioDto.getUsuario()).uniqueResult() != null)
 				throw new NonUniqueResultException("El nombre de usuario \"" + usuarioDto.getUsuario() + "\" ya existe");
-			usuarioDto.setCiudad((Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?")
-					.setString(0, (String) usuarioDto.getCiudad()).setString(1, usuarioDto.getPais()).uniqueResult());
+			usuarioDto.setPais((Pais) sess.createQuery("FROM Pais WHERE nombre = ?").setString(0,
+					(String) usuarioDto.getPais()).uniqueResult());
 			TransactionWrapper.save(sess, new Usuario(usuarioDto));
 			return null;
 		}
@@ -616,10 +601,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				throw new SoftmartServerException("No se encuentra el usuario con login: " + login);
 			dto.setNombre(usuario.getNombre());
 			dto.setApellido(usuario.getApellido());
-			dto.setPais(usuario.getCiudad().getPais().getNombre());
+			dto.setPais(usuario.getPais().getNombre());
 			dto.setEmail(usuario.getEmail());
 			dto.setUsuario(login);
-			dto.setCiudad(usuario.getCiudad().getNombre());
+			dto.setCiudad(usuario.getCiudad());
 			dto.setNivel(NivelReputacion.valueOf(usuario.getNivel()));
 
 			MyCompradorAccount comprador = dto.getDatosComprador();
@@ -908,7 +893,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 	public String update(UsuarioDto dto, String usuarioAnterior)
 	{
-
 		Session sess = HibernateUtil.getSession();
 
 		try
@@ -921,11 +905,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			Usuario us = (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, usuarioAnterior)
 					.uniqueResult();
 
-			dto.setCiudad((Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?").setString(0,
-					(String) dto.getCiudad()).setString(1, dto.getPais()).uniqueResult());
+			dto.setPais((Pais) sess.createQuery("FROM Pais WHERE nombre = ?").setString(0, (String) dto.getPais())
+					.uniqueResult());
 
 			us.setApellido(dto.getApellido());
-			us.setCiudad((Ciudad) dto.getCiudad());
+			us.setCiudad(dto.getCiudad());
 			us.setEmail(dto.getEmail());
 			// us.setLogin(dto.getUsuario());
 			us.setNombre(dto.getNombre());

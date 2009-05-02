@@ -22,8 +22,6 @@ public interface SoftmartServiceAsync
 
 	public void getPaises(AsyncCallback<List<String>> callback);
 
-	public void getCiudades(String pais, AsyncCallback<List<String>> callback);
-
 	public void registrar(UsuarioDto usuario, AsyncCallback<String> callback);
 
 	public void publicar(ProyectoDto proyecto, AsyncCallback<String> callback);
