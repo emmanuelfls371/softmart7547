@@ -13,18 +13,14 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 
-public class AdminProjectsWidget extends Widget implements AdminWidget
+public class AdminProjectsWidget extends AdminWidget
 {
 	private static AdminProjectsWidget instance;
-	private HTML statusMessage;
-	private SimplePanel container;
 
 	public static AdminProjectsWidget getInstance()
 	{
@@ -33,16 +29,7 @@ public class AdminProjectsWidget extends Widget implements AdminWidget
 		return instance;
 	}
 
-	public void setStatusMessage(HTML statusMessage)
-	{
-		this.statusMessage = statusMessage;
-	}
-
-	public void setContainer(SimplePanel container)
-	{
-		this.container = container;
-	}
-
+	@Override
 	public void load()
 	{
 		container.clear();
@@ -99,8 +86,10 @@ public class AdminProjectsWidget extends Widget implements AdminWidget
 		{
 			public void onClick(ClickEvent event)
 			{
-				// TODO Implementar
-				Window.alert("Not implemented!");
+				AdminWidget w = AdminUsersWidget.getInstance();
+				w.setStatusMessage(statusMessage);
+				w.setContainer(container);
+				w.load();
 			}
 		});
 		return a;
