@@ -64,4 +64,7 @@ public interface SoftmartServiceAsync
 	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
 
 	public void getOfertaDeUsuario(Proyecto proyecto, String usuario, AsyncCallback<Oferta> callback);
+
+	public void update(UsuarioDto dto,String usuarioAnterior, AsyncCallback<String> callback);
+
 }

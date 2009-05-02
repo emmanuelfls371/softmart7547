@@ -63,5 +63,7 @@ public interface SoftmartService extends RemoteService
 	
 	public List<Proyecto> filterProject(FiltroDto filtro);
 	
-	public List<Moneda> buscarMonedas();	
+	public List<Moneda> buscarMonedas();
+	
+	public String update(UsuarioDto dto, String usuarioAnterior);
 }

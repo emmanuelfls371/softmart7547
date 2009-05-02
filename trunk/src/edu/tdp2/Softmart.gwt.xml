@@ -23,5 +23,6 @@
     
       <!-- Specify the application specific style sheet.              -->
       <stylesheet src='Softmart.css' ></stylesheet>
+      <servlet path="/modification" class="edu.tdp2.server.FileUploadServlet"></servlet>
 
 </module>
