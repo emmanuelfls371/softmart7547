@@ -14,6 +14,7 @@ import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.model.Usuario;
 
 public interface SoftmartServiceAsync
 {
@@ -70,4 +71,8 @@ public interface SoftmartServiceAsync
 	public void getActiveProjects(AsyncCallback<List<Proyecto>> callback);
 
 	public void update(UsuarioDto dto,String usuarioAnterior, AsyncCallback<String> callback);
+
+	public void getUsers(AsyncCallback<List<Usuario>> callback);
+
+	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
 }

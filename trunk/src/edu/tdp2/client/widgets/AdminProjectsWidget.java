@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -33,11 +34,13 @@ public class AdminProjectsWidget extends AdminWidget
 	public void load()
 	{
 		container.clear();
+		History.newItem("AdminProjects");
+
 		VerticalPanel vPanel = new VerticalPanel();
 		final FlexTable table = new FlexTable();
+		table.setCellPadding(5);
 		vPanel.add(getAnchorVerUsuarios());
 		vPanel.add(statusMessage);
-		statusMessage.setHeight("50px");
 		vPanel.add(table);
 		container.add(vPanel);
 
@@ -78,7 +81,7 @@ public class AdminProjectsWidget extends AdminWidget
 		};
 		ClientUtils.getSoftmartService().getActiveProjects(callback);
 	}
-	
+
 	private Anchor getAnchorVerUsuarios()
 	{
 		Anchor a = new Anchor("Ver usuarios");
@@ -136,7 +139,7 @@ public class AdminProjectsWidget extends AdminWidget
 		{
 			public void onValueChange(ValueChangeEvent<Boolean> event)
 			{
-				final ValueChangeEvent<Boolean> ev = event;
+				final boolean value = event.getValue();
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{
 
@@ -149,7 +152,7 @@ public class AdminProjectsWidget extends AdminWidget
 					{
 						if (result == null)
 							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
-									+ (ev.getValue() ? "" : "no ") + "revisado");
+									+ (value ? "" : "no ") + "revisado");
 						else
 						{
 							Window.alert(result);

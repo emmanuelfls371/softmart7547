@@ -49,6 +49,9 @@ public class Usuario extends AbstractDomainObject
 	@Column(name = "Nivel", length = 50, nullable = false)
 	private String nivel = "Normal";
 
+	@Column(name = "Bloqueado", nullable = false)
+	private boolean bloqueado;
+	
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Proyecto> proyectos;
 
@@ -218,6 +221,16 @@ public class Usuario extends AbstractDomainObject
 	public void setNivel(String nivel)
 	{
 		this.nivel = nivel;
+	}
+
+	public void setBloqueado(boolean bloqueado)
+	{
+		this.bloqueado = bloqueado;
+	}
+
+	public boolean isBloqueado()
+	{
+		return bloqueado;
 	}
 
 	@Override

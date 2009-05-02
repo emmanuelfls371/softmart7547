@@ -23,6 +23,7 @@ public class Admin implements EntryPoint
 		DockPanel dPanel = new DockPanel();
 		centerPanel = new SimplePanel();
 		centerPanel.setSize("100%", "450px");
+		statusMessage.setHeight("50px");
 		dPanel.add(centerPanel, DockPanel.CENTER);
 
 		HorizontalPanel hPanel = new HorizontalPanel();
