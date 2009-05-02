@@ -1,10 +1,13 @@
 package edu.tdp2.client.widgets;
 
 import com.google.gwt.event.dom.client.ClickHandler;
+
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.HistoryToken;
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.ProjectWidget;
@@ -14,10 +17,15 @@ import edu.tdp2.client.utils.OneParamDelegate;
 
 public class NavigablePanel extends VerticalPanel
 {
+	
+	//protected Proyecto proyectoActual;
+	//protected ProjectList projs;
+	
 	private OneParamDelegate<Proyecto> onShowOfertaDelegate = new OneParamDelegate<Proyecto>()
 	{
 		public void invoke(Proyecto p)
 		{
+			
 			onShowOferta(p);
 		}
 	};
@@ -56,17 +64,30 @@ public class NavigablePanel extends VerticalPanel
 
 	private void onShowProyecto(Proyecto project)
 	{
+		
 		putAlone(new ProjectWidget(project));
 	}
 
-	protected void onShowOferta(Proyecto project)
+	protected void onShowOferta(Proyecto proyectoActual)
 	{
-		putAlone(new OfertaWidget(project));
+		
+		putAlone(new OfertaWidget(proyectoActual));
 	}
 
 	protected void putAlone(Widget widget)
 	{
+		History.newItem("");
 		clear();
 		add(widget);
 	}
+	
+	/*protected void putAlone(Widget widget, String historyToken){
+		History.newItem(historyToken);
+		clear();
+		add(widget);
+	}*/
+	
+	
+	
+	
 }
