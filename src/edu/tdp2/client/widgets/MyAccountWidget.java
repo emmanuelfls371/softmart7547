@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.Map;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -68,6 +69,8 @@ public class MyAccountWidget extends NavigablePanel
 		tableComp.setCellPadding(10);
 		tableVend.setCellPadding(10);
 		
+		addRowDatos(getModificationAnchor(dto));
+		
 		addRowDatos(new HTML("Nombre"), new HTML(dto.getNombre()));
 		addRowDatos(new HTML("Apellido"), new HTML(dto.getApellido()));
 		addRowDatos(new HTML("Pais"), new HTML(dto.getPais()));
@@ -75,6 +78,8 @@ public class MyAccountWidget extends NavigablePanel
 		addRowDatos(new HTML("Usuario"), new HTML(dto.getUsuario()));
 		addRowDatos(new HTML("Ciudad"), new HTML(dto.getCiudad()));
 		addRowDatos(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
+		
+		
 
 		MyCompradorAccount comprador = dto.getDatosComprador();
 		addRowComp(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
@@ -174,4 +179,19 @@ public class MyAccountWidget extends NavigablePanel
 	{
 		putAlone(new OfertaWidget(project, LoginWidget.getCurrentUser()));
 	}
+	
+	private Widget getModificationAnchor(final MyAccountDto dto)
+	{
+		Anchor anchor = new Anchor("Modificar");
+		anchor.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				putAlone(new PersonalModificationWidget(dto));
+			}
+		});
+		return anchor;
+	}
+	
+	
 }

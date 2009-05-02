@@ -846,4 +846,45 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+	
+	
+	public String update(UsuarioDto dto, String usuarioAnterior){
+		
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			if(!usuarioAnterior.equals(dto.getUsuario())){
+				if (sess.createQuery("FROM Usuario WHERE login = ?").setString(0, dto.getUsuario()).uniqueResult() != null)
+					throw new NonUniqueResultException("El nombre de usuario \"" + dto.getUsuario() + "\" ya existe");
+			}
+			Usuario us=(Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0,usuarioAnterior).uniqueResult();
+			
+			dto.setCodPostal(us.getCodPostal());
+			dto.setDescripPerfil(us.getDescripPerfil());
+			dto.setLogo(us.getPathLogo());
+						
+			dto.setCiudad((Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?")
+					.setString(0, (String) dto.getCiudad()).setString(1, dto.getPais()).uniqueResult());
+			
+			Usuario usNuevo=new Usuario(dto);
+			usNuevo.setId(us.getId());
+			usNuevo.setVersion(us.getVersion());
+			TransactionWrapper.save(sess, usNuevo);
+			
+			return null;
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+		finally
+		{
+			sess.close();
+		}
+		
+	}
+	
+	
+	
 }

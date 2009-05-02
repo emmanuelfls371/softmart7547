@@ -25,6 +25,28 @@ public class TransactionWrapper
 			}
 		});
 	}
+	
+	public static void update(final Session session, final AbstractDomainObject o)
+	{
+		execute(session, new Action()
+		{
+			public void execute()
+			{
+				session.update(o);
+			}
+		});
+	}
+	
+	public static void delete(final Session session, final AbstractDomainObject o)
+	{
+		execute(session, new Action()
+		{
+			public void execute()
+			{
+				session.delete(o);
+			}
+		});
+	}
 
 	public static void execute(Session session, Action action)
 	{

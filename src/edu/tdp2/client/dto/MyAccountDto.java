@@ -2,9 +2,11 @@ package edu.tdp2.client.dto;
 
 import java.io.Serializable;
 
+import com.google.gwt.validation.client.interfaces.IValidatable;
+
 import edu.tdp2.client.model.NivelReputacion;
 
-public class MyAccountDto implements Serializable, Dto
+public class MyAccountDto implements Serializable, Dto, IValidatable
 {
 	private static final long serialVersionUID = 2281603093697764090L;
 
