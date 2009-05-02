@@ -27,6 +27,8 @@ public class PersonalModificationWidget extends FormWidget
 	private SuggestCallback suggestCallback;
 	private MyAccountDto accountDto;
 	
+	private static String INVALIDO="0000";
+	
 	public PersonalModificationWidget(MyAccountDto dto)
 	{
 		tituloWidget = "<b>Modificación de datos personales</b>";
@@ -65,16 +67,11 @@ public class PersonalModificationWidget extends FormWidget
 		t.setText(((MyAccountDto) accountDto).getEmail());
 		widgets.put(ModificationFields.Email, t);
 
-		t = new TextBox();
+		/*t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ModificationFields.Usuario.toString());
 		t.setText(((MyAccountDto) accountDto).getUsuario());
-		widgets.put(ModificationFields.Usuario, t);
-		
-		t = new PasswordTextBox();
-		t.setMaxLength(50);
-		t.setName(ModificationFields.Clave.toString());
-		widgets.put(ModificationFields.Clave, t);
+		widgets.put(ModificationFields.Usuario, t);*/
 		
 		final ListBox lisPaises = new ListBox();
 		lisPaises.setName(ModificationFields.Pais.toString());
@@ -142,16 +139,15 @@ public class PersonalModificationWidget extends FormWidget
 			((UsuarioDto) dto).setNombre(((TextBox) widgets.get(ModificationFields.Nombre)).getText());
 			((UsuarioDto) dto).setApellido(((TextBox) widgets.get(ModificationFields.Apellido)).getText());
 			((UsuarioDto) dto).setEmail(((TextBox) widgets.get(ModificationFields.Email)).getText());
-			((UsuarioDto) dto).setUsuario(((TextBox) widgets.get(ModificationFields.Usuario)).getText());
+			//((UsuarioDto) dto).setUsuario(((TextBox) widgets.get(ModificationFields.Usuario)).getText());
 			ListBox lisPaises = (ListBox) widgets.get(ModificationFields.Pais);
 			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
 			((UsuarioDto) dto).setCiudad(((SuggestBox) widgets.get(ModificationFields.Ciudad)).getText());
 			
-			((UsuarioDto) dto).setClave(((PasswordTextBox) widgets.get(ModificationFields.Clave)).getText());
-			
-			
-			
-			((UsuarioDto) dto).setCodPostal("0000");
+
+			((UsuarioDto) dto).setCodPostal(INVALIDO);
+			((UsuarioDto) dto).setClave(INVALIDO);
+			((UsuarioDto) dto).setUsuario(INVALIDO);
 			
 			if (!validate())
 				event.cancel();
@@ -196,7 +192,7 @@ public class PersonalModificationWidget extends FormWidget
 	
 	private enum ModificationFields implements FormFields
 	{
-		Nombre, Apellido, Email, Usuario("Nombre de usuario"),Clave, Pais("Pa&iacute;s"), Ciudad;
+		Nombre, Apellido, Email, Pais("Pa&iacute;s"), Ciudad;
 
 		private ModificationFields(String description)
 		{
