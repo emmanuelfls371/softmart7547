@@ -50,7 +50,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ? AND passwordHash = ?").setString(0,
+			List<Usuario> result = sess.createQuery("FROM User WHERE login = ? AND passwordHash = ?").setString(0,
 					userName).setString(1, passwordHash).list();
 			if (result.size() > 0)
 				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
@@ -343,6 +343,27 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			String sql = "FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
 					+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString(0, user).list();
+			for (Proyecto project : projects)
+				project.prune();
+			return projects;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Proyecto> getActiveProjects()
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			String sql = "SELECT p FROM Proyecto AS p LEFT JOIN p.contrato AS c WHERE p.cancelado = false AND "
+					+ "((c IS EMPTY AND p.fecha >= current_date()) OR "
+					+ "(c.califAlComprador IS NULL OR c.califAlVendedor IS NULL)) ";
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
@@ -846,6 +867,28 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+
+
+	@Override
+	public String setProyectoRevisado(Long projectId, Boolean revisado)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Proyecto p = (Proyecto) sess.get(Proyecto.class, projectId);
+			if (p == null)
+				return "El proyecto con id " + projectId + " no existe";
+			p.setRevisado(revisado);
+			TransactionWrapper.save(sess, p);
+			return null;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
 	
 	
 	public String update(UsuarioDto dto, String usuarioAnterior){

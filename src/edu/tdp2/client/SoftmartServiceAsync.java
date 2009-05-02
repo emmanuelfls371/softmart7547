@@ -65,6 +65,9 @@ public interface SoftmartServiceAsync
 
 	public void getOfertaDeUsuario(Proyecto proyecto, String usuario, AsyncCallback<Oferta> callback);
 
-	public void update(UsuarioDto dto,String usuarioAnterior, AsyncCallback<String> callback);
+	public void setProyectoRevisado(Long projectId, Boolean value, AsyncCallback<String> callback);
 
+	public void getActiveProjects(AsyncCallback<List<Proyecto>> callback);
+
+	public void update(UsuarioDto dto,String usuarioAnterior, AsyncCallback<String> callback);
 }
