@@ -859,18 +859,16 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					throw new NonUniqueResultException("El nombre de usuario \"" + dto.getUsuario() + "\" ya existe");
 			}
 			Usuario us=(Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0,usuarioAnterior).uniqueResult();
-			
-			dto.setCodPostal(us.getCodPostal());
-			dto.setDescripPerfil(us.getDescripPerfil());
-			dto.setLogo(us.getPathLogo());
 						
 			dto.setCiudad((Ciudad) sess.createQuery("FROM Ciudad WHERE nombre = ? AND pais.nombre = ?")
 					.setString(0, (String) dto.getCiudad()).setString(1, dto.getPais()).uniqueResult());
 			
-			Usuario usNuevo=new Usuario(dto);
-			usNuevo.setId(us.getId());
-			usNuevo.setVersion(us.getVersion());
-			TransactionWrapper.save(sess, usNuevo);
+			us.setApellido(dto.getApellido());
+			us.setCiudad((Ciudad) dto.getCiudad());
+			us.setEmail(dto.getEmail());
+			//us.setLogin(dto.getUsuario());
+			us.setNombre(dto.getNombre());
+			TransactionWrapper.save(sess, us);
 			
 			return null;
 		}
