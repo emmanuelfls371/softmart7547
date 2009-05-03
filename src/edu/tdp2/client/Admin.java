@@ -1,6 +1,7 @@
 package edu.tdp2.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -37,5 +38,10 @@ public class Admin implements EntryPoint
 		w.setStatusMessage(statusMessage);
 		w.setContainer(centerPanel);
 		w.load();
+
+		AdminHistoryHandler historyHandler = new AdminHistoryHandler();
+		historyHandler.setStatusMessage(statusMessage);
+		historyHandler.setContainer(centerPanel);
+		History.addValueChangeHandler(historyHandler);
 	}
 }
