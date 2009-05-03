@@ -126,7 +126,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (us != null)
 			{
 				final Proyecto nuevo = new Proyecto(proyecto, us, buscarMoneda(proyecto.getMoneda()));
-				if (us.addProyecto(nuevo))
+				if (us.addProyecto(nuevo)){
 					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
 					{
 						public void execute()
@@ -135,6 +135,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							sess.save(us);
 						}
 					});
+				}else{
+					return "El nombre del proyecto ya existe";
+				}
 			}
 			return null;
 		}
