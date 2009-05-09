@@ -197,7 +197,7 @@ public class RegistrationWidget extends FormWidget
 
 		private RegistrationFields()
 		{
-			this.description = name();
+			description = name();
 		}
 
 		public String getDescription()

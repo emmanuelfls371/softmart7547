@@ -32,9 +32,9 @@ public class CalificationWidget extends VerticalPanel
 
 	private void load()
 	{
-		
+
 		final HTML h = new HTML(calif.getUsuario());
-		
+
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -44,15 +44,15 @@ public class CalificationWidget extends VerticalPanel
 
 			public void onSuccess(Boolean isBloqueado)
 			{
-				if(isBloqueado){
+				if (isBloqueado)
+				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
 				}
 			}
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(calif.getUsuario(), callback);
-		
-		
+
 		add(new Label("Calificacion para Proyecto " + proyecto));
 		table.clear();
 		add(table);

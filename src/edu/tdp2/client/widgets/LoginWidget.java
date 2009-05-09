@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -66,7 +66,7 @@ public class LoginWidget extends SimplePanel
 	private void buildWidget()
 	{
 		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		SimplePanel simplePanel = new SimplePanel();
 		simplePanel.setHeight("50px");
 		panel.add(simplePanel);
@@ -110,7 +110,7 @@ public class LoginWidget extends SimplePanel
 	private HorizontalPanel getSubmitPanel()
 	{
 		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
 		Button submit = new Button("Entrar", new ClickHandler()
 		{
@@ -126,7 +126,7 @@ public class LoginWidget extends SimplePanel
 					public void onSuccess(String result)
 					{
 						Date expire = new Date();
-						expire.setTime(expire.getTime() + (1000 * 60 * 60 * 24)); // Un dia
+						expire.setTime(expire.getTime() + 1000 * 60 * 60 * 24); // Un dia
 						Cookies.setCookie(constants.loginCookieName(), result, expire);
 						setCurrentUser(userNameTextBox.getText());
 						if (loginListener != null)

@@ -7,7 +7,8 @@ import java.util.List;
 
 import com.google.gwt.validation.client.interfaces.IValidatable;
 
-public class FiltroDto implements IValidatable, Serializable, Dto{
+public class FiltroDto implements IValidatable, Serializable, Dto
+{
 
 	/**
 	 * 
@@ -22,68 +23,101 @@ public class FiltroDto implements IValidatable, Serializable, Dto{
 	private List<String> complejidad;
 	private String reputacion;
 	private String usuario;
-	
-	public String getPresupuestoDesde() {
+
+	public String getPresupuestoDesde()
+	{
 		return presupuestoDesde;
 	}
-	public void setPresupuestoDesde(String presupuestoDesde) {
+
+	public void setPresupuestoDesde(String presupuestoDesde)
+	{
 		this.presupuestoDesde = presupuestoDesde;
 	}
-	public String getPresupuestoHasta() {
+
+	public String getPresupuestoHasta()
+	{
 		return presupuestoHasta;
 	}
-	public void setPresupuestoHasta(String presupuestoHasta) {
+
+	public void setPresupuestoHasta(String presupuestoHasta)
+	{
 		this.presupuestoHasta = presupuestoHasta;
 	}
-		
-	public Date getFechaDesde() {
+
+	public Date getFechaDesde()
+	{
 		return fechaDesde;
 	}
-	public void setFechaDesde(Date fechaDesde) {
+
+	public void setFechaDesde(Date fechaDesde)
+	{
 		this.fechaDesde = fechaDesde;
 	}
-	public Date getFechaHasta() {
+
+	public Date getFechaHasta()
+	{
 		return fechaHasta;
 	}
-	public void setFechaHasta(Date fechaHasta) {
+
+	public void setFechaHasta(Date fechaHasta)
+	{
 		this.fechaHasta = fechaHasta;
 	}
 
-	public String getMoneda() {
+	public String getMoneda()
+	{
 		return moneda;
 	}
-	public void setMoneda(String moneda) {
+
+	public void setMoneda(String moneda)
+	{
 		this.moneda = moneda;
 	}
-	public List<String> getTamanio() {
+
+	public List<String> getTamanio()
+	{
 		return tamanio;
 	}
-	public void addTamanio(String tamanio) {
+
+	public void addTamanio(String tamanio)
+	{
 		this.tamanio.add(tamanio);
 	}
-	public String getReputacion() {
+
+	public String getReputacion()
+	{
 		return reputacion;
 	}
-	public void setReputacion(String reputacion) {
+
+	public void setReputacion(String reputacion)
+	{
 		this.reputacion = reputacion;
 	}
-	public void addComplejidad(String complejidad) {
+
+	public void addComplejidad(String complejidad)
+	{
 		this.complejidad.add(complejidad);
 	}
-	public List<String> getComplejidad() {
+
+	public List<String> getComplejidad()
+	{
 		return complejidad;
 	}
-	public void setUsuario(String usuario) {
+
+	public void setUsuario(String usuario)
+	{
 		this.usuario = usuario;
 	}
-	public String getUsuario() {
+
+	public String getUsuario()
+	{
 		return usuario;
 	}
-	
-	public FiltroDto(){
-		this.complejidad=new ArrayList<String>();
-		this.tamanio=new ArrayList<String>();
+
+	public FiltroDto()
+	{
+		complejidad = new ArrayList<String>();
+		tamanio = new ArrayList<String>();
 	}
-	
-	
+
 }

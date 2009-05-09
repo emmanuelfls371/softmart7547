@@ -17,6 +17,6 @@ public abstract class AdminWidget
 	{
 		this.container = container;
 	}
-	
+
 	public abstract void load();
 }

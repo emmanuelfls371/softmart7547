@@ -59,7 +59,7 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 
 	public void setProyecto(long projectId)
 	{
-		this.proyecto = projectId;
+		proyecto = projectId;
 	}
 
 	public int getMonto()

@@ -20,7 +20,7 @@ public class ProjectList extends ListBox
 		setWidth();
 		loadProjects(projects);
 	}
-	
+
 	protected ProjectList()
 	{
 		super();
@@ -59,6 +59,7 @@ public class ProjectList extends ListBox
 
 	/**
 	 * Este metodo debe ser implementado en las subclases
+	 * 
 	 * @param callback
 	 */
 	protected void doCall(AsyncCallback<List<Proyecto>> callback)

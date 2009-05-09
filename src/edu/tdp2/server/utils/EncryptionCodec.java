@@ -24,7 +24,7 @@ public class EncryptionCodec
 		String str = "";
 		for (byte bite : enc)
 		{
-			int ibite = (int) bite;
+			int ibite = bite;
 			ibite += 128;
 			String strByte = new Integer(ibite).toString();
 

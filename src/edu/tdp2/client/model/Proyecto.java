@@ -137,17 +137,17 @@ public class Proyecto extends AbstractDomainObject
 
 	public Proyecto(ProyectoDto dto, Usuario usuario, Moneda moneda)
 	{
-		this.setNombre(dto.getNombre());
-		this.setNivel(dto.getNivel());
-		this.setTamanio(dto.getTamanio());
-		this.setDificultad(dto.getDificultad());
-		this.setDescripcion(dto.getDescripcion());
-		this.setPathArchivo(dto.getArchivo());
-		this.setMinPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(0));
-		this.setMaxPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(1));
-		this.setUsuario(usuario);
-		this.setFecha(dto.getFecha());
-		this.setMoneda(moneda);
+		setNombre(dto.getNombre());
+		setNivel(dto.getNivel());
+		setTamanio(dto.getTamanio());
+		setDificultad(dto.getDificultad());
+		setDescripcion(dto.getDescripcion());
+		setPathArchivo(dto.getArchivo());
+		setMinPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(0));
+		setMaxPresupuesto(Presupuesto.desarmarRango(dto.getPresupuesto()).get(1));
+		setUsuario(usuario);
+		setFecha(dto.getFecha());
+		setMoneda(moneda);
 	}
 
 	public Usuario getUsuario()

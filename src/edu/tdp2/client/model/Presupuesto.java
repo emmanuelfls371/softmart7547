@@ -18,16 +18,16 @@ public final class Presupuesto
 			String rango = new String();
 			if (i + 1 != rangos.length)
 			{
-				rango = rango.concat(String.valueOf(Float.valueOf(rangos[i]*conversion).intValue()));
+				rango = rango.concat(String.valueOf(Float.valueOf(rangos[i] * conversion).intValue()));
 				rango = rango.concat(separador);
-				rango = rango.concat(String.valueOf(Float.valueOf(rangos[i + 1]*conversion).intValue()));
+				rango = rango.concat(String.valueOf(Float.valueOf(rangos[i + 1] * conversion).intValue()));
 
 				lista.add(rango);
 			}
 		}
 		String rango = new String();
 		rango = rango.concat(rangoFinal);
-		rango = rango.concat(String.valueOf(Float.valueOf(rangos[rangos.length - 1]*conversion).intValue()));
+		rango = rango.concat(String.valueOf(Float.valueOf(rangos[rangos.length - 1] * conversion).intValue()));
 		lista.add(rango);
 		return lista;
 	}

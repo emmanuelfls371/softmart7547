@@ -4,32 +4,33 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "Moneda")
-public class Moneda  extends AbstractDomainObject
+public class Moneda extends AbstractDomainObject
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Column(name = "Nombre", nullable = false)
 	private String description;
 	@Column(name = "Conversion", nullable = false)
 	private float conversion;
-	
-	public Moneda(){
-		
+
+	public Moneda()
+	{
+
 	}
-	
+
 	public Moneda(String description, float conversion)
 	{
 		this.description = description;
-		this.conversion=conversion;
+		this.conversion = conversion;
 	}
 
-	public float getConversion() {
+	public float getConversion()
+	{
 		return conversion;
 	}
 

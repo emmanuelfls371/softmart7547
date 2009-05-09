@@ -55,7 +55,7 @@ public class Contrato extends AbstractDomainObject
 
 	public void setCalifAlVendedor(Calificacion califVendedor)
 	{
-		this.califAlVendedor = califVendedor;
+		califAlVendedor = califVendedor;
 	}
 
 	public Calificacion getCalifAlVendedor()
@@ -65,7 +65,7 @@ public class Contrato extends AbstractDomainObject
 
 	public void setCalifAlComprador(Calificacion califComprador)
 	{
-		this.califAlComprador = califComprador;
+		califAlComprador = califComprador;
 	}
 
 	public Calificacion getCalifAlComprador()

@@ -7,13 +7,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.MyAccountDto;
-import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
@@ -32,7 +30,7 @@ public class PersonalModificationWidget extends FormWidget
 		url = "modification";
 		accountDto = dto;
 		init();
-		
+
 	}
 
 	@Override
@@ -47,31 +45,30 @@ public class PersonalModificationWidget extends FormWidget
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ModificationFields.Nombre.toString());
-		t.setText(((MyAccountDto) accountDto).getNombre());
+		t.setText((accountDto).getNombre());
 		widgets.put(ModificationFields.Nombre, t);
 
 		t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ModificationFields.Apellido.toString());
-		t.setText(((MyAccountDto) accountDto).getApellido());
+		t.setText((accountDto).getApellido());
 		widgets.put(ModificationFields.Apellido, t);
 
 		t = new TextBox();
 		t.setMaxLength(255);
 		t.setName(ModificationFields.Email.toString());
-		t.setText(((MyAccountDto) accountDto).getEmail());
+		t.setText((accountDto).getEmail());
 		widgets.put(ModificationFields.Email, t);
 
-		
-		 PasswordTextBox t2 = new PasswordTextBox();
-		 t2.setMaxLength(50); 
-		 t2.setName(ModificationFields.Contrasenia.toString());
-		 widgets.put(ModificationFields.Contrasenia, t2);
-		 
-		 t2 = new PasswordTextBox();
-		 t2.setMaxLength(50); 
-		 t2.setName(ModificationFields.ConfirmeContrasenia.toString());
-		 widgets.put(ModificationFields.ConfirmeContrasenia, t2);
+		PasswordTextBox t2 = new PasswordTextBox();
+		t2.setMaxLength(50);
+		t2.setName(ModificationFields.Contrasenia.toString());
+		widgets.put(ModificationFields.Contrasenia, t2);
+
+		t2 = new PasswordTextBox();
+		t2.setMaxLength(50);
+		t2.setName(ModificationFields.ConfirmeContrasenia.toString());
+		widgets.put(ModificationFields.ConfirmeContrasenia, t2);
 
 		final ListBox lisPaises = new ListBox();
 		lisPaises.setName(ModificationFields.Pais.toString());
@@ -90,7 +87,7 @@ public class PersonalModificationWidget extends FormWidget
 				int selectedItem = 1;
 				for (String pais : paises)
 				{
-					if (pais.equals(((MyAccountDto) accountDto).getPais()))
+					if (pais.equals((accountDto).getPais()))
 						selectedItem = pos;
 					lisPaises.addItem(pais, pais);
 					pos++;
@@ -104,19 +101,19 @@ public class PersonalModificationWidget extends FormWidget
 		t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ModificationFields.Ciudad.toString());
-		t.setText(((MyAccountDto) accountDto).getCiudad());
+		t.setText((accountDto).getCiudad());
 		widgets.put(ModificationFields.Ciudad, t);
-		
+
 		t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ModificationFields.CodigoPostal.toString());
-		t.setText(((MyAccountDto) accountDto).getCodigoPostal());
+		t.setText((accountDto).getCodigoPostal());
 		widgets.put(ModificationFields.CodigoPostal, t);
-		
+
 		t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ModificationFields.Descripcion.toString());
-		t.setText(((MyAccountDto) accountDto).getDescripcion());
+		t.setText((accountDto).getDescripcion());
 		widgets.put(ModificationFields.Descripcion, t);
 	}
 
@@ -133,22 +130,22 @@ public class PersonalModificationWidget extends FormWidget
 	{
 		if (errorClave)
 			errMsgs.add("No ha ingresado la clave repetida correctamente");
-		
+
 	}
 
 	private final class ModificationSubmitHandler implements SubmitHandler
 	{
 		public void onSubmit(SubmitEvent event)
 		{
-			errorClave=false;
+			errorClave = false;
 			dto = new UsuarioDto();
 			((UsuarioDto) dto).setNombre(((TextBox) widgets.get(ModificationFields.Nombre)).getText());
 			((UsuarioDto) dto).setApellido(((TextBox) widgets.get(ModificationFields.Apellido)).getText());
 			((UsuarioDto) dto).setEmail(((TextBox) widgets.get(ModificationFields.Email)).getText());
-			
-			String clave = (((PasswordTextBox) widgets.get(ModificationFields.Contrasenia)).getText());
-			String claveRepetida = (((PasswordTextBox) widgets.get(ModificationFields.ConfirmeContrasenia)).getText());
-			
+
+			String clave = ((PasswordTextBox) widgets.get(ModificationFields.Contrasenia)).getText();
+			String claveRepetida = ((PasswordTextBox) widgets.get(ModificationFields.ConfirmeContrasenia)).getText();
+
 			ListBox lisPaises = (ListBox) widgets.get(ModificationFields.Pais);
 			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
 			((UsuarioDto) dto).setCiudad(((TextBox) widgets.get(ModificationFields.Ciudad)).getText());
@@ -156,14 +153,13 @@ public class PersonalModificationWidget extends FormWidget
 			((UsuarioDto) dto).setCodPostal(((TextBox) widgets.get(ModificationFields.CodigoPostal)).getText());
 			((UsuarioDto) dto).setDescripPerfil(((TextBox) widgets.get(ModificationFields.Descripcion)).getText());
 
-			
 			((UsuarioDto) dto).setUsuario(INVALIDO);
 
-			if(clave!=null && claveRepetida!=null && clave.equals(claveRepetida))
+			if (clave != null && claveRepetida != null && clave.equals(claveRepetida))
 				((UsuarioDto) dto).setClave(claveRepetida);
 			else
 				errorClave = true;
-			
+
 			if (!validate())
 				event.cancel();
 
@@ -180,7 +176,7 @@ public class PersonalModificationWidget extends FormWidget
 			{
 				((UsuarioDto) dto).setLogo(results.split(":", 2)[1]);
 
-				ClientUtils.getSoftmartService().update((UsuarioDto) dto, ((MyAccountDto) accountDto).getUsuario(),
+				ClientUtils.getSoftmartService().update((UsuarioDto) dto, (accountDto).getUsuario(),
 						new AsyncCallback<String>()
 						{
 							public void onFailure(Throwable caught)
@@ -208,7 +204,8 @@ public class PersonalModificationWidget extends FormWidget
 
 	private enum ModificationFields implements FormFields
 	{
-		Nombre, Apellido, Email,Contrasenia ("Clave"), ConfirmeContrasenia("Repita la clave"), Pais("Pa&iacute;s"), Ciudad, CodigoPostal("C&oacutedigo Postal"), Descripcion("Descripci&oacuten");
+		Nombre, Apellido, Email, Contrasenia("Clave"), ConfirmeContrasenia("Repita la clave"), Pais("Pa&iacute;s"), Ciudad, CodigoPostal(
+				"C&oacutedigo Postal"), Descripcion("Descripci&oacuten");
 
 		private ModificationFields(String description)
 		{
@@ -219,7 +216,7 @@ public class PersonalModificationWidget extends FormWidget
 
 		private ModificationFields()
 		{
-			this.description = name();
+			description = name();
 		}
 
 		public String getDescription()

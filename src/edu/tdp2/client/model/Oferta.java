@@ -61,13 +61,13 @@ public class Oferta extends AbstractDomainObject
 
 	public Oferta(OfertaDto dto, Proyecto proyecto, Usuario us, Moneda moneda)
 	{
-		this.setMonto(dto.getMonto());
-		this.setDias(dto.getDias());
-		this.setDescripcion(dto.getDescripcion());
-		this.setNotificacion(dto.getNotificacion());
-		this.setProyecto(proyecto);
-		this.setUsuario(us);
-		this.setMoneda(moneda);
+		setMonto(dto.getMonto());
+		setDias(dto.getDias());
+		setDescripcion(dto.getDescripcion());
+		setNotificacion(dto.getNotificacion());
+		setProyecto(proyecto);
+		setUsuario(us);
+		setMoneda(moneda);
 	}
 
 	public Usuario getUsuario()
@@ -154,22 +154,20 @@ public class Oferta extends AbstractDomainObject
 		if (obj != null && obj instanceof Oferta)
 		{
 			Oferta o = (Oferta) obj;
-			if (o.getDias() != this.getDias())
+			if (o.getDias() != getDias())
 				return false;
-			if (o.getMonto() != this.getMonto())
+			if (o.getMonto() != getMonto())
 				return false;
-			if (!o.getMoneda().equals(this.getMoneda()))
+			if (!o.getMoneda().equals(getMoneda()))
 				return false;
-			if (o.getUsuario().getId() != this.getUsuario().getId())
+			if (o.getUsuario().getId() != getUsuario().getId())
 				return false;
-			if (o.getProyecto().getId() != this.getProyecto().getId())
+			if (o.getProyecto().getId() != getProyecto().getId())
 				return false;
 			return true;
 		}
 		else
-		{
 			return false;
-		}
 	}
 
 }

@@ -140,7 +140,7 @@ public class CalificationWidget extends FormWidget
 
 		private CalificacionFields()
 		{
-			this.description = name();
+			description = name();
 		}
 
 		public String getDescription()

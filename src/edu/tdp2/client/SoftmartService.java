@@ -59,11 +59,11 @@ public interface SoftmartService extends RemoteService
 	public String cancelarProyecto(Long projectId);
 
 	public MyAccountDto getMyAccountData(String usuario);
-	
+
 	public List<Proyecto> filterProject(FiltroDto filtro);
-	
+
 	public List<Moneda> buscarMonedas();
-	
+
 	public String update(UsuarioDto dto, String usuarioAnterior);
 
 	public String setProyectoRevisado(Long projectId, Boolean value);
@@ -73,6 +73,6 @@ public interface SoftmartService extends RemoteService
 	public List<Usuario> getUsers();
 
 	public String setUsuarioBloqueado(Long id, Boolean value);
-	
+
 	public Boolean isUsuarioBloqueado(String name);
 }

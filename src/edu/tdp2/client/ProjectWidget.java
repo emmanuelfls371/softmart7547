@@ -1,20 +1,16 @@
 package edu.tdp2.client;
 
-import java.util.List;
-
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
-
 
 public class ProjectWidget extends VerticalPanel
 {
@@ -36,7 +32,7 @@ public class ProjectWidget extends VerticalPanel
 	private void load()
 	{
 		final HTML h = new HTML(project.getUsuario().getLogin());
-		
+
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -46,16 +42,15 @@ public class ProjectWidget extends VerticalPanel
 
 			public void onSuccess(Boolean isBloqueado)
 			{
-				if(isBloqueado){
+				if (isBloqueado)
+				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
 				}
 			}
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(project.getUsuario().getLogin(), callback);
-		
-		
-		
+
 		add(new Label("Proyecto " + project.getNombre()));
 		table.clear();
 		add(table);
@@ -86,7 +81,7 @@ public class ProjectWidget extends VerticalPanel
 			table.setWidget(row, 8, new Anchor("Bajar"));
 		else
 			table.setWidget(row, 8, new HTML("No se ha cargado un archivo"));
-		if(project.isCancelado())
+		if (project.isCancelado())
 			table.setWidget(row, 9, new HTML("Si"));
 		else
 			table.setWidget(row, 9, new HTML("No"));

@@ -55,7 +55,7 @@ public abstract class MySpecificAccount implements Serializable
 
 	public void setProyectosSinCalificar(List<Proyecto> contratosSinCalificar)
 	{
-		this.proyectosSinCalificar = prune(contratosSinCalificar);
+		proyectosSinCalificar = prune(contratosSinCalificar);
 	}
 
 	public List<Proyecto> getProyectosCerrados()
