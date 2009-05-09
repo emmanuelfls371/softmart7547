@@ -83,7 +83,8 @@ public class MyAccountWidget extends NavigablePanel
 		addRowDatos(new HTML("Usuario"), new HTML(dto.getUsuario()));
 		addRowDatos(new HTML("Ciudad"), new HTML(dto.getCiudad()));
 		addRowDatos(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
-		
+		addRowDatos(new HTML("Codigo Postal"), new HTML(dto.getCodigoPostal().toString()));
+		addRowDatos(new HTML("Descripcion"), new HTML(dto.getDescripcion().toString()));
 		
 
 		MyCompradorAccount comprador = dto.getDatosComprador();

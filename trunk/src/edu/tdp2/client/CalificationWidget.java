@@ -1,5 +1,7 @@
 package edu.tdp2.client;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -30,6 +32,27 @@ public class CalificationWidget extends VerticalPanel
 
 	private void load()
 	{
+		
+		final HTML h = new HTML(calif.getUsuario());
+		
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert("No se pudo recuperar el usuario");
+			}
+
+			public void onSuccess(Boolean isBloqueado)
+			{
+				if(isBloqueado){
+					h.addStyleName("blocked");
+					h.setStyleName("blocked");
+				}
+			}
+		};
+		ClientUtils.getSoftmartService().isUsuarioBloqueado(calif.getUsuario(), callback);
+		
+		
 		add(new Label("Calificacion para Proyecto " + proyecto));
 		table.clear();
 		add(table);
@@ -40,7 +63,7 @@ public class CalificationWidget extends VerticalPanel
 		int row = 1;
 		table.setWidget(row, 0, new HTML(Integer.toString(calif.getCalificacion())));
 		table.setWidget(row, 1, new HTML(calif.getComentario()));
-		table.setWidget(row, 2, new HTML(calif.getUsuario()));
+		table.setWidget(row, 2, h);
 
 		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
