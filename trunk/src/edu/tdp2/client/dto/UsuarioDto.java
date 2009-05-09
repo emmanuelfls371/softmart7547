@@ -118,7 +118,7 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 
 	public void setCodPostal(String codigoPostal)
 	{
-		this.codPostal = codigoPostal;
+		codPostal = codigoPostal;
 	}
 
 	public String getDescripPerfil()

@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
-
 import edu.tdp2.client.utils.ClientUtils;
 
 public class OffersWidget extends VerticalPanel

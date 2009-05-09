@@ -12,7 +12,7 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 	private static final long serialVersionUID = 111116217892037317L;
 
 	private long id;
-	
+
 	@NotEmpty(message = "Debe ingresar el nombre")
 	@NotNull(message = "Debe ingresar el nombre")
 	private String nombre;

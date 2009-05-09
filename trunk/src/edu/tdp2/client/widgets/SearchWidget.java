@@ -16,10 +16,10 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.Format;
@@ -58,7 +58,7 @@ public class SearchWidget extends NavigablePanel
 
 	private void buildWidget()
 	{
-		panelBusqueda = new FormPanel();		
+		panelBusqueda = new FormPanel();
 		FlexTable table = getTabla();
 		panelBusqueda.add(table);
 		add(panelBusqueda);
@@ -69,22 +69,22 @@ public class SearchWidget extends NavigablePanel
 		FlexTable table = new FlexTable();
 		table.setWidget(0, 0, new HTML(tituloWidget));
 		table.setWidget(0, 1, ClientUtils.getBackAnchor());
-	
+
 		int row = 1;
-		for (FormFields field : this.values())
+		for (FormFields field : values())
 		{
 			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));
 			table.setWidget(row, 1, widgets.get(field));
 			row++;
 		}
 		table.setWidget(row, 1, getSubmitPanel());
-		
+
 		return table;
 	}
 
 	private void init()
 	{
-		this.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+		setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		populateWidgets();
 		buildWidget();
 	}
@@ -92,20 +92,21 @@ public class SearchWidget extends NavigablePanel
 	private HorizontalPanel getSubmitPanel()
 	{
 		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
 		final SearchWidget instance = this;
 		Button submit = new Button("Buscar", new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
-				this.onSubmit(event);
+				onSubmit(event);
 			}
 
-			private void onSubmit(ClickEvent event) {
-				
+			private void onSubmit(ClickEvent event)
+			{
+
 				dto = new FiltroDto();
-				FiltroDto filtroDto = (FiltroDto) dto;
+				FiltroDto filtroDto = dto;
 
 				HorizontalPanel panel = (HorizontalPanel) instance.widgets.get(SearchFields.Presupuesto);
 
@@ -153,12 +154,15 @@ public class SearchWidget extends NavigablePanel
 					if (!(filtroDto.getPresupuestoHasta() == null || filtroDto.getPresupuestoHasta().isEmpty()))
 						Float.parseFloat(filtroDto.getPresupuestoHasta());
 
-						if(!(filtroDto.getPresupuestoDesde()==null||filtroDto.getPresupuestoDesde().isEmpty())&&(filtroDto.getMoneda()==null||filtroDto.getMoneda().isEmpty()))
+					if (!(filtroDto.getPresupuestoDesde() == null || filtroDto.getPresupuestoDesde().isEmpty())
+							&& (filtroDto.getMoneda() == null || filtroDto.getMoneda().isEmpty()))
 						Window.alert("Error inesperado, no se pudo realizar la búsqueda");
-						else if(!(filtroDto.getPresupuestoHasta()==null||filtroDto.getPresupuestoHasta().isEmpty())&&(filtroDto.getMoneda()==null||filtroDto.getMoneda().isEmpty()))
+					else if (!(filtroDto.getPresupuestoHasta() == null || filtroDto.getPresupuestoHasta().isEmpty())
+							&& (filtroDto.getMoneda() == null || filtroDto.getMoneda().isEmpty()))
 						Window.alert("Error inesperado, no se pudo realizar la búsqueda");
-						else{			
-						final FiltroDto filtro = (FiltroDto) dto;
+					else
+					{
+						final FiltroDto filtro = dto;
 						ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<List<Proyecto>>()
 						{
 							public void onFailure(Throwable caught)
@@ -184,7 +188,7 @@ public class SearchWidget extends NavigablePanel
 								FlexTable table = new FlexTable();
 								table.setCellPadding(10);
 								ProjectList projs = new ProjectList(listaProy);
-								table.setWidget(0, 0,new HTML("<b>Resultados de la búsqueda</b>"));
+								table.setWidget(0, 0, new HTML("<b>Resultados de la búsqueda</b>"));
 								table.setWidget(1, 1, projs);
 								table.setWidget(1, 2, getAnchorForProjects(projs));
 								table.setWidget(1, 3, getOfferAnchorForProjects(projs));
@@ -192,7 +196,8 @@ public class SearchWidget extends NavigablePanel
 							}
 						});
 					}
-					}catch (NumberFormatException e)
+				}
+				catch (NumberFormatException e)
 				{
 					Window.alert("Error inesperado, no se pudo realizar la búsqueda");
 				}
@@ -210,9 +215,9 @@ public class SearchWidget extends NavigablePanel
 		t.setMaxLength(10);
 		t.setName(SearchFields.Presupuesto.toString());
 		horiz.add(t);
-		
+
 		horiz.add(new HTML(" - "));
-		
+
 		TextBox t2 = new TextBox();
 		t2.setMaxLength(10);
 		t2.setName(SearchFields.Presupuesto.toString());
@@ -320,7 +325,8 @@ public class SearchWidget extends NavigablePanel
 
 	private enum SearchFields implements FormFields
 	{
-		Presupuesto ("Presupuesto Desde-Hasta"), FechaDesde("Fecha desde de cierre de la oferta"), FechaHasta("Fecha hasta de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
+		Presupuesto("Presupuesto Desde-Hasta"), FechaDesde("Fecha desde de cierre de la oferta"), FechaHasta(
+				"Fecha hasta de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
 				"Tama&ntilde;o");
 
 		private SearchFields(String description)
@@ -332,7 +338,7 @@ public class SearchWidget extends NavigablePanel
 
 		private SearchFields()
 		{
-			this.description = name();
+			description = name();
 		}
 
 		public String getDescription()

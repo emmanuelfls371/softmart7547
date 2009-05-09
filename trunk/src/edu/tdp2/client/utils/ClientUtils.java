@@ -32,7 +32,7 @@ public class ClientUtils
 	public static List<Map<String, String>> deserializeResults(List serialized)
 	{
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-		List<String> serializedStrs = (List<String>) serialized;
+		List<String> serializedStrs = serialized;
 		for (String serializedStr : serializedStrs)
 		{
 			String[] fieldsWithValue = serializedStr.split(";");

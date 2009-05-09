@@ -33,7 +33,7 @@ public abstract class AbstractDomainObject implements Serializable
 	public boolean equals(final Object other)
 	{
 		AbstractDomainObject rhs = (AbstractDomainObject) other;
-		return (this.getId().equals(rhs.getId()));
+		return getId().equals(rhs.getId());
 	}
 
 	/**
@@ -41,7 +41,7 @@ public abstract class AbstractDomainObject implements Serializable
 	 */
 	public Long getId()
 	{
-		return this.id;
+		return id;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public abstract class AbstractDomainObject implements Serializable
 	 */
 	public Long getVersion()
 	{
-		return this.version;
+		return version;
 	}
 
 	/**

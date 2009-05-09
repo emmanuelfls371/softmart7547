@@ -35,7 +35,7 @@ public class Calificacion extends AbstractDomainObject
 
 	public void setContrato(Contrato contrato)
 	{
-		this.contratoVendedor = this.contratoComprador = contrato;
+		contratoVendedor = contratoComprador = contrato;
 	}
 
 	public Calificacion()
@@ -44,9 +44,9 @@ public class Calificacion extends AbstractDomainObject
 
 	public Calificacion(CalificacionDto dto, Contrato c)
 	{
-		this.setCalificacion(dto.getCalificacion());
-		this.setComentario(dto.getComentario());
-		this.setContrato(c);
+		setCalificacion(dto.getCalificacion());
+		setComentario(dto.getComentario());
+		setContrato(c);
 	}
 
 	private void setComentario(String comentario)

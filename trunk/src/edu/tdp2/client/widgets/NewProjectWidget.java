@@ -12,7 +12,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
-
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
@@ -24,8 +23,8 @@ import com.google.gwt.validation.client.interfaces.IValidator;
 import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.ProyectoDto;
-import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.model.Moneda;
+import edu.tdp2.client.utils.ClientUtils;
 
 public class NewProjectWidget extends FormWidget
 {
@@ -317,7 +316,7 @@ public class NewProjectWidget extends FormWidget
 
 		private ProjectFields()
 		{
-			this.description = name();
+			description = name();
 		}
 
 		public String getDescription()

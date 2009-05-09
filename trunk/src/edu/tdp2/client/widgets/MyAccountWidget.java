@@ -2,10 +2,8 @@ package edu.tdp2.client.widgets;
 
 import java.util.Map;
 
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -15,7 +13,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.tdp2.client.HistoryToken;
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.dto.MyAccountDto;
@@ -25,7 +22,6 @@ import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.utils.OneParamDelegate;
-
 
 public class MyAccountWidget extends NavigablePanel
 {
@@ -61,21 +57,21 @@ public class MyAccountWidget extends NavigablePanel
 
 	private void init(MyAccountDto dto)
 	{
-		
+
 		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
-		addRow(table,new HTML("<b>Datos de mi cuenta</b>"),ClientUtils.getBackAnchor());
+		addRow(table, new HTML("<b>Datos de mi cuenta</b>"), ClientUtils.getBackAnchor());
 		add(table);
-		
+
 		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
 		tabPanel.setAnimationEnabled(true);
 
 		tableDatos.setCellPadding(10);
 		tableComp.setCellPadding(10);
 		tableVend.setCellPadding(10);
-		
+
 		addRowDatos(getModificationAnchor(dto));
-		
+
 		addRowDatos(new HTML("Nombre"), new HTML(dto.getNombre()));
 		addRowDatos(new HTML("Apellido"), new HTML(dto.getApellido()));
 		addRowDatos(new HTML("Pais"), new HTML(dto.getPais()));
@@ -85,7 +81,6 @@ public class MyAccountWidget extends NavigablePanel
 		addRowDatos(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
 		addRowDatos(new HTML("Codigo Postal"), new HTML(dto.getCodigoPostal().toString()));
 		addRowDatos(new HTML("Descripcion"), new HTML(dto.getDescripcion().toString()));
-		
 
 		MyCompradorAccount comprador = dto.getDatosComprador();
 		addRowComp(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
@@ -112,8 +107,8 @@ public class MyAccountWidget extends NavigablePanel
 		addRowVend(new HTML("Reputación como vendedor"), new HTML(((Double) vendedor.getReputacion()).toString()));
 
 		projs = new ProjectList(vendedor.getProyectosSinRecibirCalif());
-		addRowVend(new HTML("Proyectos adjudicados a mí donde no recibí calificación"), projs, getAnchorForProjects(projs),
-				getOfferAnchorForProjects(projs));
+		addRowVend(new HTML("Proyectos adjudicados a mí donde no recibí calificación"), projs,
+				getAnchorForProjects(projs), getOfferAnchorForProjects(projs));
 
 		projs = new ProjectList(vendedor.getProyectosSinCalificar());
 		addRowVend(new HTML("Proyectos adjudicados a mí pendientes de calificar"), projs, getAnchorForProjects(projs),
@@ -129,7 +124,7 @@ public class MyAccountWidget extends NavigablePanel
 		addRowVend(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
 
 		projs = new ProjectList(vendedor.getProyectosConOfertasAbiertas());
-		//History.addValueChangeHandler(new MyAccountHistoryHandler());
+		// History.addValueChangeHandler(new MyAccountHistoryHandler());
 		addRowVend(new HTML("Proyectos con ofertas abiertas"), projs, getAnchorForProjects(projs),
 				getOwnOfferAnchorForProjects(projs));
 
@@ -139,12 +134,10 @@ public class MyAccountWidget extends NavigablePanel
 		tabPanel.selectTab(0);
 
 		add(tabPanel);
-		
-		
-		
+
 	}
 
-	private void addRow(FlexTable table,Widget... widgets)
+	private void addRow(FlexTable table, Widget... widgets)
 	{
 		int row = table.getRowCount();
 		for (int i = 0; i < widgets.length; i++)
@@ -152,18 +145,21 @@ public class MyAccountWidget extends NavigablePanel
 		table.getWidget(row, 0).setWidth("200px");
 	}
 
-	private void addRowDatos(Widget... widgets){
-		addRow(tableDatos,widgets);
+	private void addRowDatos(Widget... widgets)
+	{
+		addRow(tableDatos, widgets);
 	}
-	
-	private void addRowComp(Widget... widgets){
-		addRow(tableComp,widgets);
+
+	private void addRowComp(Widget... widgets)
+	{
+		addRow(tableComp, widgets);
 	}
-	
-	private void addRowVend(Widget... widgets){
-		addRow(tableVend,widgets);
+
+	private void addRowVend(Widget... widgets)
+	{
+		addRow(tableVend, widgets);
 	}
-	
+
 	public class EarningsMap extends VerticalPanel
 	{
 		public EarningsMap(Map<Moneda, Long> gananciaAcumulada)
@@ -189,7 +185,7 @@ public class MyAccountWidget extends NavigablePanel
 	{
 		putAlone(new OfertaWidget(proyectoActual, LoginWidget.getCurrentUser()));
 	}
-	
+
 	private Widget getModificationAnchor(final MyAccountDto dto)
 	{
 		Anchor anchor = new Anchor("Modificar");
@@ -202,38 +198,19 @@ public class MyAccountWidget extends NavigablePanel
 		});
 		return anchor;
 	}
-	
-	public void onModuleLoad(){
-		
-	}
-	
-	/*
-	private class MyAccountHistoryHandler implements ValueChangeHandler<String>
-	{
-		public void onValueChange(ValueChangeEvent<String> event)
-		{
-			HistoryToken token;
-			try
-			{
-				token = HistoryToken.valueOf(event.getValue());
-			}
-			catch (IllegalArgumentException e)
-			{
-				return;
-			}
 
-			switch (token)
-			{
-				case onShowOfertaMyAccount:
-					onShowOferta();
-					break;
-				case onShowOwnOferta:
-					//onShowOwnOferta();
-					getOwnOfferAnchorForProjects();
-					break;
-			}
-		}
+	public void onModuleLoad()
+	{
+
 	}
-	*/
-	
+
+	/*
+	 * private class MyAccountHistoryHandler implements ValueChangeHandler<String> { public void
+	 * onValueChange(ValueChangeEvent<String> event) { HistoryToken token; try { token =
+	 * HistoryToken.valueOf(event.getValue()); } catch (IllegalArgumentException e) { return; }
+	 * 
+	 * switch (token) { case onShowOfertaMyAccount: onShowOferta(); break; case onShowOwnOferta: //onShowOwnOferta();
+	 * getOwnOfferAnchorForProjects(); break; } } }
+	 */
+
 }

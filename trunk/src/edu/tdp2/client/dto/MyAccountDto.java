@@ -112,19 +112,23 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 		return apellido;
 	}
 
-	public void setDescripcion(String descripcion) {
+	public void setDescripcion(String descripcion)
+	{
 		this.descripcion = descripcion;
 	}
 
-	public String getDescripcion() {
+	public String getDescripcion()
+	{
 		return descripcion;
 	}
 
-	public void setCodigoPostal(String codigoPostal) {
+	public void setCodigoPostal(String codigoPostal)
+	{
 		this.codigoPostal = codigoPostal;
 	}
 
-	public String getCodigoPostal() {
+	public String getCodigoPostal()
+	{
 		return codigoPostal;
 	}
 }

@@ -317,7 +317,6 @@ public class Softmart implements EntryPoint, LoginListener
 							Window.alert("No se pudo recuperar las monedas");
 						}
 
-				
 						public void onSuccess(List<Moneda> monedas)
 						{
 							if (monedas == null)
@@ -325,10 +324,9 @@ public class Softmart implements EntryPoint, LoginListener
 							else
 							{
 								Moneda monedaEncontrada = null;
-								for(Moneda m: monedas){
+								for (Moneda m : monedas)
 									if (m.getDescription().equals(contrato.getProyecto().getMoneda()))
 										monedaEncontrada = m;
-								}
 								onShowProyecto(new Proyecto(contrato.getProyecto(), us, monedaEncontrada));
 							}
 						}
@@ -365,7 +363,7 @@ public class Softmart implements EntryPoint, LoginListener
 	private Panel getCenterPanel()
 	{
 		centerPanel = new VerticalPanel();
-		centerPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		centerPanel.setSize("100%", "450px");
 		return centerPanel;
 	}
@@ -373,7 +371,7 @@ public class Softmart implements EntryPoint, LoginListener
 	private Panel getNorthPanel()
 	{
 		northPanel = new HorizontalPanel();
-		northPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		northPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		northPanel.setSize("700px", "50px");
 		return northPanel;
 	}

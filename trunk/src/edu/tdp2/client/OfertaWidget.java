@@ -89,9 +89,9 @@ public class OfertaWidget extends VerticalPanel
 
 	private void load()
 	{
-		
+
 		final HTML h = new HTML(oferta.getUsuario());
-		
+
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -101,16 +101,15 @@ public class OfertaWidget extends VerticalPanel
 
 			public void onSuccess(Boolean isBloqueado)
 			{
-				if(isBloqueado){
+				if (isBloqueado)
+				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
 				}
 			}
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(oferta.getUsuario(), callback);
-		
-		
-		
+
 		add(new Label("Ofertas para el proyecto " + proyecto));
 		table.clear();
 		add(table);

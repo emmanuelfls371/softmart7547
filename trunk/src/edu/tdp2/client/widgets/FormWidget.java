@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,7 +40,7 @@ public abstract class FormWidget extends FormPanel
 	protected void buildWidget()
 	{
 		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		FlexTable table = getTable();
 		panel.add(table);
 		add(panel);
@@ -56,7 +57,7 @@ public abstract class FormWidget extends FormPanel
 
 		int row = 1;
 		table.getWidget(0, 0).setWidth(anchoWidget);
-		for (FormFields field : this.values())
+		for (FormFields field : values())
 		{
 			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));
 			table.setWidget(row, 1, widgets.get(field));
@@ -81,7 +82,7 @@ public abstract class FormWidget extends FormPanel
 	private HorizontalPanel getSubmitPanel()
 	{
 		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
+		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
 		Button submit = new Button("Entrar", new ClickHandler()
 		{

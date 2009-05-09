@@ -47,7 +47,7 @@ public abstract class CalificacionList extends ListBox
 	private void addItem(ContratoDto contrato)
 	{
 		addItem(contrato.getProyecto().getNombre(), Long.toString(contrato.getIdContrato()));
-		this.contratos.put(Long.toString(contrato.getIdContrato()), contrato);
+		contratos.put(Long.toString(contrato.getIdContrato()), contrato);
 	}
 
 	protected abstract void doCall(AsyncCallback<List<ContratoDto>> callback);

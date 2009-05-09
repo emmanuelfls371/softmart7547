@@ -16,13 +16,13 @@ public class ComentarioWidget extends VerticalPanel
 
 	public ComentarioWidget(Oferta oferta)
 	{
-		this.c = oferta.getDescripcion();
+		c = oferta.getDescripcion();
 		load();
 	}
 
 	public ComentarioWidget(OfertaDto oferta)
 	{
-		this.c = oferta.getDescripcion();
+		c = oferta.getDescripcion();
 		load();
 	}
 

@@ -25,7 +25,7 @@ public class TransactionWrapper
 			}
 		});
 	}
-	
+
 	public static void update(final Session session, final AbstractDomainObject o)
 	{
 		execute(session, new Action()
@@ -36,7 +36,7 @@ public class TransactionWrapper
 			}
 		});
 	}
-	
+
 	public static void delete(final Session session, final AbstractDomainObject o)
 	{
 		execute(session, new Action()

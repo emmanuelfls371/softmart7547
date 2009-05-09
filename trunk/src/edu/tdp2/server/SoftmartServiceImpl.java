@@ -126,7 +126,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (us != null)
 			{
 				final Proyecto nuevo = new Proyecto(proyecto, us, buscarMoneda(proyecto.getMoneda()));
-				if (us.addProyecto(nuevo)){
+				if (us.addProyecto(nuevo))
 					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
 					{
 						public void execute()
@@ -135,9 +135,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							sess.save(us);
 						}
 					});
-				}else{
+				else
 					return "El nombre del proyecto ya existe";
-				}
 			}
 			return null;
 		}
@@ -279,10 +278,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
-					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
-							+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false AND proy.revisado = true AND bloqueado = false").setString(0,
-					usuario).list();
+			List<Proyecto> projects = (List<Proyecto>) sess
+					.createQuery(
+							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
+									+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false AND proy.revisado = true AND bloqueado = false")
+					.setString(0, usuario).list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
@@ -656,9 +656,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			vendedor.setProyectosCancelados((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND cancelado = true").setParameter(0,
 					usuario).list());
-			vendedor.setProyectosConOfertasAbiertas((List<Proyecto>) sess.createQuery(
-					"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
-							+ "WHERE oferta.usuario = ? AND proy.contrato IS EMPTY AND proy.revisado = true AND proy.usuario.bloqueado = false").setParameter(0, usuario).list());
+			vendedor
+					.setProyectosConOfertasAbiertas((List<Proyecto>) sess
+							.createQuery(
+									"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
+											+ "WHERE oferta.usuario = ? AND proy.contrato IS EMPTY AND proy.revisado = true AND proy.usuario.bloqueado = false")
+							.setParameter(0, usuario).list());
 			List<Object[]> ganancia = (List<Object[]>) sess
 					.createQuery(
 							"SELECT contrato.ofertaGanadora.moneda.description, SUM(contrato.ofertaGanadora.monto) AS monto FROM Proyecto "
@@ -744,8 +747,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
-						int rango = (int) (Float.parseFloat(filtro.getPresupuestoDesde()) * m.getConversion() / (buscarMoneda(
-								filtro.getMoneda(), monedas).getConversion()));
+						int rango = (int) (Float.parseFloat(filtro.getPresupuestoDesde()) * m.getConversion() / buscarMoneda(
+								filtro.getMoneda(), monedas).getConversion());
 						consulta += "((presupuestoMin >= '" + String.valueOf(rango) + "') AND (moneda.description = '"
 								+ m.getDescription() + "'))";
 						pos++;
@@ -766,8 +769,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
-						int rango = (int) (Float.parseFloat(filtro.getPresupuestoHasta()) / m.getConversion() * (buscarMoneda(
-								filtro.getMoneda(), monedas).getConversion()));
+						int rango = (int) (Float.parseFloat(filtro.getPresupuestoHasta()) / m.getConversion() * buscarMoneda(
+								filtro.getMoneda(), monedas).getConversion());
 						consulta += "((presupuestoMax <= '" + String.valueOf(rango) + "') AND (moneda.description = '"
 								+ m.getDescription() + "'))";
 						pos++;
@@ -806,18 +809,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					primero = true;
 				}
 			}
+			else if (!primero)
+				consulta += " AND fecha >= current_date()";
 			else
 			{
-				if (!primero)
-					consulta += " AND fecha >= current_date()";
-				else
-				{
-					consulta += " fecha >= current_date()";
-					primero = true;
-				}
+				consulta += " fecha >= current_date()";
+				primero = true;
 			}
 			if (filtro.getFechaHasta() != null)
-			{
 				if (!primero)
 					consulta += " AND fecha <= :fecha_hasta";
 				else
@@ -825,9 +824,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					consulta += " fecha <= :fecha_hasta";
 					primero = true;
 				}
-			}
 			if (filtro.getReputacion() != null && !filtro.getReputacion().isEmpty())
-			{
 				if (!primero)
 					consulta += " AND nivel = '" + filtro.getReputacion() + "'";
 				else
@@ -835,7 +832,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					consulta += " nivel = '" + filtro.getReputacion() + "'";
 					primero = true;
 				}
-			}
 			if (filtro.getTamanio() != null && !filtro.getTamanio().isEmpty())
 			{
 				if (!primero)
@@ -905,10 +901,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			if (!usuarioAnterior.equals(dto.getUsuario()))
-			{
 				if (sess.createQuery("FROM Usuario WHERE login = ?").setString(0, dto.getUsuario()).uniqueResult() != null)
 					throw new NonUniqueResultException("El nombre de usuario \"" + dto.getUsuario() + "\" ya existe");
-			}
 			Usuario us = (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, usuarioAnterior)
 					.uniqueResult();
 
@@ -921,9 +915,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			us.setCodPostal(dto.getCodPostal());
 			us.setDescripPerfil(dto.getDescripPerfil());
 			us.setNombre(dto.getNombre());
-			
+
 			us.setPasswordHash(dto.getClave());
-			
+
 			TransactionWrapper.save(sess, us);
 
 			return null;
@@ -979,13 +973,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@Override
-	public Boolean isUsuarioBloqueado(String name) {
+	public Boolean isUsuarioBloqueado(String name)
+	{
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
 			Usuario user = (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, name).uniqueResult();
-			
+
 			return user.isBloqueado();
 		}
 		finally

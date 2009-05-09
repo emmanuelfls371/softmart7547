@@ -49,13 +49,11 @@ public class NewOfertaWidget extends FormWidget
 			{
 				((ListBox) f.getWidget(1)).clear();
 				for (Moneda moneda : monedas)
-				{
 					if (moneda.getDescription().compareTo(instance.moneda) == 0)
-					{						
+					{
 						((ListBox) f.getWidget(1)).addItem(moneda.getDescription(), moneda.getDescription());
 						((ListBox) f.getWidget(1)).setItemSelected(0, true);
 					}
-				}
 				((ListBox) f.getWidget(1)).setEnabled(false);
 			}
 		};
@@ -199,7 +197,7 @@ public class NewOfertaWidget extends FormWidget
 
 		private OfertaFields()
 		{
-			this.description = name();
+			description = name();
 		}
 
 		public String getDescription()

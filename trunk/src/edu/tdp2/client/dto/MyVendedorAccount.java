@@ -31,6 +31,6 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 
 	public void setProyectosConOfertasAbiertas(List<Proyecto> ofertasAbiertas)
 	{
-		this.proyectosConOfertasAbiertas = prune(ofertasAbiertas);
+		proyectosConOfertasAbiertas = prune(ofertasAbiertas);
 	}
 }

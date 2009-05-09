@@ -76,7 +76,7 @@ public class AdminUsersWidget extends AdminWidget
 			public void onValueChange(ValueChangeEvent<Boolean> event)
 			{
 				final boolean value = event.getValue();
-				final String prefix = (value ? "" : "des");
+				final String prefix = value ? "" : "des";
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{
 
