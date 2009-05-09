@@ -2,8 +2,6 @@ package edu.tdp2.client.model;
 
 import java.util.List;
 
-import edu.tdp2.client.model.Presupuesto;
-
 import junit.framework.TestCase;
 
 public class PresupuestoTest extends TestCase
