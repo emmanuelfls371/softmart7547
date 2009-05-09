@@ -10,3 +10,8 @@
 #pc-template-img {
   margin-top: 20px;
 }
+
+.blocked {
+   background-color: red;
+   border: none;
+ }

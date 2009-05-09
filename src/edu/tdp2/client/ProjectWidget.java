@@ -1,14 +1,20 @@
 package edu.tdp2.client;
 
+import java.util.List;
+
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
+
 
 public class ProjectWidget extends VerticalPanel
 {
@@ -29,6 +35,27 @@ public class ProjectWidget extends VerticalPanel
 	@SuppressWarnings("deprecation")
 	private void load()
 	{
+		final HTML h = new HTML(project.getUsuario().getLogin());
+		
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert("No se pudo recuperar el usuario");
+			}
+
+			public void onSuccess(Boolean isBloqueado)
+			{
+				if(isBloqueado){
+					h.addStyleName("blocked");
+					h.setStyleName("blocked");
+				}
+			}
+		};
+		ClientUtils.getSoftmartService().isUsuarioBloqueado(project.getUsuario().getLogin(), callback);
+		
+		
+		
 		add(new Label("Proyecto " + project.getNombre()));
 		table.clear();
 		add(table);
@@ -44,7 +71,7 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(0, 9, new HTML("¿Cancelado?"));
 
 		int row = 1;
-		table.setWidget(row, 0, new HTML(project.getUsuario().getLogin()));
+		table.setWidget(row, 0, h);
 		table.setWidget(row, 1, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
 				.getMaxPresupuesto())));
 		table.setWidget(row, 2, new HTML(project.getMoneda().getDescription()));

@@ -17,6 +17,8 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 	private String ciudad;
 	private String email;
 	private String usuario;
+	private String codigoPostal;
+	private String descripcion;
 	private MyVendedorAccount datosVendedor = new MyVendedorAccount();
 	private MyCompradorAccount datosComprador = new MyCompradorAccount();
 
@@ -108,5 +110,21 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 	public String getApellido()
 	{
 		return apellido;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setCodigoPostal(String codigoPostal) {
+		this.codigoPostal = codigoPostal;
+	}
+
+	public String getCodigoPostal() {
+		return codigoPostal;
 	}
 }

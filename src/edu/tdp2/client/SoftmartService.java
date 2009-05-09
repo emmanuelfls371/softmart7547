@@ -73,4 +73,6 @@ public interface SoftmartService extends RemoteService
 	public List<Usuario> getUsers();
 
 	public String setUsuarioBloqueado(Long id, Boolean value);
+	
+	public Boolean isUsuarioBloqueado(String name);
 }

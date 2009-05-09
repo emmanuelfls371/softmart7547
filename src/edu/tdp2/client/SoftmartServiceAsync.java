@@ -73,4 +73,7 @@ public interface SoftmartServiceAsync
 	public void getUsers(AsyncCallback<List<Usuario>> callback);
 
 	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
+
+
+	public void isUsuarioBloqueado(String name, AsyncCallback<Boolean> callback);
 }
