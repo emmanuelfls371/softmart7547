@@ -92,7 +92,7 @@ public class Proyecto extends AbstractDomainObject
 		return moneda;
 	}
 
-	private void setMoneda(Moneda moneda)
+	public void setMoneda(Moneda moneda)
 	{
 		this.moneda = moneda;
 	}
@@ -155,27 +155,27 @@ public class Proyecto extends AbstractDomainObject
 		return usuario;
 	}
 
-	private void setUsuario(Usuario usuario)
+	public void setUsuario(Usuario usuario)
 	{
 		this.usuario = usuario;
 	}
 
-	private void setMaxPresupuesto(int maxPresupuesto)
+	public void setMaxPresupuesto(int maxPresupuesto)
 	{
 		this.maxPresupuesto = maxPresupuesto;
 	}
 
-	private void setMinPresupuesto(int minPresupuesto)
+	public void setMinPresupuesto(int minPresupuesto)
 	{
 		this.minPresupuesto = minPresupuesto;
 	}
 
-	private void setFecha(Date fecha)
+	public void setFecha(Date fecha)
 	{
 		this.fecha = fecha;
 	}
 
-	private void setNivel(String nivel)
+	public void setNivel(String nivel)
 	{
 		boolean existe = false;
 		for (NivelReputacion n : NivelReputacion.values())
@@ -185,7 +185,7 @@ public class Proyecto extends AbstractDomainObject
 			this.nivel = nivel;
 	}
 
-	private void setDificultad(String dificultad)
+	public void setDificultad(String dificultad)
 	{
 		boolean existe = false;
 		for (DificultadProyecto d : DificultadProyecto.values())
@@ -195,7 +195,7 @@ public class Proyecto extends AbstractDomainObject
 			this.dificultad = dificultad;
 	}
 
-	private void setTamanio(String tamanio)
+	public void setTamanio(String tamanio)
 	{
 		boolean existe = false;
 		for (TamanioProyecto t : TamanioProyecto.values())
@@ -205,12 +205,12 @@ public class Proyecto extends AbstractDomainObject
 			this.tamanio = tamanio;
 	}
 
-	private void setDescripcion(String descripcion)
+	public void setDescripcion(String descripcion)
 	{
 		this.descripcion = descripcion;
 	}
 
-	private void setPathArchivo(String pathArchivo)
+	public void setPathArchivo(String pathArchivo)
 	{
 		this.pathArchivo = pathArchivo;
 	}

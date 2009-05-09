@@ -1,61 +1,96 @@
 package edu.tdp2.server;
 
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.hibernate.Session;
 
-import edu.tdp2.client.dto.FiltroDto;
-import edu.tdp2.client.dto.MyAccountDto;
-import edu.tdp2.client.dto.MyCompradorAccount;
-import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
+import edu.tdp2.client.model.AbstractDomainObject;
+import edu.tdp2.client.model.Contrato;
 import edu.tdp2.client.model.Moneda;
-import edu.tdp2.client.model.NivelReputacion;
 import edu.tdp2.client.model.Oferta;
+import edu.tdp2.client.model.Pais;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.Usuario;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
+import edu.tdp2.server.db.TransactionWrapper.Action;
 import edu.tdp2.server.exceptions.SoftmartServerException;
 
 public class SoftmartServiceTest extends TestCase
 {
-	private static String nombreProy = "lala";
-	private static String descripcion = "lalala";
-	private static String presupuesto = "100 a 500";
-	private static String nivel = "Normal";
-	private static String tam = "Chico";
-	private static String dif = "Simple";
-	private static String moneda = "Peso";
+	private SoftmartServiceImpl impl = new SoftmartServiceImpl();
+	private Proyecto y, y2;
+	private Pais p;
+	private Moneda m;
+	private Usuario uComprador, uVendedor;
+	private Oferta o, o2;
+	private Contrato c;
+	private Session sess;
 
-	private static String usProy = "chechu";
-	private static String usOf = "ariel";
-	private static String login = "chechu";
+	public SoftmartServiceTest()
+	{
+		HibernateUtil.getSession().close();
+	}
 
-	private static String descOf = "prueba unitaria";
-	private static int dias = 10;
-	private static int monto = 200;
-	private static String notif = "Si";
+	public void testOfertar()
+	{
+		final Session sess = HibernateUtil.getSession();
+		Oferta nueva = null;
+		try
+		{
+			OfertaDto o = new OfertaDto();
+			o.setDescripcion("prueba unitaria");
+			o.setDias(10);
+			o.setMoneda(m.getDescription());
+			o.setMonto(200);
+			o.setNotificacion("Si");
+			o.setProyecto(y.getId());
+			o.setUsuario(uVendedor.getLogin());
+			Usuario us = getUsuario(sess, o.getUsuario());
+			assertNotNull(us);
+			impl.ofertar(o);
+
+			nueva = null;
+			List<Oferta> ofertas = impl.getOffers(y);
+			for (Oferta oferta : ofertas)
+				if (oferta.getDescripcion().equals(o.getDescripcion()))
+				{
+					nueva = oferta;
+					break;
+				}
+			assertNotNull(nueva);
+		}
+		catch (SoftmartServerException e)
+		{
+			assertFalse(false);
+		}
+		finally
+		{
+			if (nueva != null)
+				TransactionWrapper.delete(sess, (AbstractDomainObject) sess.get(Oferta.class, nueva.getId()));
+			sess.close();
+		}
+	}
 
 	public void testPublicar()
 	{
 		Session sess = HibernateUtil.getSession();
-		Usuario us = getUsuario(sess, usProy);
+		Usuario us = getUsuario(sess, "chechu");
 		assertNotNull(us);
 		ProyectoDto dto = new ProyectoDto();
-		dto.setNombre(nombreProy);
-		dto.setDescripcion(descripcion);
-		dto.setPresupuesto(presupuesto);
-		dto.setNivel(nivel);
-		dto.setTamanio(tam);
-		dto.setDificultad(dif);
-		dto.setMoneda(moneda);
+		dto.setNombre("nombreProy");
+		dto.setDescripcion("lalala");
+		dto.setPresupuesto("100 a 500");
+		dto.setNivel("Normal");
+		dto.setTamanio("Chico");
+		dto.setDificultad("Simple");
+		dto.setMoneda(m.getDescription());
 		dto.setFecha(Calendar.getInstance().getTime());
 		Proyecto nuevo = new Proyecto(dto, us, buscarMoneda(dto.getMoneda()));
 		assertTrue(us.addProyecto(nuevo));
@@ -64,14 +99,144 @@ public class SoftmartServiceTest extends TestCase
 			TransactionWrapper.save(sess, nuevo);
 			TransactionWrapper.save(sess, us);
 		}
-		catch (Exception e)
+		catch (SoftmartServerException e)
 		{
 			assertFalse(false);
 		}
-		sess.close();
+		finally
+		{
+			TransactionWrapper.delete(sess, nuevo);
+			sess.close();
+		}
 	}
 
-	Moneda buscarMoneda(String nombre)
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+
+		sess = HibernateUtil.getSession();
+
+		p = new Pais();
+		p.setNombre("Zamunda");
+
+		m = new Moneda("Sextercio", 1f);
+
+		uComprador = new Usuario();
+		uComprador.setNombre("Nombre");
+		uComprador.setApellido("Apellido");
+		uComprador.setEmail("email@email.com");
+		uComprador.setLogin("Comprador");
+		uComprador.setPasswordHash("5f4dcc3b5aa765d61d8327deb882cf99"); // password
+		uComprador.setPais(p);
+		uComprador.setCiudad("Ciudad gotica");
+		uComprador.setCodPostal("012345");
+
+		uVendedor = new Usuario();
+		uVendedor.setNombre("Nombre2");
+		uVendedor.setApellido("Apellido2");
+		uVendedor.setEmail("email@email.com2");
+		uVendedor.setLogin("Vendedor");
+		uVendedor.setPasswordHash("6cb75f652a9b52798eb6cf2201057c73"); // password2
+		uVendedor.setPais(p);
+		uVendedor.setCiudad("Ciudad gotica2");
+		uVendedor.setCodPostal("012346");
+
+		y = new Proyecto();
+		y.setNombre("Nombre");
+		y.setMaxPresupuesto(500);
+		y.setMinPresupuesto(100);
+		y.setFecha(new Date(System.currentTimeMillis()));
+		y.setNivel("Normal");
+		y.setDificultad("Medio");
+		y.setTamanio("Mediano");
+		y.setDescripcion("Descripcion");
+		y.setMoneda(m);
+		y.setUsuario(uComprador);
+
+		y2 = new Proyecto();
+		y2.setNombre("Nombre2");
+		y2.setMaxPresupuesto(500);
+		y2.setMinPresupuesto(100);
+		y2.setFecha(new Date(System.currentTimeMillis()));
+		y2.setNivel("Premium");
+		y2.setDificultad("Simple");
+		y2.setTamanio("Chico");
+		y2.setDescripcion("Descripcion2");
+		y2.setMoneda(m);
+		y2.setUsuario(uComprador);
+
+		o = new Oferta();
+		o.setMonto(100);
+		o.setDias(10);
+		o.setDescripcion("Descripcion");
+		o.setProyecto(y);
+		o.setUsuario(uVendedor);
+		o.setNotificacion("Si");
+		o.setMoneda(m);
+
+		o2 = new Oferta();
+		o2.setMonto(100);
+		o2.setDias(10);
+		o2.setDescripcion("Descripcion2");
+		o2.setProyecto(y);
+		o2.setUsuario(uVendedor);
+		o2.setNotificacion("Si");
+		o2.setMoneda(m);
+
+		c = new Contrato();
+		c.setProyecto(y);
+		c.setOfertaGanadora(o);
+		/*
+		 * TransactionWrapper.execute(sess, new Action() { public void execute() { sess.save(p); sess.save(m);
+		 * sess.save(uComprador); sess.save(uVendedor); sess.save(y); sess.save(y2); sess.save(o); sess.save(o2);
+		 * sess.save(c); } });
+		 */
+		TransactionWrapper.save(sess, p);
+		TransactionWrapper.save(sess, m);
+		TransactionWrapper.save(sess, uComprador);
+		TransactionWrapper.save(sess, uVendedor);
+		TransactionWrapper.save(sess, y);
+		TransactionWrapper.save(sess, y2);
+		TransactionWrapper.save(sess, o);
+		TransactionWrapper.save(sess, o2);
+		TransactionWrapper.save(sess, c);
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		super.tearDown();
+
+		TransactionWrapper.execute(sess, new Action()
+		{
+			public void execute()
+			{
+				sess.refresh(c);
+				sess.refresh(o);
+				sess.refresh(o2);
+				sess.refresh(y);
+				sess.refresh(y2);
+				sess.refresh(uComprador);
+				sess.refresh(uVendedor);
+				sess.refresh(p);
+				sess.refresh(m);
+
+				sess.delete(c);
+				sess.delete(o);
+				sess.delete(o2);
+				sess.delete(y);
+				sess.delete(y2);
+				sess.delete(uComprador);
+				sess.delete(uVendedor);
+				sess.delete(p);
+				sess.delete(m);
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private Moneda buscarMoneda(String nombre)
 	{
 		Session sess = HibernateUtil.getSession();
 
@@ -87,20 +252,20 @@ public class SoftmartServiceTest extends TestCase
 	}
 
 	@SuppressWarnings("unchecked")
-	Usuario getUsuario(Session sess, String userName)
+	private long getIdProyecto(Session sess, String nombre)
 	{
 		try
 		{
-			List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ?").setString(0, userName).list();
+			List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, nombre).list();
 			if (result.size() > 0)
-				return result.get(0);
+				return result.get(0).getId();
 			else
-				return null;
+				return -1;
 		}
 		catch (Exception e)
 		{
 			assertFalse(false);
-			return null;
+			return -1;
 		}
 	}
 
@@ -123,197 +288,21 @@ public class SoftmartServiceTest extends TestCase
 	}
 
 	@SuppressWarnings("unchecked")
-	private long getIdProyecto(Session sess, String nombre)
+	private Usuario getUsuario(Session sess, String userName)
 	{
 		try
 		{
-			List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, nombre).list();
+			List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ?").setString(0, userName).list();
 			if (result.size() > 0)
-				return result.get(0).getId();
+				return result.get(0);
 			else
-				return -1;
+				return null;
 		}
 		catch (Exception e)
 		{
 			assertFalse(false);
-			return -1;
+			return null;
 		}
-	}
-
-	public void testOfertar()
-	{
-		final Session sess = HibernateUtil.getSession();
-		try
-		{
-			OfertaDto o = new OfertaDto();
-			o.setDescripcion(descOf);
-			o.setDias(dias);
-			o.setMoneda(moneda);
-			o.setMonto(monto);
-			o.setNotificacion(notif);
-			assertNotSame(getIdProyecto(sess, nombreProy), -1);
-			o.setProyecto(getIdProyecto(sess, nombreProy));
-			o.setUsuario(usOf);
-			final Proyecto proy = getProyecto(sess, o.getProyecto());
-			assertNotNull(proy);
-			Usuario us = getUsuario(sess, o.getUsuario());
-			assertNotNull(us);
-			final Oferta nueva = new Oferta(o, proy, us, buscarMoneda(o.getMoneda()));
-			assertTrue(proy.addOferta(nueva));
-			assertTrue(us.addOferta(nueva));
-			TransactionWrapper.execute(sess, new TransactionWrapper.Action()
-			{
-				public void execute()
-				{
-					sess.save(nueva);
-					sess.save(proy);
-				}
-			});
-
-		}
-		catch (Exception e)
-		{
-			assertFalse(false);
-		}
-		sess.close();
-	}
-
-	@SuppressWarnings("unchecked")
-	public void testGetMyAccountData()
-	{
-		Session sess = HibernateUtil.getSession();
-		MyAccountDto dto = new MyAccountDto();
-
-		try
-		{
-			Usuario usuario = (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, login)
-					.uniqueResult();
-			if (usuario == null)
-				throw new SoftmartServerException("No se encuentra el usuario con login: " + login);
-			dto.setNombre(usuario.getNombre());
-			dto.setApellido(usuario.getApellido());
-			dto.setPais(usuario.getPais().getNombre());
-			dto.setEmail(usuario.getEmail());
-			dto.setUsuario(login);
-			dto.setCiudad(usuario.getCiudad());
-			dto.setNivel(NivelReputacion.valueOf(usuario.getNivel()));
-
-			MyCompradorAccount comprador = dto.getDatosComprador();
-			Double d = (Double) sess.createQuery(
-					"SELECT AVG(califAlComprador.calificacion) FROM Contrato WHERE proyecto.usuario = ?").setParameter(
-					0, usuario).uniqueResult();
-			if (d != null)
-				comprador.setReputacion(d);
-			comprador.setProyectosSinRecibirCalif(sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NULL").setParameter(0, usuario)
-					.list());
-			comprador.setProyectosSinCalificar(sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND contrato.califAlVendedor IS NULL").setParameter(0, usuario)
-					.list());
-			comprador.setProyectosCerrados(sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NOT NULL "
-							+ "AND contrato.califAlVendedor IS NOT NULL").setParameter(0, usuario).list());
-			comprador.setProyectosCancelados(sess.createQuery("FROM Proyecto WHERE usuario = ? AND cancelado = true")
-					.setParameter(0, usuario).list());
-			comprador.setProyectosAbiertos(sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND (contrato IS NULL OR contrato.califAlComprador IS NULL "
-							+ "OR contrato.califAlVendedor IS NULL)").setParameter(0, usuario).list());
-
-			MyVendedorAccount vendedor = dto.getDatosVendedor();
-			/*
-			 * vendedor.setReputacion((Double) sess.createQuery(
-			 * "SELECT AVG(califAlVendedor.calificacion) FROM Contrato WHERE ofertaGanadora.usuario = ?")
-			 * .setParameter(0, usuario).uniqueResult());
-			 */
-			vendedor.setProyectosSinRecibirCalif(sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NULL")
-					.setParameter(0, usuario).list());
-			vendedor.setProyectosSinCalificar(sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlVendedor IS NULL")
-					.setParameter(0, usuario).list());
-			vendedor.setProyectosCerrados(sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
-							+ "AND contrato.califAlVendedor IS NOT NULL").setParameter(0, usuario).list());
-			vendedor.setProyectosCancelados(sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND cancelado = true").setParameter(0,
-					usuario).list());
-			vendedor.setProyectosConOfertasAbiertas(sess.createQuery(
-					"FROM Proyecto proy JOIN proy.ofertas AS oferta "
-							+ "WHERE oferta.usuario = ? AND oferta.contrato IS NULL").setParameter(0, usuario).list());
-			List<Object[]> ganancia = sess
-					.createQuery(
-							"SELECT contrato.ofertaGanadora.moneda.description, SUM(contrato.ofertaGanadora.monto) AS monto FROM Proyecto "
-									+ "WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
-									+ "AND contrato.califAlVendedor IS NOT NULL GROUP BY contrato.ofertaGanadora.moneda.description")
-					.setParameter(0, usuario).list();
-			Map<Moneda, Long> gananciaAcumulada = new HashMap<Moneda, Long>();
-			for (Object[] row : ganancia)
-				gananciaAcumulada.put(buscarMoneda((String) row[0]), (Long) row[1]);
-			vendedor.setGananciaAcumulada(gananciaAcumulada);
-
-		}
-		finally
-		{
-			sess.close();
-		}
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Moneda> buscarMonedas()
-	{
-		Session sess = HibernateUtil.getSession();
-
-		try
-		{
-			return sess.createQuery("FROM Moneda").list();
-
-		}
-		finally
-		{
-			sess.close();
-		}
-	}
-
-	Moneda buscarMoneda(String nombre, List<Moneda> monedas)
-	{
-		for (Moneda m : monedas)
-			if (m.getDescription().equals(nombre))
-				return m;
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void testFilterProject()
-	{
-		Session sess = HibernateUtil.getSession();
-		String consulta = new String();
-		List<Moneda> monedas = buscarMonedas();
-		FiltroDto filtro = new FiltroDto();
-		filtro.setPresupuestoDesde("4");
-		filtro.setMoneda("Peso");
-		filtro.setUsuario(login);
-		if (filtro.getPresupuestoDesde() != null && !filtro.getPresupuestoDesde().isEmpty())
-		{
-			consulta += " AND (";
-			int pos = 0;
-			for (Moneda m : monedas)
-			{
-				int rango = (int) (Float.parseFloat(filtro.getPresupuestoDesde()) * m.getConversion() / buscarMoneda(
-						filtro.getMoneda(), monedas).getConversion());
-				consulta += "((presupuestoMin >= '" + String.valueOf(rango) + "') AND (moneda.description = '"
-						+ m.getDescription() + "'))";
-				pos++;
-				if (pos != monedas.size())
-					consulta += " OR ";
-			}
-			consulta += ")";
-		}
-		List<Proyecto> projects = null;
-		projects = sess.createQuery(
-				"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-						+ "AND usuario.login != :us AND cancelado = false" + consulta).setString("us",
-				filtro.getUsuario()).list();
 	}
 
 }

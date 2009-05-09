@@ -75,7 +75,7 @@ public class Oferta extends AbstractDomainObject
 		return usuario;
 	}
 
-	private void setUsuario(Usuario usuario)
+	public void setUsuario(Usuario usuario)
 	{
 		this.usuario = usuario;
 	}
@@ -85,7 +85,7 @@ public class Oferta extends AbstractDomainObject
 		return proyecto;
 	}
 
-	private void setProyecto(Proyecto proyecto)
+	public void setProyecto(Proyecto proyecto)
 	{
 		this.proyecto = proyecto;
 	}
@@ -95,7 +95,7 @@ public class Oferta extends AbstractDomainObject
 		return monto;
 	}
 
-	private void setMonto(int monto)
+	public void setMonto(int monto)
 	{
 		this.monto = monto;
 	}
@@ -105,7 +105,7 @@ public class Oferta extends AbstractDomainObject
 		return dias;
 	}
 
-	private void setDias(int dias)
+	public void setDias(int dias)
 	{
 		this.dias = dias;
 	}
@@ -115,7 +115,7 @@ public class Oferta extends AbstractDomainObject
 		return descripcion;
 	}
 
-	private void setDescripcion(String descripcion)
+	public void setDescripcion(String descripcion)
 	{
 		this.descripcion = descripcion;
 	}
@@ -125,7 +125,7 @@ public class Oferta extends AbstractDomainObject
 		return notificacion;
 	}
 
-	private void setNotificacion(String notificacion)
+	public void setNotificacion(String notificacion)
 	{
 		this.notificacion = notificacion;
 	}
@@ -138,7 +138,7 @@ public class Oferta extends AbstractDomainObject
 		contrato = null;
 	}
 
-	private void setMoneda(Moneda moneda)
+	public void setMoneda(Moneda moneda)
 	{
 		this.moneda = moneda;
 	}
@@ -169,5 +169,4 @@ public class Oferta extends AbstractDomainObject
 		else
 			return false;
 	}
-
 }
