@@ -811,8 +811,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				filtroActual += ")";
 				filtros.add(filtroActual);
 			}
-			List<Proyecto> projects = null;
+			filtros.add("revisado = true");
 			String consulta = StringUtils.join(filtros.iterator(), " AND ");
+			List<Proyecto> projects = null;
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() == null)
 				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate("fecha_desde",
 						filtro.getFechaDesde()).list();
