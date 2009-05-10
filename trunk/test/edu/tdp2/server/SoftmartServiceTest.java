@@ -38,6 +38,9 @@ public class SoftmartServiceTest extends TestCase
 		HibernateUtil.getSession().close();
 	}
 
+	/**
+	 * Prueba para ofertar y getOffers
+	 */
 	public void testOfertar()
 	{
 		final Session sess = HibernateUtil.getSession();
@@ -80,24 +83,31 @@ public class SoftmartServiceTest extends TestCase
 
 	public void testPublicar()
 	{
-		Session sess = HibernateUtil.getSession();
-		Usuario us = getUsuario(sess, "chechu");
-		assertNotNull(us);
-		ProyectoDto dto = new ProyectoDto();
-		dto.setNombre("nombreProy");
-		dto.setDescripcion("lalala");
-		dto.setPresupuesto("100 a 500");
-		dto.setNivel("Normal");
-		dto.setTamanio("Chico");
-		dto.setDificultad("Simple");
-		dto.setMoneda(m.getDescription());
-		dto.setFecha(Calendar.getInstance().getTime());
-		Proyecto nuevo = new Proyecto(dto, us, buscarMoneda(dto.getMoneda()));
-		assertTrue(us.addProyecto(nuevo));
+		Proyecto nuevo = null;
 		try
 		{
-			TransactionWrapper.save(sess, nuevo);
-			TransactionWrapper.save(sess, us);
+			ProyectoDto dto = new ProyectoDto();
+			dto.setNombre("Nombre3");
+			dto.setDescripcion("lalala");
+			dto.setPresupuesto("100 a 500");
+			dto.setNivel("Normal");
+			dto.setTamanio("Chico");
+			dto.setDificultad("Simple");
+			dto.setMoneda(m.getDescription());
+			dto.setFecha(new Date(System.currentTimeMillis() + 1000 * 86400 * 365));
+			dto.setUsuario(uComprador.getLogin());
+			impl.publicar(dto);
+
+			List<Proyecto> proyectos = impl.getActiveProjects();
+			for (Proyecto proyecto : proyectos)
+			{
+				if (proyecto.getNombre().equals(dto.getNombre()))
+				{
+					nuevo = proyecto;
+					break;
+				}
+			}
+			assertNotNull(nuevo);
 		}
 		catch (SoftmartServerException e)
 		{
@@ -105,8 +115,8 @@ public class SoftmartServiceTest extends TestCase
 		}
 		finally
 		{
-			TransactionWrapper.delete(sess, nuevo);
-			sess.close();
+			if (nuevo != null)
+				TransactionWrapper.delete(sess, (AbstractDomainObject) sess.get(Proyecto.class, nuevo.getId()));
 		}
 	}
 
@@ -146,7 +156,7 @@ public class SoftmartServiceTest extends TestCase
 		y.setNombre("Nombre");
 		y.setMaxPresupuesto(500);
 		y.setMinPresupuesto(100);
-		y.setFecha(new Date(System.currentTimeMillis()));
+		y.setFecha(new Date(System.currentTimeMillis() + 1000 * 86400 * 365));
 		y.setNivel("Normal");
 		y.setDificultad("Medio");
 		y.setTamanio("Mediano");
@@ -158,7 +168,7 @@ public class SoftmartServiceTest extends TestCase
 		y2.setNombre("Nombre2");
 		y2.setMaxPresupuesto(500);
 		y2.setMinPresupuesto(100);
-		y2.setFecha(new Date(System.currentTimeMillis()));
+		y2.setFecha(new Date(System.currentTimeMillis() + 1000 * 86400 * 365));
 		y2.setNivel("Premium");
 		y2.setDificultad("Simple");
 		y2.setTamanio("Chico");
