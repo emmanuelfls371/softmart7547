@@ -1,12 +1,14 @@
 package edu.tdp2.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.NonUniqueResultException;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -637,8 +639,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					"FROM Proyecto AS proy WHERE usuario = ? AND proy IN (SELECT proyecto FROM Contrato) "
 							+ "AND proy.cancelado = false").setParameter(0, usuario).list());
 			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND cancelado = true")
-					.setParameter(0, usuario).list());
+					"FROM Proyecto WHERE usuario = ? AND cancelado = true").setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
 							+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
@@ -735,128 +736,84 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			boolean primero = true;
-			String consulta = new String();
+			List<String> filtros = new ArrayList<String>();
+			String filtroActual = null;
 			if (filtro.getMoneda() != null && !filtro.getMoneda().isEmpty())
 			{
 				List<Moneda> monedas = buscarMonedas();
 				if (filtro.getPresupuestoDesde() != null && !filtro.getPresupuestoDesde().isEmpty())
 				{
-					if (!primero)
-						consulta += " AND (";
-					else
-					{
-						consulta += " (";
-						primero = true;
-					}
+					filtroActual = "(";
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
 						int rango = (int) (Float.parseFloat(filtro.getPresupuestoDesde()) * m.getConversion() / buscarMoneda(
 								filtro.getMoneda(), monedas).getConversion());
-						consulta += "((presupuestoMin >= '" + String.valueOf(rango) + "') AND (moneda.description = '"
-								+ m.getDescription() + "'))";
+						filtroActual += "((presupuestoMin >= '" + String.valueOf(rango)
+								+ "') AND (moneda.description = '" + m.getDescription() + "'))";
 						pos++;
 						if (pos != monedas.size())
-							consulta += " OR ";
+							filtroActual += " OR ";
 					}
-					consulta += ")";
+					filtroActual += ")";
+					filtros.add(filtroActual);
 				}
 				if (filtro.getPresupuestoHasta() != null && !filtro.getPresupuestoHasta().isEmpty())
 				{
-					if (!primero)
-						consulta += " AND (";
-					else
-					{
-						consulta += " (";
-						primero = true;
-					}
+					filtroActual = "(";
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
 						int rango = (int) (Float.parseFloat(filtro.getPresupuestoHasta()) / m.getConversion() * buscarMoneda(
 								filtro.getMoneda(), monedas).getConversion());
-						consulta += "((presupuestoMax <= '" + String.valueOf(rango) + "') AND (moneda.description = '"
-								+ m.getDescription() + "'))";
+						filtroActual += "((presupuestoMax <= '" + String.valueOf(rango)
+								+ "') AND (moneda.description = '" + m.getDescription() + "'))";
 						pos++;
 						if (pos != monedas.size())
-							consulta += " OR ";
+							filtroActual += " OR ";
 					}
-					consulta += ")";
+					filtroActual += ")";
+					filtros.add(filtroActual);
 				}
 			}
 			if (filtro.getComplejidad() != null && !filtro.getComplejidad().isEmpty())
 			{
-				if (!primero)
-					consulta += " AND (";
-				else
-				{
-					consulta += " (";
-					primero = true;
-				}
+				filtroActual = "(";
 				int pos = 0;
 				for (String c : filtro.getComplejidad())
 				{
-					consulta += "dificultad = '" + c + "'";
+					filtroActual += "dificultad = '" + c + "'";
 					pos++;
 					if (pos != filtro.getComplejidad().size())
-						consulta += " OR ";
+						filtroActual += " OR ";
 				}
-				consulta += ")";
+				filtroActual += ")";
+				filtros.add(filtroActual);
 			}
 			if (filtro.getFechaDesde() != null)
-			{
-				if (!primero)
-					consulta += " AND fecha >= :fecha_desde";
-				else
-				{
-					consulta += " fecha >= :fecha_desde";
-					primero = true;
-				}
-			}
-			else if (!primero)
-				consulta += " AND fecha >= current_date()";
+				filtros.add(" fecha >= :fecha_desde");
 			else
-			{
-				consulta += " fecha >= current_date()";
-				primero = true;
-			}
+				filtros.add(" fecha >= current_date()");
 			if (filtro.getFechaHasta() != null)
-				if (!primero)
-					consulta += " AND fecha <= :fecha_hasta";
-				else
-				{
-					consulta += " fecha <= :fecha_hasta";
-					primero = true;
-				}
+				filtros.add(" fecha <= :fecha_hasta");
 			if (filtro.getReputacion() != null && !filtro.getReputacion().isEmpty())
-				if (!primero)
-					consulta += " AND nivel = '" + filtro.getReputacion() + "'";
-				else
-				{
-					consulta += " nivel = '" + filtro.getReputacion() + "'";
-					primero = true;
-				}
+				filtros.add(" nivel = '" + filtro.getReputacion() + "'");
 			if (filtro.getTamanio() != null && !filtro.getTamanio().isEmpty())
 			{
-				if (!primero)
-					consulta += " AND (";
-				else
-				{
-					consulta += " (";
-					primero = true;
-				}
+				filtroActual = " (";
 				int pos = 0;
 				for (String t : filtro.getTamanio())
 				{
-					consulta += "tamanio = '" + t + "'";
+					filtroActual += "tamanio = '" + t + "'";
 					pos++;
 					if (pos != filtro.getTamanio().size())
-						consulta += " OR ";
+						filtroActual += " OR ";
 				}
-				consulta += ")";
+				filtroActual += ")";
+				filtros.add(filtroActual);
 			}
 			List<Proyecto> projects = null;
+			String consulta = StringUtils.join(filtros.iterator(), " AND ");
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() == null)
 				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate("fecha_desde",
 						filtro.getFechaDesde()).list();
