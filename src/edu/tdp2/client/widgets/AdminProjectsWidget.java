@@ -105,7 +105,7 @@ public class AdminProjectsWidget extends AdminWidget
 		{
 			public void onClick(ClickEvent event)
 			{
-				if (!Window.confirm("Confirme que desea cancelar el proyecto?"))
+				if (!Window.confirm("Confirme que desea cancelar el proyecto"))
 					return;
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{
@@ -125,7 +125,7 @@ public class AdminProjectsWidget extends AdminWidget
 						}
 					}
 				};
-				ClientUtils.getSoftmartService().cancelarProyecto(p.getId(), callback);
+				ClientUtils.getSoftmartService().cancelarProyectoXAdmin(p.getId(), callback);
 			}
 		});
 		return a;
