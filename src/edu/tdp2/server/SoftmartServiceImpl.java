@@ -347,10 +347,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			String sql = "SELECT p FROM Proyecto AS p LEFT JOIN p.contrato AS c WHERE p.cancelado = false AND "
-					+ "((c IS EMPTY AND p.fecha >= current_date()) OR "
-					+ "(c.califAlComprador IS NULL OR c.califAlVendedor IS NULL)) ";
+			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND "
+					+ "p.contrato IS EMPTY AND p.fecha >= current_date()";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).list();
+			projects.addAll(sess.createQuery(
+					"FROM Proyecto AS p WHERE p.cancelado = false AND "
+							+ "(p.contrato.califAlComprador IS NULL OR p.contrato.califAlVendedor IS NULL)").list());
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
