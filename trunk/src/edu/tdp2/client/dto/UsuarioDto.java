@@ -31,8 +31,6 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 	private String usuario;
 
 	// En realidad solo se guarda el hash de la clave, no la clave
-	@NotEmpty(message = "Debe ingresar la clave")
-	@NotNull
 	private String clave;
 
 	@NotEmpty(message = "Debe ingresar el pa�s")

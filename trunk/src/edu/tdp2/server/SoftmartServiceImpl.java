@@ -1,7 +1,6 @@
 package edu.tdp2.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -878,7 +877,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			us.setDescripPerfil(dto.getDescripPerfil());
 			us.setNombre(dto.getNombre());
 
-			us.setPasswordHash(dto.getClave());
+			if (dto.getClave() != null)
+				us.setPasswordHash(dto.getClave());
 
 			TransactionWrapper.save(sess, us);
 
