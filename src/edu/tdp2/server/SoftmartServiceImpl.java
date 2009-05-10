@@ -36,7 +36,6 @@ import edu.tdp2.client.model.TamanioProyecto;
 import edu.tdp2.client.model.Usuario;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
-import edu.tdp2.server.exceptions.BadLoginException;
 import edu.tdp2.server.exceptions.SoftmartServerException;
 import edu.tdp2.server.utils.Encrypter;
 
@@ -51,13 +50,17 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Usuario> result = sess.createQuery(
-					"FROM Usuario WHERE login = ? AND passwordHash = ? AND bloqueado = false").setString(0, userName)
-					.setString(1, passwordHash).list();
+			List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ? AND passwordHash = ?").setString(0,
+					userName).setString(1, passwordHash).list();
 			if (result.size() > 0)
-				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
+			{
+				if (result.get(0).isBloqueado())
+					return "@Esta cuenta ha sido bloqueada por el administrador";
+				else
+					return crearTicket(userName, result.get(0).getId());// Este array es 1-based
+			}
 			else
-				throw new BadLoginException("Login incorrecto");
+				return "@Login incorrecto";
 		}
 		finally
 		{

@@ -125,12 +125,17 @@ public class LoginWidget extends SimplePanel
 
 					public void onSuccess(String result)
 					{
-						Date expire = new Date();
-						expire.setTime(expire.getTime() + 1000 * 60 * 60 * 24); // Un dia
-						Cookies.setCookie(constants.loginCookieName(), result, expire);
-						setCurrentUser(userNameTextBox.getText());
-						if (loginListener != null)
-							loginListener.onLogin();
+						if (result.startsWith("@")) // Error devuelto por parametro
+							Window.alert(result.substring(1));
+						else
+						{
+							Date expire = new Date();
+							expire.setTime(expire.getTime() + 1000 * 60 * 60 * 24); // Un dia
+							Cookies.setCookie(constants.loginCookieName(), result, expire);
+							setCurrentUser(userNameTextBox.getText());
+							if (loginListener != null)
+								loginListener.onLogin();
+						}
 					}
 				};
 				ClientUtils.getSoftmartService().login(userNameTextBox.getText(), getHash(passwordTextBox.getText()),
