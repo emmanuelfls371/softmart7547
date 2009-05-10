@@ -278,11 +278,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			List<Proyecto> projects = (List<Proyecto>) sess
-					.createQuery(
-							"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
-									+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false AND proy.revisado = true AND bloqueado = false")
-					.setString(0, usuario).list();
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
+					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
+							+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false "
+							+ "AND proy.revisado = true AND usuario.bloqueado = false AND revisado = true").setString(
+					0, usuario).list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
@@ -308,7 +308,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			String sql = "FROM Proyecto WHERE ((contrato.ofertaGanadora.usuario.login = :usr "
 					+ "AND contrato.califAlComprador IS NULL) OR (contrato.proyecto.usuario.login = :usr "
-					+ "AND contrato.califAlVendedor IS NULL)) AND cancelado = false";
+					+ "AND contrato.califAlVendedor IS NULL)) AND cancelado = false AND revisado = true";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString("usr", user).list();
 			for (Proyecto project : projects)
 				project.prune();
@@ -328,7 +328,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			String sql = "FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-					+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false";
+					+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
+					+ "AND revisado = true";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString(0, user).list();
 			for (Proyecto project : projects)
 				project.prune();
@@ -340,6 +341,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
+	/**
+	 * Muestra todos los proyectos activos ((sin contrato y con la fecha aun no vencida) o sin calificacion), sin
+	 * importar si tienen la aprobacion del admin
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Proyecto> getActiveProjects()
 	{
@@ -623,22 +628,21 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (reputacionComp != null)
 				comprador.setReputacion(reputacionComp);
 			comprador.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NULL").setParameter(0, usuario)
-					.list());
+					"FROM Proyecto WHERE usuario = ? AND contrato.califAlComprador IS NULL AND revisado = true")
+					.setParameter(0, usuario).list());
 			comprador.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND contrato.califAlVendedor IS NULL").setParameter(0, usuario)
-					.list());
-			comprador
-					.setProyectosCerrados((List<Proyecto>) sess
-							.createQuery(
-									"FROM Proyecto AS proy WHERE usuario = ? AND proy IN (SELECT proyecto FROM Contrato) AND proy.cancelado = false")
-							.setParameter(0, usuario).list());
+					"FROM Proyecto WHERE usuario = ? AND contrato.califAlVendedor IS NULL AND revisado = true")
+					.setParameter(0, usuario).list());
+			comprador.setProyectosCerrados((List<Proyecto>) sess.createQuery(
+					"FROM Proyecto AS proy WHERE usuario = ? AND proy IN (SELECT proyecto FROM Contrato) "
+							+ "AND proy.cancelado = false").setParameter(0, usuario).list());
 			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND cancelado = true").setParameter(0, usuario).list());
+					"FROM Proyecto WHERE usuario = ? AND cancelado = true")
+					.setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-							+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false")
-					.setParameter(0, usuario.getLogin()).list());
+							+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
+							+ "AND proy.revisado = true").setParameter(0, usuario.getLogin()).list());
 
 			MyVendedorAccount vendedor = dto.getDatosVendedor();
 			Double reputacionVend = (Double) sess.createQuery(
@@ -647,23 +651,22 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (reputacionVend != null)
 				vendedor.setReputacion(reputacionVend);
 			vendedor.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NULL")
-					.setParameter(0, usuario).list());
+					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NULL "
+							+ "AND revisado = true").setParameter(0, usuario).list());
 			vendedor.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlVendedor IS NULL")
-					.setParameter(0, usuario).list());
+					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlVendedor IS NULL "
+							+ "AND revisado = true").setParameter(0, usuario).list());
 			vendedor.setProyectosCerrados((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
 							+ "AND contrato.califAlVendedor IS NOT NULL").setParameter(0, usuario).list());
 			vendedor.setProyectosCancelados((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND cancelado = true").setParameter(0,
 					usuario).list());
-			vendedor
-					.setProyectosConOfertasAbiertas((List<Proyecto>) sess
-							.createQuery(
-									"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
-											+ "WHERE oferta.usuario = ? AND proy.contrato IS EMPTY AND proy.revisado = true AND proy.usuario.bloqueado = false")
-							.setParameter(0, usuario).list());
+			vendedor.setProyectosConOfertasAbiertas((List<Proyecto>) sess.createQuery(
+					"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
+							+ "WHERE oferta.usuario = ? AND proy.contrato IS EMPTY AND proy.revisado = true "
+							+ "AND proy.usuario.bloqueado = false AND proy.revisado = true").setParameter(0, usuario)
+					.list());
 			List<Object[]> ganancia = (List<Object[]>) sess
 					.createQuery(
 							"SELECT contrato.ofertaGanadora.moneda.description, SUM(contrato.ofertaGanadora.monto) AS monto FROM Proyecto "
