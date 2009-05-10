@@ -130,7 +130,6 @@ public class PersonalModificationWidget extends FormWidget
 	{
 		if (errorClave)
 			errMsgs.add("No ha ingresado la clave repetida correctamente");
-
 	}
 
 	private final class ModificationSubmitHandler implements SubmitHandler
@@ -155,14 +154,13 @@ public class PersonalModificationWidget extends FormWidget
 
 			((UsuarioDto) dto).setUsuario(INVALIDO);
 
-			if (clave != null && claveRepetida != null && clave.equals(claveRepetida))
+			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
 				((UsuarioDto) dto).setClave(claveRepetida);
-			else
+			else if (!clave.isEmpty() || !claveRepetida.isEmpty())
 				errorClave = true;
 
 			if (!validate())
 				event.cancel();
-
 		}
 	}
 
