@@ -153,13 +153,18 @@ public class SearchWidget extends NavigablePanel
 
 					if (!(filtroDto.getPresupuestoHasta() == null || filtroDto.getPresupuestoHasta().isEmpty()))
 						Float.parseFloat(filtroDto.getPresupuestoHasta());
+				}
+				catch (NumberFormatException e)
+				{
+					Window.alert("No se reconoce el formato del monto ingresado");
+				}
 
 					if (!(filtroDto.getPresupuestoDesde() == null || filtroDto.getPresupuestoDesde().isEmpty())
 							&& (filtroDto.getMoneda() == null || filtroDto.getMoneda().isEmpty()))
-						Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+						Window.alert("Debe ingresar la moneda");
 					else if (!(filtroDto.getPresupuestoHasta() == null || filtroDto.getPresupuestoHasta().isEmpty())
 							&& (filtroDto.getMoneda() == null || filtroDto.getMoneda().isEmpty()))
-						Window.alert("Error inesperado, no se pudo realizar la búsqueda");
+						Window.alert("Debe ingresar la moneda");
 					else
 					{
 						final FiltroDto filtro = dto;
@@ -196,11 +201,6 @@ public class SearchWidget extends NavigablePanel
 							}
 						});
 					}
-				}
-				catch (NumberFormatException e)
-				{
-					Window.alert("Error inesperado, no se pudo realizar la búsqueda");
-				}
 			}
 		});
 		submitPanel.add(submit);
