@@ -58,6 +58,8 @@ public interface SoftmartService extends RemoteService
 
 	public String cancelarProyecto(Long projectId);
 
+	public String cancelarProyectoXAdmin(Long projectId);
+
 	public MyAccountDto getMyAccountData(String usuario);
 
 	public List<Proyecto> filterProject(FiltroDto filtro);

@@ -56,6 +56,8 @@ public interface SoftmartServiceAsync
 
 	public void cancelarProyecto(Long projectId, AsyncCallback<String> callback);
 
+	public void cancelarProyectoXAdmin(Long projectId, AsyncCallback<String> callback);
+
 	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
 
 	public void filterProject(FiltroDto filtro, AsyncCallback<List<Proyecto>> callback);

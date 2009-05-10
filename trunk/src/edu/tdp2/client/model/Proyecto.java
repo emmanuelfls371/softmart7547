@@ -64,6 +64,9 @@ public class Proyecto extends AbstractDomainObject
 	@Column(name = "Cancelado", nullable = false)
 	private boolean cancelado;
 
+	@Column(name = "CanceladoAdmin", nullable = false)
+	private boolean canceladoXAdmin;
+
 	@Column(name = "Revisado", nullable = false)
 	private boolean revisado;
 
@@ -278,6 +281,16 @@ public class Proyecto extends AbstractDomainObject
 	public boolean isRevisado()
 	{
 		return revisado;
+	}
+
+	public void setCanceladoXAdmin(boolean canceladoXAdmin)
+	{
+		this.canceladoXAdmin = canceladoXAdmin;
+	}
+
+	public boolean isCanceladoXAdmin()
+	{
+		return canceladoXAdmin;
 	}
 
 	@Override
