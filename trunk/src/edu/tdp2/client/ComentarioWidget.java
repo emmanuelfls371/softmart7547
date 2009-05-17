@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.model.Oferta;
-import edu.tdp2.client.utils.ClientUtils;
 
 public class ComentarioWidget extends VerticalPanel
 {
