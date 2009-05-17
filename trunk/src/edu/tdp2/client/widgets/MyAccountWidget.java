@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
 import edu.tdp2.client.dto.MyAccountDto;
-import edu.tdp2.client.dto.MyCompradorAccount;
+import edu.tdp2.client.dto.MySpecificAccount;
 import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Proyecto;
@@ -74,15 +74,16 @@ public class MyAccountWidget extends NavigablePanel
 
 		addRowDatos(new HTML("Nombre"), new HTML(dto.getNombre()));
 		addRowDatos(new HTML("Apellido"), new HTML(dto.getApellido()));
-		addRowDatos(new HTML("Pais"), new HTML(dto.getPais()));
 		addRowDatos(new HTML("E-mail"), new HTML(dto.getEmail()));
 		addRowDatos(new HTML("Usuario"), new HTML(dto.getUsuario()));
+		addRowDatos(new HTML("Pais"), new HTML(dto.getPais()));
 		addRowDatos(new HTML("Ciudad"), new HTML(dto.getCiudad()));
-		addRowDatos(new HTML("Nivel"), new HTML(dto.getNivel().toString()));
 		addRowDatos(new HTML("Codigo Postal"), new HTML(dto.getCodigoPostal().toString()));
 		addRowDatos(new HTML("Descripcion"), new HTML(dto.getDescripcion().toString()));
+		addRowDatos(new HTML("Mi categor&iacute;a como usuario de Softmart"),
+				new HTML(dto.getNivel().toString()));
 
-		MyCompradorAccount comprador = dto.getDatosComprador();
+		MySpecificAccount comprador = dto.getDatosComprador();
 		addRowComp(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
 
 		ProjectList projs = new ProjectList(comprador.getProyectosSinRecibirCalif());
@@ -123,14 +124,14 @@ public class MyAccountWidget extends NavigablePanel
 
 		addRowVend(new HTML("Ganancia acumulada"), new EarningsMap(vendedor.getGananciaAcumulada()));
 
-		projs = new ProjectList(vendedor.getProyectosConOfertasAbiertas());
+		projs = new ProjectList(vendedor.getProyectosAbiertos());
 		// History.addValueChangeHandler(new MyAccountHistoryHandler());
 		addRowVend(new HTML("Proyectos con ofertas abiertas"), projs, getAnchorForProjects(projs),
 				getOwnOfferAnchorForProjects(projs));
 
 		tabPanel.add(tableDatos, "Datos Personales");
-		tabPanel.add(tableComp, "Datos Comprador");
-		tabPanel.add(tableVend, "Datos Vendedor");
+		tabPanel.add(new MyCompradorAccountWidget(dto.getDatosComprador()), "Datos Comprador");
+		tabPanel.add(new MyVendedorAccountWidget(dto.getDatosVendedor()), "Datos Vendedor");
 		tabPanel.selectTab(0);
 
 		add(tabPanel);
