@@ -15,3 +15,11 @@
    background-color: red;
    border: none;
  }
+
+ body {
+   background-color: #FFC83C; 
+ }
+ 
+ .cursorPointer {
+  cursor: pointer;
+}

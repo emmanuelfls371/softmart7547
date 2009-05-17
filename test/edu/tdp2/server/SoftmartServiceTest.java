@@ -1,6 +1,5 @@
 package edu.tdp2.server;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -245,68 +244,11 @@ public class SoftmartServiceTest extends TestCase
 		});
 	}
 
-	@SuppressWarnings("unchecked")
-	private Moneda buscarMoneda(String nombre)
-	{
-		Session sess = HibernateUtil.getSession();
-
-		try
-		{
-			List<Moneda> monedas = sess.createQuery("FROM Moneda WHERE nombre = ?").setString(0, nombre).list();
-			return monedas.get(0);
-		}
-		finally
-		{
-			sess.close();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private long getIdProyecto(Session sess, String nombre)
-	{
-		try
-		{
-			List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, nombre).list();
-			if (result.size() > 0)
-				return result.get(0).getId();
-			else
-				return -1;
-		}
-		catch (Exception e)
-		{
-			assertFalse(false);
-			return -1;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Proyecto getProyecto(Session sess, long projectId)
-	{
-		try
-		{
-			List<Proyecto> result = sess.createQuery("FROM Proyecto WHERE id = ?").setLong(0, projectId).list();
-			if (result.size() > 0)
-				return result.get(0);
-			else
-				return null;
-		}
-		catch (Exception e)
-		{
-			assertFalse(false);
-			return null;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	private Usuario getUsuario(Session sess, String userName)
 	{
 		try
 		{
-			List<Usuario> result = sess.createQuery("FROM Usuario WHERE login = ?").setString(0, userName).list();
-			if (result.size() > 0)
-				return result.get(0);
-			else
-				return null;
+			return (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, userName).uniqueResult();
 		}
 		catch (Exception e)
 		{
@@ -314,5 +256,4 @@ public class SoftmartServiceTest extends TestCase
 			return null;
 		}
 	}
-
 }

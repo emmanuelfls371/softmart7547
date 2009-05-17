@@ -79,14 +79,15 @@ public class LoginWidget extends SimplePanel
 	private FlexTable getTable()
 	{
 		FlexTable table = new FlexTable();
-		table.setWidget(1, 0, new HTML("<b>Iniciar sesi&oacute;n</b>"));
+		HTML prompt = new HTML("<big><big><b>Inicie sesi&oacute;n</b></big></big>");
+		prompt.setWidth("150px");
+		table.setWidget(0, 0, prompt);
 		table.setWidget(1, 1, getRegisterLink());
 		table.setWidget(2, 0, new HTML("Usuario: "));
 		table.setWidget(2, 1, userNameTextBox);
 		table.setWidget(3, 0, new HTML("Contrase&ntilde;a: "));
 		table.setWidget(3, 1, passwordTextBox);
 		table.setWidget(4, 1, getSubmitPanel());
-		table.setWidth("100px");
 		/*
 		 * String sImage = "http://localhost:8888/edu.tdp2.Softmart/logo.jpg"; Image image = new Image(sImage);
 		 * table.setWidget(0, 0, image);
@@ -96,7 +97,7 @@ public class LoginWidget extends SimplePanel
 
 	private Widget getRegisterLink()
 	{
-		Anchor link = new Anchor("Registrarse");
+		Anchor link = new Anchor("Reg&iacute;strese", true);
 		link.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)

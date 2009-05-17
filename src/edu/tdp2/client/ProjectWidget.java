@@ -85,7 +85,8 @@ public class ProjectWidget extends VerticalPanel
 			table.setWidget(row, 9, new HTML("Si"));
 		else
 			table.setWidget(row, 9, new HTML("No"));
-		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
+		
+		table.setBorderWidth(1);
 	}
 
 }

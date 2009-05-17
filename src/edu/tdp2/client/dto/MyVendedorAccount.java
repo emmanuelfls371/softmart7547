@@ -12,7 +12,8 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 	private static final long serialVersionUID = -6866869107363384714L;
 
 	private Map<Moneda, Long> gananciaAcumulada;
-	private List<Proyecto> proyectosConOfertasAbiertas;
+	private List<Proyecto> proyectosPerdidos;
+	private List<Proyecto> proyectosAdjudicados;
 
 	public Map<Moneda, Long> getGananciaAcumulada()
 	{
@@ -24,13 +25,23 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 		this.gananciaAcumulada = gananciaAcumulada;
 	}
 
-	public List<Proyecto> getProyectosConOfertasAbiertas()
+	public void setProyectosPerdidos(List<Proyecto> proyectosPerdidos)
 	{
-		return proyectosConOfertasAbiertas;
+		this.proyectosPerdidos = proyectosPerdidos;
 	}
 
-	public void setProyectosConOfertasAbiertas(List<Proyecto> ofertasAbiertas)
+	public List<Proyecto> getProyectosPerdidos()
 	{
-		proyectosConOfertasAbiertas = prune(ofertasAbiertas);
+		return proyectosPerdidos;
+	}
+
+	public void setProyectosAdjudicados(List<Proyecto> proyectosAdjudicados)
+	{
+		this.proyectosAdjudicados = proyectosAdjudicados;
+	}
+
+	public List<Proyecto> getProyectosAdjudicados()
+	{
+		return proyectosAdjudicados;
 	}
 }

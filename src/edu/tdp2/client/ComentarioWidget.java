@@ -38,8 +38,6 @@ public class ComentarioWidget extends VerticalPanel
 
 		int row = 1;
 		table.setWidget(row, 0, new HTML(c));
-
-		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
 }

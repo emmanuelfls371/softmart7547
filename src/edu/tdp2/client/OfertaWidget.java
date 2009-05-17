@@ -89,7 +89,6 @@ public class OfertaWidget extends VerticalPanel
 
 	private void load()
 	{
-
 		final HTML h = new HTML(oferta.getUsuario());
 
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
@@ -137,8 +136,7 @@ public class OfertaWidget extends VerticalPanel
 
 		table.setWidget(row, 3, menuLink);
 		table.setWidget(row, 4, h);
-
-		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
+		table.setBorderWidth(1);
 	}
 
 }

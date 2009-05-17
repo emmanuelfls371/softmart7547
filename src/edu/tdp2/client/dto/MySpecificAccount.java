@@ -28,6 +28,8 @@ public abstract class MySpecificAccount implements Serializable
 	private List<Proyecto> proyectosCerrados;
 	private List<Proyecto> proyectosCancelados;
 
+	private List<Proyecto> proyectosAbiertos;
+
 	public double getReputacion()
 	{
 		return reputacion;
@@ -83,5 +85,15 @@ public abstract class MySpecificAccount implements Serializable
 		for (Proyecto proyecto : proyectos)
 			proyecto.prune();
 		return proyectos;
+	}
+
+	public List<Proyecto> getProyectosAbiertos()
+	{
+		return proyectosAbiertos;
+	}
+
+	public void setProyectosAbiertos(List<Proyecto> proyectosAbiertos)
+	{
+		this.proyectosAbiertos = prune(proyectosAbiertos);
 	}
 }

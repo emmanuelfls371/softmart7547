@@ -1,5 +1,6 @@
 package edu.tdp2.client.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class Proyecto extends AbstractDomainObject
 	@JoinColumn(name = "Usuario", nullable = false)
 	private Usuario usuario;
 
-	@OneToMany(mappedBy = "proyecto", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
 	private List<Oferta> ofertas;
 
 	@OneToOne(mappedBy = "proyecto", fetch = FetchType.LAZY)
@@ -297,7 +298,9 @@ public class Proyecto extends AbstractDomainObject
 	public void prune()
 	{
 		contrato = null;
-		ofertas = null;
+		ofertas = new ArrayList<Oferta>(ofertas);
+		for (Oferta oferta : ofertas)
+			oferta.prune();
 		usuario.prune();
 	}
 }
