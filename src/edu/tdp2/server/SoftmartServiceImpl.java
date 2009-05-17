@@ -310,10 +310,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			String sql = "FROM Proyecto WHERE ((contrato.ofertaGanadora.usuario.login = :usr "
-					+ "AND contrato.califAlComprador IS NULL) OR (contrato.proyecto.usuario.login = :usr "
-					+ "AND contrato.califAlVendedor IS NULL)) AND cancelado = false AND revisado = true "
-					+ "AND canceladoXAdmin = false ";
+			String sql = "FROM Proyecto y JOIN FETCH y.ofertas WHERE ((y.contrato.ofertaGanadora.usuario.login = :usr "
+					+ "AND y.contrato.califAlComprador IS NULL) OR (y.contrato.proyecto.usuario.login = :usr "
+					+ "AND y.contrato.califAlVendedor IS NULL)) AND y.cancelado = false AND y.revisado = true "
+					+ "AND y.canceladoXAdmin = false ";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString("usr", user).list();
 			for (Proyecto project : projects)
 				project.prune();
