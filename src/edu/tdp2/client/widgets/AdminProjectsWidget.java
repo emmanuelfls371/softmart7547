@@ -33,16 +33,16 @@ public class AdminProjectsWidget extends AdminWidget
 	@Override
 	public void load()
 	{
-		container.clear();
 		History.newItem("AdminProjects");
 
 		VerticalPanel vPanel = new VerticalPanel();
 		final FlexTable table = new FlexTable();
 		table.setCellPadding(5);
-		vPanel.add(getAnchorVerUsuarios());
+		statusMessage = new HTML();
+		statusMessage.setHeight("50px");
 		vPanel.add(statusMessage);
 		vPanel.add(table);
-		container.add(vPanel);
+		container.add(vPanel, "Proyectos");
 
 		AsyncCallback<List<Proyecto>> callback = new AsyncCallback<List<Proyecto>>()
 		{
@@ -61,6 +61,7 @@ public class AdminProjectsWidget extends AdminWidget
 				table.setWidget(0, 5, new HTML("Complejidad"));
 				table.setWidget(0, 6, new HTML("Fecha cierre"));
 				table.setWidget(0, 7, new HTML("Revisado"));
+				table.setWidget(0, 9, new HTML("Destacado"));
 				int row = 1;
 				for (Proyecto p : proyectos)
 				{
@@ -75,27 +76,12 @@ public class AdminProjectsWidget extends AdminWidget
 					table.setWidget(row, 6, new HTML(format.format(p.getFecha())));
 					table.setWidget(row, 7, getCheckBoxRevisado(p));
 					table.setWidget(row, 8, getAnchorCancelarProyecto(p));
+					table.setWidget(row, 9, getCheckBoxDestacado(p));
 					row++;
 				}
 			}
 		};
 		ClientUtils.getSoftmartService().getActiveProjects(callback);
-	}
-
-	private Anchor getAnchorVerUsuarios()
-	{
-		Anchor a = new Anchor("Ver usuarios");
-		a.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				AdminWidget w = AdminUsersWidget.getInstance();
-				w.setStatusMessage(statusMessage);
-				w.setContainer(container);
-				w.load();
-			}
-		});
-		return a;
 	}
 
 	private Anchor getAnchorCancelarProyecto(final Proyecto p)
@@ -145,7 +131,7 @@ public class AdminProjectsWidget extends AdminWidget
 
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("No se pudo marcar el proyecto");
+						Window.alert("No se pudo marcar el proyecto como revisado");
 					}
 
 					public void onSuccess(String result)
@@ -156,7 +142,7 @@ public class AdminProjectsWidget extends AdminWidget
 						else
 						{
 							Window.alert(result);
-							statusMessage.setHTML("Error al intentar marcar el proyecto");
+							statusMessage.setHTML("Error al intentar marcar el proyecto como revisado");
 						}
 					}
 				};
@@ -165,4 +151,45 @@ public class AdminProjectsWidget extends AdminWidget
 		});
 		return c;
 	}
+	
+	private CheckBox getCheckBoxDestacado(final Proyecto p){
+		
+		CheckBox c = new CheckBox();
+		c.setValue(p.isDestacado());
+		c.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+		{
+			public void onValueChange(ValueChangeEvent<Boolean> event)
+			{
+				final boolean value = event.getValue();
+				if(p.isRevisado()){
+					AsyncCallback<String> callback = new AsyncCallback<String>()
+					{
+	
+						public void onFailure(Throwable caught)
+						{
+							Window.alert("No se pudo marcar el proyecto como destacado");
+						}
+	
+						public void onSuccess(String result)
+						{
+							if (result == null)
+								statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
+										+ (value ? "" : "no ") + "destacado");
+							else
+							{
+								Window.alert(result);
+								statusMessage.setHTML("Error al intentar marcar el proyecto como destacado");
+							}
+						}
+					};
+					ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), event.getValue(), callback);
+				}else{
+					Window.alert("No se pudo marcar el proyecto. El proyecto aún no fue revisado");
+				}
+			}
+		});
+		return c;
+	
+	}
+	
 }

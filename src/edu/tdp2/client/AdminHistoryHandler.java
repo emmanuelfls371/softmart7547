@@ -2,8 +2,8 @@ package edu.tdp2.client;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
 
 import edu.tdp2.client.widgets.AdminProjectsWidget;
 import edu.tdp2.client.widgets.AdminUsersWidget;
@@ -12,14 +12,14 @@ import edu.tdp2.client.widgets.AdminWidget;
 public class AdminHistoryHandler implements ValueChangeHandler<String>
 {
 	protected HTML statusMessage;
-	protected SimplePanel container;
+	protected DecoratedTabPanel container;
 
 	public void setStatusMessage(HTML statusMessage)
 	{
 		this.statusMessage = statusMessage;
 	}
 
-	public void setContainer(SimplePanel container)
+	public void setContainer(DecoratedTabPanel container)
 	{
 		this.container = container;
 	}
@@ -47,7 +47,6 @@ public class AdminHistoryHandler implements ValueChangeHandler<String>
 			w = AdminUsersWidget.getInstance();
 			break;
 		}
-		w.setStatusMessage(statusMessage);
 		w.setContainer(container);
 		w.load();
 	}

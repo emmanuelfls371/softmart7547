@@ -10,6 +10,7 @@ import edu.tdp2.client.dto.FiltroDto;
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
+import edu.tdp2.client.dto.SearchDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
@@ -62,7 +63,7 @@ public interface SoftmartService extends RemoteService
 
 	public MyAccountDto getMyAccountData(String usuario);
 
-	public List<Proyecto> filterProject(FiltroDto filtro);
+	public SearchDto filterProject(FiltroDto filtro);
 
 	public List<Moneda> buscarMonedas();
 
@@ -77,4 +78,10 @@ public interface SoftmartService extends RemoteService
 	public String setUsuarioBloqueado(Long id, Boolean value);
 
 	public Boolean isUsuarioBloqueado(String name);
+	
+	public String getUsuario(String login);
+	
+	public String setProyectoDestacado(Long projectId, Boolean value);
+	
+	public List<Proyecto> getProyectosDestacados();
 }

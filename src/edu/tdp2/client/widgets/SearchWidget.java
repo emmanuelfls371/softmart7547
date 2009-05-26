@@ -8,8 +8,10 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -20,14 +22,17 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.Format;
 
-import edu.tdp2.client.ProjectList;
+
 import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.FiltroDto;
+import edu.tdp2.client.dto.SearchDto;
 import edu.tdp2.client.model.Moneda;
+import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
 
@@ -168,36 +173,67 @@ public class SearchWidget extends NavigablePanel
 					else
 					{
 						final FiltroDto filtro = dto;
-						ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<List<Proyecto>>()
+						ClientUtils.getSoftmartService().filterProject(filtro, new AsyncCallback<SearchDto>()
 						{
 							public void onFailure(Throwable caught)
 							{
 								Window.alert("Error inesperado, no se pudo realizar la búsqueda");
 							}
 
-							public void onSuccess(List<Proyecto> listaProy)
+							public void onSuccess(SearchDto searchDto)
 							{
-								if (listaProy == null)
+								if (searchDto == null)
 									Window.alert("Error inesperado, no se pudo realizar la búsqueda");
 								else
 								{
 									if (resultsWidget != null)
 										remove(resultsWidget);
-									resultsWidget = getResultsWidget(listaProy);
+									resultsWidget = getResultsWidget(searchDto.getProyectosBuscados());
 									add(resultsWidget);
 								}
 							}
 
 							private Widget getResultsWidget(List<Proyecto> listaProy)
 							{
+																
+								final VerticalPanel p=new VerticalPanel();
+								p.add(new HTML("<b>Resultados de la búsqueda</b>"));
+								
 								FlexTable table = new FlexTable();
-								table.setCellPadding(10);
-								ProjectList projs = new ProjectList(listaProy);
-								table.setWidget(0, 0, new HTML("<b>Resultados de la búsqueda</b>"));
-								table.setWidget(1, 1, projs);
-								table.setWidget(1, 2, getAnchorForProjects(projs));
-								table.setWidget(1, 3, getOfferAnchorForProjects(projs));
-								return table;
+								
+								table.setWidget(0, 0, new HTML("Nombre"));
+								table.setWidget(0, 1, new HTML("Presupuesto"));
+								table.setWidget(0, 2, new HTML("Moneda"));
+								table.setWidget(0, 3, new HTML("Tama&ntilde;o"));
+								table.setWidget(0, 4, new HTML("Complejidad"));
+								table.setWidget(0, 5, new HTML("Fecha cierre"));
+
+								int row = 1;
+								for (final Proyecto proyecto : listaProy)
+								{
+									Anchor aProy = new Anchor(proyecto.getNombre());
+									aProy.addClickHandler(new ClickHandler()
+									{
+										public void onClick(ClickEvent event)
+										{
+											p.clear();
+											p.add(new DetailSearchWidget(proyecto));
+										}
+									});
+									table.setWidget(row, 0, aProy);
+						
+									table.setWidget(row, 1, new HTML(Presupuesto.armarRango(proyecto.getMinPresupuesto(), proyecto.getMaxPresupuesto())));
+									table.setWidget(row, 2, new HTML(proyecto.getMoneda().getDescription()));
+									table.setWidget(row, 3, new HTML(proyecto.getTamanio()));
+									table.setWidget(row, 4, new HTML(proyecto.getDificultad()));
+									DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
+									table.setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
+
+									row++;
+								}					
+								
+								p.add(table);
+								return p;
 							}
 						});
 					}

@@ -55,36 +55,46 @@ public class ProjectWidget extends VerticalPanel
 		table.clear();
 		add(table);
 		table.setWidget(0, 0, new HTML("Comprador"));
-		table.setWidget(0, 1, new HTML("Presupuesto"));
-		table.setWidget(0, 2, new HTML("Moneda"));
-		table.setWidget(0, 3, new HTML("Fecha de cierre"));
-		table.setWidget(0, 4, new HTML("Nivel de reputaci&oacute;n"));
-		table.setWidget(0, 5, new HTML("Dificultad"));
-		table.setWidget(0, 6, new HTML("Tama&ntilde;o"));
-		table.setWidget(0, 7, new HTML("Descripci&oacute;n"));
-		table.setWidget(0, 8, new HTML("Archivo"));
-		table.setWidget(0, 9, new HTML("¿Cancelado?"));
+		table.setWidget(1, 0, new HTML("Presupuesto"));
+		table.setWidget(2, 0, new HTML("Moneda"));
+		table.setWidget(3, 0, new HTML("Fecha de cierre"));
+		table.setWidget(4, 0, new HTML("Nivel de reputaci&oacute;n"));
+		table.setWidget(5, 0, new HTML("Dificultad"));
+		table.setWidget(6, 0, new HTML("Tama&ntilde;o"));
+		table.setWidget(7, 0, new HTML("Descripci&oacute;n"));
+		table.setWidget(8, 0, new HTML("Archivo"));
+		table.setWidget(9, 0, new HTML("¿Cancelado por Usuario?"));
+		table.setWidget(10, 0, new HTML("¿Cancelado por Administrador?"));
+		table.setWidget(11, 0, new HTML("¿Revisado por Administrador?"));
 
-		int row = 1;
-		table.setWidget(row, 0, h);
-		table.setWidget(row, 1, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
+		int col = 1;
+		table.setWidget(0, col, h);
+		table.setWidget(1, col, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
 				.getMaxPresupuesto())));
-		table.setWidget(row, 2, new HTML(project.getMoneda().getDescription()));
-		table.setWidget(row, 3, new HTML(String.valueOf(project.getFecha().getDate()) + "/"
+		table.setWidget(2, col, new HTML(project.getMoneda().getDescription()));
+		table.setWidget(3, col, new HTML(String.valueOf(project.getFecha().getDate()) + "/"
 				+ String.valueOf(project.getFecha().getMonth() + 1) + "/"
 				+ String.valueOf(project.getFecha().getYear() + 1900)));
-		table.setWidget(row, 4, new HTML(project.getNivel()));
-		table.setWidget(row, 5, new HTML(project.getDificultad()));
-		table.setWidget(row, 6, new HTML(project.getTamanio()));
-		table.setWidget(row, 7, new HTML(project.getDescripcion()));
+		table.setWidget(4, col, new HTML(project.getNivel()));
+		table.setWidget(5, col, new HTML(project.getDificultad()));
+		table.setWidget(6, col, new HTML(project.getTamanio()));
+		table.setWidget(7, col, new HTML(project.getDescripcion()));
 		if (project.getPathArchivo() != null && !project.getPathArchivo().isEmpty())
-			table.setWidget(row, 8, new Anchor("Bajar"));
+			table.setWidget(8, col, new Anchor("Bajar"));
 		else
-			table.setWidget(row, 8, new HTML("No se ha cargado un archivo"));
+			table.setWidget(8, col, new HTML("No se ha cargado un archivo"));
 		if (project.isCancelado())
-			table.setWidget(row, 9, new HTML("Si"));
+			table.setWidget(9, col, new HTML("Si"));
 		else
-			table.setWidget(row, 9, new HTML("No"));
+			table.setWidget(9, col, new HTML("No"));
+		if (project.isCanceladoXAdmin())
+			table.setWidget(10, col, new HTML("Si"));
+		else
+			table.setWidget(10, col, new HTML("No"));
+		if (project.isRevisado())
+			table.setWidget(11, col, new HTML("Si"));
+		else
+			table.setWidget(11, col, new HTML("No"));
 		
 		table.setBorderWidth(1);
 	}

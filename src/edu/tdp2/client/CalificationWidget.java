@@ -65,7 +65,6 @@ public class CalificationWidget extends VerticalPanel
 		table.setWidget(row, 1, new HTML(calif.getComentario()));
 		table.setWidget(row, 2, h);
 
-		table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
 	}
 
 }

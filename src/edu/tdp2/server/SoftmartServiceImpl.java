@@ -22,6 +22,7 @@ import edu.tdp2.client.dto.MySpecificAccount;
 import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
+import edu.tdp2.client.dto.SearchDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.model.Calificacion;
 import edu.tdp2.client.model.Contrato;
@@ -228,15 +229,51 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	@SuppressWarnings("unchecked")
 	private Contrato getContrato(Session sess, long projectId)
 	{
-		List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.id = ?").setLong(0, projectId).list();
-		if (result.size() > 0)
-			return result.get(0);
-		else
-			return null;
+		
+			List<Contrato> result = sess.createQuery("FROM Contrato WHERE proyecto.id = ?").setLong(0, projectId).list();
+			if (result.size() > 0)
+				return result.get(0);
+			else
+				return null;
+		
+	}
+	
+	
+	private void updateNivel(Session sess, Calificacion calif, final Usuario us)throws Exception{
+		
+		
+		if(us!=null){
+			List<ContratoDto> listaCalif= this.getCalificacionesRecibidas(sess, us.getLogin());
+				boolean premium = false;
+				if(listaCalif.size()+1>=3){
+					premium = true;
+					for(ContratoDto c : listaCalif){
+						if(c.getCalif().getCalificacion()<8){
+							premium=false;
+							break;
+						}
+					}
+					if(calif.getCalificacion()<8){
+						premium=false;
+					}
+				}
+				
+				if(premium){
+					us.setNivel(NivelReputacion.Premium.name());
+				}else{
+					us.setNivel(NivelReputacion.Normal.name());
+				}
+				
+				sess.update(us);
+		}
+
 	}
 
 	public String calificar(CalificacionDto dto)
 	{
+		
+		
+		
 		final Session sess = HibernateUtil.getSession();
 		try
 		{
@@ -246,10 +283,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				final Calificacion calif = new Calificacion(dto, c);
 				if (calif != null)
 				{
-					if (c.getProyecto().getUsuario().getLogin().equals(dto.getUsuario())) // Usuario es el que publico
+					if (c.getProyecto().getUsuario().getLogin().equals(dto.getUsuario())){ // Usuario es el que publico
 						c.setCalifAlVendedor(calif); // El comprador califica al vendedor
-					else if (c.getOfertaGanadora().getUsuario().getLogin().equals(dto.getUsuario())) // El que oferto
+						updateNivel(sess,calif, c.getOfertaGanadora().getUsuario());
+					}
+					else if (c.getOfertaGanadora().getUsuario().getLogin().equals(dto.getUsuario())){ // El que oferto
 						c.setCalifAlComprador(calif); // El vendedor califica al comprador
+						updateNivel(sess,calif, c.getProyecto().getUsuario());
+					}
 					else
 						throw new SoftmartServerException(
 								"No se puede calificar si no se es el comprador ni el vendedor del proyecto");
@@ -259,6 +300,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 						{
 							sess.save(calif);
 							sess.save(c);
+							
 						}
 					});
 				}
@@ -272,7 +314,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		finally
 		{
 			sess.close();
+			
 		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -364,8 +408,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					"FROM Proyecto AS p WHERE p.cancelado = false AND "
 							+ "(p.contrato.califAlComprador IS NULL OR p.contrato.califAlVendedor IS NULL)").list());
 			for (Proyecto project : projects)
-				project.prune();
+				project.pruneIncludingOffers();
 			return projects;
+		}catch (Exception e)
+		{
+			e.getMessage();
+			return null;
 		}
 		finally
 		{
@@ -478,6 +526,13 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		String sql = "FROM Contrato WHERE (califComprador IS NOT NULL AND proyecto.usuario.login=?) OR (califVendedor IS NOT NULL AND ofertaGanadora.usuario.login=?)";
 		return getCalificaciones(sql, user, TipoCalificacion.Recibida);
 	}
+	
+	public List<ContratoDto> getCalificacionesRecibidas(Session sess, String user)
+	{
+		String sql = "FROM Contrato WHERE (califComprador IS NOT NULL AND proyecto.usuario.login=?) OR (califVendedor IS NOT NULL AND ofertaGanadora.usuario.login=?)";
+		return getCalificaciones(sess, sql, user, TipoCalificacion.Recibida);
+	}
+
 
 	private void setCalifVendedor(Contrato c, CalificacionDto calif)
 	{
@@ -525,36 +580,43 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		return calif;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	private List<ContratoDto> getCalificaciones(String sql, String user, TipoCalificacion tipo)
 	{
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
-			List<Contrato> contratos = (List<Contrato>) sess.createQuery(sql).setString(0, user).setString(1, user)
-					.list();
-			List<ContratoDto> dtos = new ArrayList<ContratoDto>();
-			for (Contrato c : contratos)
-			{
-				ContratoDto dto = new ContratoDto();
-				dto.setCalif(getCalif(tipo, c, user));
-				dto.setIdContrato(c.getId());
-				dto.setProyecto(getProyectoDto(c.getProyecto()));
-				dto.setOferta(getOfertaDto(c.getOfertaGanadora()));
-				dtos.add(dto);
-			}
-			return dtos;
+			return getCalificaciones(sess, sql, user, tipo);
 		}
 		finally
 		{
 			sess.close();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	private List<ContratoDto> getCalificaciones(Session sess, String sql, String user, TipoCalificacion tipo)
+	{
+		List<Contrato> contratos = (List<Contrato>) sess.createQuery(sql).setString(0, user).setString(1, user)
+			.list();
+		List<ContratoDto> dtos = new ArrayList<ContratoDto>();
+		for (Contrato c : contratos)
+		{
+			ContratoDto dto = new ContratoDto();
+			dto.setCalif(getCalif(tipo, c, user));
+			dto.setIdContrato(c.getId());
+			dto.setProyecto(getProyectoDto(c.getProyecto()));
+			dto.setOferta(getOfertaDto(c.getOfertaGanadora()));
+			dtos.add(dto);
+		}
+		return dtos;
+	}
 
 	private ProyectoDto getProyectoDto(Proyecto p)
 	{
 		ProyectoDto dto = new ProyectoDto();
+		dto.setId(p.getId());
 		dto.setArchivo(p.getPathArchivo());
 		dto.setDescripcion(p.getDescripcion());
 		dto.setDificultad(p.getDificultad());
@@ -771,7 +833,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Proyecto> filterProject(FiltroDto filtro)
+	public SearchDto filterProject(FiltroDto filtro)
 	{
 
 		Session sess = HibernateUtil.getSession();
@@ -871,8 +933,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).list();
 
 			for (Proyecto project : projects)
-				project.prune();
-			return projects;
+				project.pruneIncludingOffers();
+			SearchDto search = new SearchDto(new ArrayList<Proyecto>());
+			search.getProyectosBuscados().addAll(projects);
+			return search;
+			
 		}
 		finally
 		{
@@ -995,4 +1060,61 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+
+	@Override
+	public String getUsuario(String login) {
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Usuario user = (Usuario) sess.createQuery("FROM Usuario WHERE login = ?").setString(0, login).uniqueResult();
+
+			return user.getNivel();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@Override
+	public String setProyectoDestacado(Long projectId, Boolean value) {
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Proyecto p = (Proyecto) sess.get(Proyecto.class, projectId);
+			if (p == null)
+				return "El proyecto con id " + projectId + " no existe";
+			p.setDestacado(value);
+			TransactionWrapper.save(sess, p);
+			return null;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Proyecto> getProyectosDestacados() {
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			List<Proyecto> lista = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE destacado = true AND revisado = true").list();
+			if(lista!=null){
+				for (Proyecto p : lista)
+					p.pruneIncludingOffers();
+				return lista;
+			}
+				return null;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+	
 }

@@ -4,31 +4,40 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
+
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+
+
+import edu.tdp2.client.OfertaWidget;
+import edu.tdp2.client.OffersWidget;
 import edu.tdp2.client.ProjectWidget;
+
 import edu.tdp2.client.dto.MyCompradorAccount;
+
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.utils.ClientUtils;
 
-public class MyCompradorAccountWidget extends DockPanel
+
+public class MyCompradorAccountWidget extends AccountWidget
 {
-	private SimplePanel centerPanel = new SimplePanel();
-	private final MyCompradorAccount datos;
 
+	private final MyCompradorAccount datos;
+	
 	public MyCompradorAccountWidget(MyCompradorAccount datos)
 	{
 		this.datos = datos;
 		add(getWestPanel(), WEST);
 		add(centerPanel, CENTER);
-
 		centerPanel.setWidth("100%");
 	}
 
@@ -40,13 +49,72 @@ public class MyCompradorAccountWidget extends DockPanel
 		panel.add(new HTML("<big><b>Mis proyectos</b></big>"));
 
 		Anchor abiertos = new Anchor("Abiertos");
+		
 		abiertos.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosAbiertos()));
+				proySelected=null;
+				accion=true;
+				proyCerrados = false;
+				Anchor menuLink = new Anchor("Ver ofertas");
+				menuLink.addClickHandler(new ClickHandler()
+				{
+					public void onClick(ClickEvent event)
+					{
+						Proyecto proyecto = proySelected;
+						if (proyecto == null)
+							Window.alert("Debe seleccionar un proyecto");
+						else
+						{
+							onShowOffers(proyecto);
+						}
+					}
+				});
+				
+				Anchor menuLink2 = new Anchor("Cancelar Proyecto");
+				menuLink2.addClickHandler(new ClickHandler()
+				{
+					public void onClick(ClickEvent event)
+					{
+						if (proySelected == null)
+							Window.alert("Debe seleccionar un proyecto para cancelar");
+						else if (Window.confirm("Â¿Seguro de que desea cancelar el proyecto?"))
+						{
+							AsyncCallback<String> projectCallback = new AsyncCallback<String>()
+							{
+								public void onFailure(Throwable caught)
+								{
+									Window.alert("No se pudo cancelar el proyecto");
+								}
+
+								public void onSuccess(String errMsg)
+								{
+									if (errMsg != null)
+										Window.alert(errMsg);
+									else
+									{
+										datos.getProyectosAbiertos().remove(proySelected);
+										Window.alert("Proyecto cancelado");
+									}
+								}
+							};
+							ClientUtils.getSoftmartService().cancelarProyecto(proySelected.getId(),
+									projectCallback);
+						}
+					}
+				});
+				
+				VerticalPanel v= new VerticalPanel();
+				v.add(new ProjectTable(datos.getProyectosAbiertos()));
+				v.add(menuLink);
+				v.add(menuLink2);
+				centerPanel.setWidget(v);
+						
 			}
 		});
+		
+		
 		panel.add(abiertos);
 
 		Anchor cerrados = new Anchor("Cerrados");
@@ -54,7 +122,30 @@ public class MyCompradorAccountWidget extends DockPanel
 		{
 			public void onClick(ClickEvent event)
 			{
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosCerrados()));
+				proySelected=null;
+				accion=true;
+				proyCerrados = true;
+				vCerrados= new VerticalPanel();
+				
+				vCerrados.add(new ProjectTable(datos.getProyectosCerrados()));
+				
+				Anchor ofertaG = new Anchor("Ver Oferta Ganadora");
+				ofertaG.addClickHandler(new ClickHandler()
+				{
+					public void onClick(ClickEvent event)
+					{
+						Proyecto proyecto = proySelected;
+						if (proyecto == null)
+							Window.alert("Debe seleccionar un proyecto para ver su oferta");
+						else
+							onShowOferta(proyecto);
+					}
+				});
+				
+				vCerrados.add(ofertaG);
+				setLinkCalificacion();
+				
+				centerPanel.setWidget(vCerrados);
 			}
 		});
 		panel.add(cerrados);
@@ -62,8 +153,12 @@ public class MyCompradorAccountWidget extends DockPanel
 		Anchor cancelados = new Anchor("Cancelados");
 		cancelados.addClickHandler(new ClickHandler()
 		{
+			
 			public void onClick(ClickEvent event)
 			{
+				proySelected=null;
+				accion=false;
+				proyCerrados = false;
 				centerPanel.setWidget(new ProjectTable(datos.getProyectosCancelados()));
 			}
 		});
@@ -74,7 +169,13 @@ public class MyCompradorAccountWidget extends DockPanel
 		{
 			public void onClick(ClickEvent event)
 			{
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosSinCalificar()));
+				proySelected=null;
+				accion=true;
+				VerticalPanel v= new VerticalPanel();
+				v.add(new ProjectTable(datos.getProyectosSinCalificar()));
+				v.add(getCalificarAction());
+		
+				centerPanel.setWidget(v);
 			}
 		});
 		panel.add(sinCalificar);
@@ -84,7 +185,13 @@ public class MyCompradorAccountWidget extends DockPanel
 		{
 			public void onClick(ClickEvent event)
 			{
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosSinRecibirCalif()));
+				proySelected=null;
+				accion=false;
+				proyCerrados = false;			
+				VerticalPanel v= new VerticalPanel();
+				v.add(new ProjectTable(datos.getProyectosSinRecibirCalif()));
+				
+				centerPanel.setWidget(v);
 			}
 		});
 		panel.add(sinRecibirCalif);
@@ -92,6 +199,18 @@ public class MyCompradorAccountWidget extends DockPanel
 		panel.setWidth("50px");
 		return panel;
 	}
+	
+	private void onShowOferta(Proyecto proy)
+	{
+		putAlone(new OfertaWidget(proy));
+	}
+	
+	protected void onShowOffers(Proyecto projectOferta)
+	{
+		putAlone(new OffersWidget(projectOferta));
+	}
+	
+	
 
 	public class ProjectTable extends FlexTable
 	{
@@ -112,11 +231,14 @@ public class MyCompradorAccountWidget extends DockPanel
 			setWidget(0, 3, new HTML("Tama&ntilde;o"));
 			setWidget(0, 4, new HTML("Complejidad"));
 			setWidget(0, 5, new HTML("Fecha cierre"));
+			
+			if(accion)
+				setWidget(0, 6, new HTML("Acción"));
 
 			int row = 1;
 			for (final Proyecto proyecto : proyectos)
 			{
-				Anchor aProy = new Anchor(proyecto.getDescripcion());
+				Anchor aProy = new Anchor(proyecto.getNombre());
 				aProy.addClickHandler(new ClickHandler()
 				{
 					public void onClick(ClickEvent event)
@@ -132,7 +254,10 @@ public class MyCompradorAccountWidget extends DockPanel
 				setWidget(row, 4, new HTML(proyecto.getDificultad()));
 				DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 				setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
-
+				
+				if(accion)
+					setWidget(row, 6, getActionButton(proyecto));
+				
 				row++;
 			}
 		}

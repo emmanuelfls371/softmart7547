@@ -50,7 +50,7 @@ public class Usuario extends AbstractDomainObject
 	private String pathLogo;
 
 	@Column(name = "Nivel", length = 50, nullable = false)
-	private String nivel = "Normal";
+	private String nivel;
 
 	@Column(name = "Bloqueado", nullable = false)
 	private boolean bloqueado;
@@ -125,6 +125,7 @@ public class Usuario extends AbstractDomainObject
 		codPostal = dto.getCodPostal();
 		descripPerfil = dto.getDescripPerfil();
 		pathLogo = dto.getLogo().isEmpty() ? null : dto.getLogo();
+		nivel = "Normal";
 	}
 
 	public String getApellido()

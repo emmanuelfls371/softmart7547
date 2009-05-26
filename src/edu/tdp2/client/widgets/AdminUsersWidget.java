@@ -29,16 +29,16 @@ public class AdminUsersWidget extends AdminWidget
 	@Override
 	public void load()
 	{
-		container.clear();
+		
 		History.newItem("AdminUsers");
 
 		VerticalPanel vPanel = new VerticalPanel();
 		final FlexTable table = new FlexTable();
 		table.setCellPadding(10);
-		vPanel.add(ClientUtils.getBackAnchor());
+		statusMessage = new HTML();
 		vPanel.add(statusMessage);
 		vPanel.add(table);
-		container.add(vPanel);
+		container.add(vPanel, "Usuarios");
 
 		AsyncCallback<List<Usuario>> callback = new AsyncCallback<List<Usuario>>()
 		{

@@ -1,13 +1,14 @@
 package edu.tdp2.client;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.model.Oferta;
 
-public class ComentarioWidget extends VerticalPanel
+public class ComentarioWidget extends PopupPanel
 {
 
 	private String c;
@@ -15,14 +16,31 @@ public class ComentarioWidget extends VerticalPanel
 
 	public ComentarioWidget(Oferta oferta)
 	{
+		super(true);
 		c = oferta.getDescripcion();
 		load();
+		this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+	          public void setPosition(int offsetWidth, int offsetHeight) {
+	            int left = (Window.getClientWidth() - offsetWidth);
+	            int top = (Window.getClientHeight() - offsetHeight);
+	            setPopupPosition(left, top);
+	          }
+	        });
+
 	}
 
 	public ComentarioWidget(OfertaDto oferta)
 	{
+		super(true);
 		c = oferta.getDescripcion();
 		load();
+		this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+	          public void setPosition(int offsetWidth, int offsetHeight) {
+	            int left = (Window.getClientWidth() - offsetWidth) / 3;
+	            int top = (Window.getClientHeight() - offsetHeight) / 3;
+	            setPopupPosition(left, top);
+	          }
+	        });
 	}
 
 	protected native void reload() /*-{
@@ -32,11 +50,14 @@ public class ComentarioWidget extends VerticalPanel
 	private void load()
 	{
 		table.clear();
-		add(table);
 		table.setWidget(0, 0, new HTML("Comentario"));
-
 		int row = 1;
+		if(c.isEmpty()){
+			table.setWidget(row, 0,new HTML("No hay comentario disponible para esta oferta"));
+		}
 		table.setWidget(row, 0, new HTML(c));
+		
+		setWidget(table);
 	}
 
 }
