@@ -74,9 +74,22 @@ public class AdminProjectsWidget extends AdminWidget
 					table.setWidget(row, 5, new HTML(p.getDificultad()));
 					DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 					table.setWidget(row, 6, new HTML(format.format(p.getFecha())));
-					table.setWidget(row, 7, getCheckBoxRevisado(p));
-					table.setWidget(row, 8, getAnchorCancelarProyecto(p));
-					table.setWidget(row, 9, getCheckBoxDestacado(p));
+					CheckBox c= getCheckBoxRevisado(p);
+					CheckBox c2=getCheckBoxDestacado(p);
+					if(p.isRevisado()){
+						c.setEnabled(false);
+					}else{
+						c2.setEnabled(false);
+					}
+					Anchor c3=getAnchorCancelarProyecto(p);
+					if(p.isCancelado()||p.isCanceladoXAdmin()){
+						c3.setEnabled(false);
+						c.setEnabled(false);
+						c2.setEnabled(false);
+					}
+					table.setWidget(row, 7, c);
+					table.setWidget(row, 8, c3);
+					table.setWidget(row, 9, c2);
 					row++;
 				}
 			}
@@ -102,9 +115,30 @@ public class AdminProjectsWidget extends AdminWidget
 
 					public void onSuccess(String result)
 					{
-						if (result == null)
+						if (result == null){
+							AsyncCallback<String> callback = new AsyncCallback<String>()
+							{
+
+								public void onFailure(Throwable caught)
+								{
+									Window.alert("No se pudo marcar el proyecto como destacado");
+								}
+
+								public void onSuccess(String result)
+								{
+									if (result == null)
+										statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
+												+ (false ? "" : "no ") + "destacado");
+									else
+									{
+										Window.alert(result);
+										statusMessage.setHTML("Error al intentar marcar el proyecto como destacado");
+									}
+								}
+							};							
+							ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), false, callback);
 							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" ha sido cancelado");
-						else
+						}else
 						{
 							Window.alert(result);
 							statusMessage.setHTML("Error al intentar cancelar el proyecto");
@@ -161,7 +195,7 @@ public class AdminProjectsWidget extends AdminWidget
 			public void onValueChange(ValueChangeEvent<Boolean> event)
 			{
 				final boolean value = event.getValue();
-				if(p.isRevisado()){
+				if(p.isRevisado()&&!p.isCancelado()&&!p.isCanceladoXAdmin()){
 					AsyncCallback<String> callback = new AsyncCallback<String>()
 					{
 	
@@ -184,7 +218,7 @@ public class AdminProjectsWidget extends AdminWidget
 					};
 					ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), event.getValue(), callback);
 				}else{
-					Window.alert("No se pudo marcar el proyecto. El proyecto aún no fue revisado");
+					Window.alert("No se pudo marcar el proyecto. El proyecto aún no fue revisado o ha sido cancelado");
 				}
 			}
 		});

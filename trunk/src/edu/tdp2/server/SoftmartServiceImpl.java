@@ -778,9 +778,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 									+ "WHERE contrato.ofertaGanadora.usuario = ? AND contrato.califAlComprador IS NOT NULL "
 									+ "AND contrato.califAlVendedor IS NOT NULL GROUP BY contrato.ofertaGanadora.moneda.description")
 					.setParameter(0, usuario).list();
-			Map<Moneda, Long> gananciaAcumulada = new HashMap<Moneda, Long>();
+			Map<Moneda, Double> gananciaAcumulada = new HashMap<Moneda, Double>();
 			for (Object[] row : ganancia)
-				gananciaAcumulada.put(buscarMoneda((String) row[0]), (Long) row[1]);
+				gananciaAcumulada.put(buscarMoneda((String) row[0]), (Double) row[1]);
 			vendedor.setGananciaAcumulada(gananciaAcumulada);
 			return dto;
 		}

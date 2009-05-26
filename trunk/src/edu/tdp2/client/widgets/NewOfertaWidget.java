@@ -148,7 +148,7 @@ public class NewOfertaWidget extends FormWidget
 				ofertaDto.setDescripcion(((TextBox) instance.widgets.get(OfertaFields.Descripcion)).getText());
 
 				FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-				ofertaDto.setMonto(Integer.parseInt(((TextBox) f.getWidget(0)).getText()));
+				ofertaDto.setMonto(Float.parseFloat(((TextBox) f.getWidget(0)).getText()));
 				ofertaDto.setMoneda(((ListBox) f.getWidget(1)).getValue(((ListBox) f.getWidget(1)).getSelectedIndex()));
 				ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
 
@@ -177,7 +177,8 @@ public class NewOfertaWidget extends FormWidget
 			}
 			catch (NumberFormatException e)
 			{
-				errMsgs.add("El formato de dias y/o monto no es valido");
+				errMsgs.add("El formato de dias y/o monto no es valido." +
+						" Verifique está ingresando los días cómo números enteros y el monto como un número real");
 				validate();
 			}
 		}

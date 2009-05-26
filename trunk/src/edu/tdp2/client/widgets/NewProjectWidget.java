@@ -214,6 +214,11 @@ public class NewProjectWidget extends FormWidget
 	{
 		if (((ProyectoDto) dto).getFecha() == null)
 			errMsgs.add("Debe ingresar la fecha de cierre");
+		else{
+			if(((ProyectoDto) dto).getFecha().before(new Date())){
+				errMsgs.add("La fecha de cierre es anterior al día de hoy");
+			}
+		}
 	}
 
 	@Override
@@ -240,7 +245,7 @@ public class NewProjectWidget extends FormWidget
 
 			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
 			proyectoDto.setFecha(dateFecha.getValue());
-
+			
 			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
 			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
 

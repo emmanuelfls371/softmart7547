@@ -15,7 +15,7 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 {
 	private static final long serialVersionUID = 111116217892037317L;
 
-	private int monto;
+	private float monto;
 
 	private int dias;
 
@@ -62,12 +62,12 @@ public class OfertaDto implements IValidatable, Serializable, Dto
 		proyecto = projectId;
 	}
 
-	public int getMonto()
+	public float getMonto()
 	{
 		return monto;
 	}
 
-	public void setMonto(int monto)
+	public void setMonto(float monto)
 	{
 		this.monto = monto;
 	}
