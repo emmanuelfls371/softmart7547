@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.dto.OfertaDto;
@@ -27,9 +28,11 @@ public class OfertaWidget extends VerticalPanel
 	{
 		this.oferta = oferta;
 		this.proyecto = proyecto;
-		load();
+		initialize();
+		load(1);
 	}
 
+	
 	public OfertaWidget(Proyecto proyecto)
 	{
 		this.proyecto = proyecto.getNombre();
@@ -51,7 +54,8 @@ public class OfertaWidget extends VerticalPanel
 				else
 				{
 					ow.oferta = OfertaDto.fromOferta(oferta);
-					load();
+					initialize();
+					load(1);
 				}
 			}
 		};
@@ -76,7 +80,8 @@ public class OfertaWidget extends VerticalPanel
 				else
 				{
 					ow.oferta = OfertaDto.fromOferta(oferta);
-					load();
+					initialize();
+					load(1);
 				}
 			}
 		};
@@ -86,8 +91,19 @@ public class OfertaWidget extends VerticalPanel
 	protected native void reload() /*-{
 	   $wnd.location.reload();
 	  }-*/;
+	
+	private void initialize(){
+		add(new Label("Ofertas para el proyecto " + proyecto));
+		table.clear();
+		add(table);
+		table.setWidget(0, 0, new HTML("Monto"));
+		table.setWidget(0, 1, new HTML("Moneda"));
+		table.setWidget(0, 2, new HTML("D&iacute;as"));
+		table.setWidget(0, 3, new HTML("Comentario"));
+		table.setWidget(0, 4, new HTML("Vendedor"));
+	}
 
-	private void load()
+	private void load(int row)
 	{
 		final HTML h = new HTML(oferta.getUsuario());
 
@@ -109,16 +125,6 @@ public class OfertaWidget extends VerticalPanel
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(oferta.getUsuario(), callback);
 
-		add(new Label("Ofertas para el proyecto " + proyecto));
-		table.clear();
-		add(table);
-		table.setWidget(0, 0, new HTML("Monto"));
-		table.setWidget(0, 1, new HTML("Moneda"));
-		table.setWidget(0, 2, new HTML("D&iacute;as"));
-		table.setWidget(0, 3, new HTML("Comentario"));
-		table.setWidget(0, 4, new HTML("Vendedor"));
-
-		int row = 1;
 		table.setWidget(row, 0, new HTML(Integer.toString(oferta.getMonto())));
 		table.setWidget(row, 1, new HTML(oferta.getMoneda()));
 		table.setWidget(row, 2, new HTML(Integer.toString(oferta.getDias())));
@@ -128,9 +134,7 @@ public class OfertaWidget extends VerticalPanel
 		{
 			public void onClick(ClickEvent event)
 			{
-				History.newItem("");
-				clear();
-				add(new ComentarioWidget(oferta));
+				new ComentarioWidget(oferta).show();
 			}
 		});
 

@@ -1,47 +1,49 @@
 package edu.tdp2.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 
 import edu.tdp2.client.widgets.AdminProjectsWidget;
+import edu.tdp2.client.widgets.AdminUsersWidget;
 import edu.tdp2.client.widgets.AdminWidget;
 
 public class Admin implements EntryPoint
 {
-	private SimplePanel centerPanel;
-	private HTML statusMessage = new HTML();
+	private DecoratedTabPanel centerPanel;
+	
 
 	public void onModuleLoad()
 	{
 		if (RootPanel.get("AdminIdentifierDiv") == null)
 			return;
 		DockPanel dPanel = new DockPanel();
-		centerPanel = new SimplePanel();
+		centerPanel = new DecoratedTabPanel();
 		centerPanel.setSize("100%", "450px");
-		statusMessage.setHeight("50px");
+		
 		dPanel.add(centerPanel, DockPanel.CENTER);
-
+		centerPanel.setAnimationEnabled(true);
+		
+		
 		HorizontalPanel hPanel = new HorizontalPanel();
 		hPanel.add(dPanel);
 		hPanel.setWidth("100%");
 		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
-
+		
 		RootPanel.get().add(hPanel);
 
 		AdminWidget w = AdminProjectsWidget.getInstance();
-		w.setStatusMessage(statusMessage);
 		w.setContainer(centerPanel);
 		w.load();
+		
+		AdminWidget w2 = AdminUsersWidget.getInstance();
+		w2.setContainer(centerPanel);
+		w2.load();
+		
+		centerPanel.selectTab(0);
 
-		AdminHistoryHandler historyHandler = new AdminHistoryHandler();
-		historyHandler.setStatusMessage(statusMessage);
-		historyHandler.setContainer(centerPanel);
-		History.addValueChangeHandler(historyHandler);
 	}
 }

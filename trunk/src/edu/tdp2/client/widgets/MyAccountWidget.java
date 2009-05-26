@@ -29,6 +29,8 @@ public class MyAccountWidget extends NavigablePanel
 	private FlexTable tableComp = new FlexTable();
 	private FlexTable tableVend = new FlexTable();
 
+
+	
 	private OneParamDelegate<Proyecto> onShowOwnOfertaDelegate = new OneParamDelegate<Proyecto>()
 	{
 		public void invoke(Proyecto p)
@@ -65,6 +67,7 @@ public class MyAccountWidget extends NavigablePanel
 
 		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
 		tabPanel.setAnimationEnabled(true);
+
 
 		tableDatos.setCellPadding(10);
 		tableComp.setCellPadding(10);
@@ -204,6 +207,9 @@ public class MyAccountWidget extends NavigablePanel
 	{
 
 	}
+	
+	
+	
 
 	/*
 	 * private class MyAccountHistoryHandler implements ValueChangeHandler<String> { public void

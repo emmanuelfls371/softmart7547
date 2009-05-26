@@ -1,5 +1,6 @@
 package edu.tdp2.client.model;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+
 
 import edu.tdp2.client.dto.OfertaDto;
 

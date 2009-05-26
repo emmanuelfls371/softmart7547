@@ -1,7 +1,9 @@
 package edu.tdp2.client.model;
 
+
 import java.util.ArrayList;
 import java.util.Date;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 
 import edu.tdp2.client.dto.ProyectoDto;
 
@@ -70,6 +73,9 @@ public class Proyecto extends AbstractDomainObject
 
 	@Column(name = "Revisado", nullable = false)
 	private boolean revisado;
+	
+	@Column(name = "Destacado", nullable = false)
+	private boolean destacado;
 
 	public List<Oferta> getOfertas()
 	{
@@ -278,10 +284,20 @@ public class Proyecto extends AbstractDomainObject
 	{
 		this.revisado = revisado;
 	}
+	
+	public void setDestacado(boolean destacado)
+	{
+		this.destacado = destacado;
+	}
 
 	public boolean isRevisado()
 	{
 		return revisado;
+	}
+	
+	public boolean isDestacado()
+	{
+		return destacado;
 	}
 
 	public void setCanceladoXAdmin(boolean canceladoXAdmin)
@@ -302,6 +318,7 @@ public class Proyecto extends AbstractDomainObject
 		for (Oferta oferta : ofertas)
 			oferta.prune();
 		usuario.prune();
+		
 	}
 
 	public void pruneIncludingOffers()

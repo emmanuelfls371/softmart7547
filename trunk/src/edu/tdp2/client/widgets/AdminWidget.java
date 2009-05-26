@@ -1,19 +1,16 @@
 package edu.tdp2.client.widgets;
 
+import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
+
 
 public abstract class AdminWidget
 {
 	protected HTML statusMessage;
-	protected SimplePanel container;
+	protected DecoratedTabPanel container;
 
-	public void setStatusMessage(HTML statusMessage)
-	{
-		this.statusMessage = statusMessage;
-	}
 
-	public void setContainer(SimplePanel container)
+	public void setContainer(DecoratedTabPanel container)
 	{
 		this.container = container;
 	}

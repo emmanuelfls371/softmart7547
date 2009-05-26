@@ -10,6 +10,7 @@ import edu.tdp2.client.dto.FiltroDto;
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
+import edu.tdp2.client.dto.SearchDto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
@@ -60,7 +61,7 @@ public interface SoftmartServiceAsync
 
 	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
 
-	public void filterProject(FiltroDto filtro, AsyncCallback<List<Proyecto>> callback);
+	public void filterProject(FiltroDto filtro, AsyncCallback<SearchDto> callback);
 
 	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
 
@@ -77,4 +78,10 @@ public interface SoftmartServiceAsync
 	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
 
 	public void isUsuarioBloqueado(String name, AsyncCallback<Boolean> callback);
+	
+	public void getUsuario(String login, AsyncCallback<String> callback);
+	
+	public void setProyectoDestacado(Long projectId, Boolean value, AsyncCallback<String> callback);
+	
+	public void getProyectosDestacados(AsyncCallback<List<Proyecto>> callback);
 }
