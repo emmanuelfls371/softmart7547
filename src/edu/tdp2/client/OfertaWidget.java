@@ -125,7 +125,7 @@ public class OfertaWidget extends VerticalPanel
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(oferta.getUsuario(), callback);
 
-		table.setWidget(row, 0, new HTML(Integer.toString(oferta.getMonto())));
+		table.setWidget(row, 0, new HTML(Float.toString(oferta.getMonto())));
 		table.setWidget(row, 1, new HTML(oferta.getMoneda()));
 		table.setWidget(row, 2, new HTML(Integer.toString(oferta.getDias())));
 

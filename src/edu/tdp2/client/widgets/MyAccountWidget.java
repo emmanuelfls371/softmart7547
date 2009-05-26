@@ -166,7 +166,7 @@ public class MyAccountWidget extends NavigablePanel
 
 	public class EarningsMap extends VerticalPanel
 	{
-		public EarningsMap(Map<Moneda, Long> gananciaAcumulada)
+		public EarningsMap(Map<Moneda, Double> gananciaAcumulada)
 		{
 			for (Moneda moneda : gananciaAcumulada.keySet())
 				add(new HTML(moneda.getDescription() + ": " + gananciaAcumulada.get(moneda)));
