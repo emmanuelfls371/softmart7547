@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Proyecto;
@@ -23,27 +24,33 @@ public class AdminProjectsWidget extends AdminWidget
 {
 	private static AdminProjectsWidget instance;
 
+	private VerticalPanel vPanel = new VerticalPanel();
 	public static AdminProjectsWidget getInstance()
 	{
 		if (instance == null)
 			instance = new AdminProjectsWidget();
 		return instance;
 	}
+	
+	public void load(){
+		container.add(vPanel, "Proyectos");
+		loadPanel();
+	}
 
-	@Override
-	public void load()
+	
+	public void loadPanel()
 	{
 		History.newItem("AdminProjects");
 
-		VerticalPanel vPanel = new VerticalPanel();
+		vPanel.clear();
 		final FlexTable table = new FlexTable();
 		table.setCellPadding(5);
 		statusMessage = new HTML();
 		statusMessage.setHeight("50px");
 		vPanel.add(statusMessage);
 		vPanel.add(table);
-		container.add(vPanel, "Proyectos");
-
+		
+	
 		AsyncCallback<List<Proyecto>> callback = new AsyncCallback<List<Proyecto>>()
 		{
 			public void onFailure(Throwable caught)
@@ -76,17 +83,7 @@ public class AdminProjectsWidget extends AdminWidget
 					table.setWidget(row, 6, new HTML(format.format(p.getFecha())));
 					CheckBox c= getCheckBoxRevisado(p);
 					CheckBox c2=getCheckBoxDestacado(p);
-					if(p.isRevisado()){
-						c.setEnabled(false);
-					}else{
-						c2.setEnabled(false);
-					}
 					Anchor c3=getAnchorCancelarProyecto(p);
-					if(p.isCancelado()||p.isCanceladoXAdmin()){
-						c3.setEnabled(false);
-						c.setEnabled(false);
-						c2.setEnabled(false);
-					}
 					table.setWidget(row, 7, c);
 					table.setWidget(row, 8, c3);
 					table.setWidget(row, 9, c2);
@@ -100,6 +97,11 @@ public class AdminProjectsWidget extends AdminWidget
 	private Anchor getAnchorCancelarProyecto(final Proyecto p)
 	{
 		Anchor a = new Anchor("Cancelar proyecto");
+		if(p.isRevisado()){
+			a.setEnabled(false);
+		}else{
+			a.setEnabled(true);
+		}
 		a.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -115,29 +117,10 @@ public class AdminProjectsWidget extends AdminWidget
 
 					public void onSuccess(String result)
 					{
-						if (result == null){
-							AsyncCallback<String> callback = new AsyncCallback<String>()
-							{
-
-								public void onFailure(Throwable caught)
-								{
-									Window.alert("No se pudo marcar el proyecto como destacado");
-								}
-
-								public void onSuccess(String result)
-								{
-									if (result == null)
-										statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
-												+ (false ? "" : "no ") + "destacado");
-									else
-									{
-										Window.alert(result);
-										statusMessage.setHTML("Error al intentar marcar el proyecto como destacado");
-									}
-								}
-							};							
-							ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), false, callback);
+						if(result==null){	
 							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" ha sido cancelado");
+							
+							loadPanel();
 						}else
 						{
 							Window.alert(result);
@@ -153,8 +136,9 @@ public class AdminProjectsWidget extends AdminWidget
 
 	private CheckBox getCheckBoxRevisado(final Proyecto p)
 	{
-		CheckBox c = new CheckBox();
+		final CheckBox c = new CheckBox();
 		c.setValue(p.isRevisado());
+		if(p.isRevisado()) c.setEnabled(false);
 		c.addValueChangeHandler(new ValueChangeHandler<Boolean>()
 		{
 			public void onValueChange(ValueChangeEvent<Boolean> event)
@@ -170,9 +154,12 @@ public class AdminProjectsWidget extends AdminWidget
 
 					public void onSuccess(String result)
 					{
-						if (result == null)
+						if (result == null){
 							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
 									+ (value ? "" : "no ") + "revisado");
+							
+							loadPanel();
+						}						
 						else
 						{
 							Window.alert(result);
@@ -189,6 +176,11 @@ public class AdminProjectsWidget extends AdminWidget
 	private CheckBox getCheckBoxDestacado(final Proyecto p){
 		
 		CheckBox c = new CheckBox();
+		if(p.isRevisado()){
+			c.setEnabled(true);
+		}else{
+			c.setEnabled(false);
+		}
 		c.setValue(p.isDestacado());
 		c.addValueChangeHandler(new ValueChangeHandler<Boolean>()
 		{
