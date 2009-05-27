@@ -401,11 +401,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 		try
 		{
-			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND "
+			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 					+ "p.contrato IS EMPTY AND p.fecha >= current_date()";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).list();
 			projects.addAll(sess.createQuery(
-					"FROM Proyecto AS p WHERE p.cancelado = false AND "
+					"FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 							+ "(p.contrato.califAlComprador IS NULL OR p.contrato.califAlVendedor IS NULL)").list());
 			for (Proyecto project : projects)
 				project.pruneIncludingOffers();
@@ -679,6 +679,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				throw new SoftmartServerException("El proyecto ya esta cancelado");
 			project.setCanceladoXAdmin(true);
 			project.setRevisado(false);
+			project.setDestacado(false);
 			TransactionWrapper.save(sess, project);
 			return null;
 		}
@@ -853,8 +854,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					{
 						int rango = (int) (Float.parseFloat(filtro.getPresupuestoDesde()) * m.getConversion() / buscarMoneda(
 								filtro.getMoneda(), monedas).getConversion());
-						filtroActual += "((presupuestoMin >= '" + String.valueOf(rango)
-								+ "') AND (moneda.description = '" + m.getDescription() + "'))";
+						filtroActual += "((presupuestoMin >= " + String.valueOf(rango)
+								+ ") AND (moneda.description = '" + m.getDescription() + "'))";
 						pos++;
 						if (pos != monedas.size())
 							filtroActual += " OR ";
@@ -868,10 +869,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					int pos = 0;
 					for (Moneda m : monedas)
 					{
-						int rango = (int) (Float.parseFloat(filtro.getPresupuestoHasta()) / m.getConversion() * buscarMoneda(
+						int rango = (int) (Float.parseFloat(filtro.getPresupuestoHasta()) * m.getConversion() / buscarMoneda(
 								filtro.getMoneda(), monedas).getConversion());
-						filtroActual += "((presupuestoMax <= '" + String.valueOf(rango)
-								+ "') AND (moneda.description = '" + m.getDescription() + "'))";
+						filtroActual += "((presupuestoMax <= " + String.valueOf(rango)
+								+ ") AND (moneda.description = '" + m.getDescription() + "'))";
 						pos++;
 						if (pos != monedas.size())
 							filtroActual += " OR ";
@@ -945,7 +946,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
+
 	public String setProyectoRevisado(Long projectId, Boolean revisado)
 	{
 		Session sess = HibernateUtil.getSession();
@@ -1006,7 +1007,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
+
 	public List<Usuario> getUsers()
 	{
 		Session sess = HibernateUtil.getSession();
@@ -1024,7 +1025,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
+
 	public String setUsuarioBloqueado(Long userId, Boolean bloqueado)
 	{
 		Session sess = HibernateUtil.getSession();
@@ -1044,7 +1045,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
+
 	public Boolean isUsuarioBloqueado(String name)
 	{
 		Session sess = HibernateUtil.getSession();
@@ -1061,7 +1062,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
+
 	public String getUsuario(String login) {
 		Session sess = HibernateUtil.getSession();
 
@@ -1077,7 +1078,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
+
 	public String setProyectoDestacado(Long projectId, Boolean value) {
 		Session sess = HibernateUtil.getSession();
 
@@ -1097,13 +1098,13 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
+
 	public List<Proyecto> getProyectosDestacados() {
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
-			List<Proyecto> lista = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE destacado = true AND revisado = true").list();
+			List<Proyecto> lista = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE destacado = true AND revisado = true AND cancelado = false AND canceladoXAdmin = false").list();
 			if(lista!=null){
 				for (Proyecto p : lista)
 					p.pruneIncludingOffers();
