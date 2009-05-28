@@ -211,8 +211,8 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 		panel.setWidth("50px");
 		
-		underPanel.add(new HTML("<p> Mi reputación como comprador es: "+String.valueOf(datos.getReputacion())+" </p>"));
-		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
+		HTML rep=new HTML("<p> Mi reputación como comprador es: "+String.valueOf(datos.getReputacion())+" </p>");
+		underPanel.add(rep);
 		return panel;
 	}
 	

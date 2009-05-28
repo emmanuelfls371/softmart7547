@@ -17,7 +17,6 @@ public class ProjectWidget extends VerticalPanel
 
 	private Proyecto project;
 	private FlexTable table = new FlexTable();
-	private boolean bloqueado = false;
 	
 	public ProjectWidget(Proyecto project)
 	{
@@ -32,8 +31,9 @@ public class ProjectWidget extends VerticalPanel
 	@SuppressWarnings("deprecation")
 	private void load()
 	{
+		table.clear();
 		final HTML h = new HTML(project.getUsuario().getLogin());
-		bloqueado = false;
+		
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -47,15 +47,19 @@ public class ProjectWidget extends VerticalPanel
 				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
-					bloqueado = true;
+					HTML h2 = new HTML("*Usuario Bloqueado");
+					h2.setStyleName("blocked");
+					h2.setHorizontalAlignment(ALIGN_RIGHT);
+					add(h2);
+					h.setHTML(project.getUsuario().getLogin()+"*");
 				}
 			}
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(project.getUsuario().getLogin(), callback);
 
 		add(new Label("Proyecto " + project.getNombre()));
-		table.clear();
-		add(table);
+		
+		
 		table.setWidget(0, 0, new HTML("Comprador"));
 		table.setWidget(1, 0, new HTML("Presupuesto"));
 		table.setWidget(2, 0, new HTML("Moneda"));
@@ -70,13 +74,8 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(11, 0, new HTML("¿Revisado por Administrador?"));
 
 		int col = 1;
-		HTML h2;
-		if(bloqueado)
-			h2= new HTML(project.getUsuario().getLogin()+". Este usuario está bloqueado");
-		else
-			h2=h;
 		
-		table.setWidget(0, col, h2);
+		table.setWidget(0, col, h);
 		table.setWidget(1, col, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
 				.getMaxPresupuesto())));
 		table.setWidget(2, col, new HTML(project.getMoneda().getDescription()));
@@ -105,6 +104,8 @@ public class ProjectWidget extends VerticalPanel
 			table.setWidget(11, col, new HTML("No"));
 		
 		table.setBorderWidth(1);
+		add(table);
+		
 	}
 
 }

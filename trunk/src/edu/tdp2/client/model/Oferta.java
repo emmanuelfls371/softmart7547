@@ -172,4 +172,21 @@ public class Oferta extends AbstractDomainObject
 		else
 			return false;
 	}
+	
+	/** Compara ofertas de un mismo proyecto */
+	public boolean compare(Oferta o)
+	{
+	
+			if (o.getDias() != getDias())
+				return false;
+			if (o.getMonto() != getMonto())
+				return false;
+			if (!o.getMoneda().equals(getMoneda()))
+				return false;
+			if (o.getUsuario().getId() != getUsuario().getId())
+				return false;
+			
+			return true;
+	
+	}
 }

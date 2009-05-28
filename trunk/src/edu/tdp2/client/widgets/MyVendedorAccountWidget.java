@@ -174,6 +174,23 @@ public class MyVendedorAccountWidget extends AccountWidget
 			int row = 1;
 			for (final Proyecto proyecto : proyectos)
 			{
+				Oferta ofertaPropia = null;
+				Oferta menorOferta = null;
+				for (final Oferta of : proyecto.getOfertas())
+				{
+					
+					if (of.getUsuario().getLogin().equals(LoginWidget.getCurrentUser()))
+					{
+						ofertaPropia = of;
+					}
+
+					if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
+						menorOferta = of;
+				
+
+				if (ofertaPropia != null)
+				{
+					
 				Anchor aProy = new Anchor(proyecto.getNombre());
 				aProy.addClickHandler(new ClickHandler()
 				{
@@ -184,22 +201,8 @@ public class MyVendedorAccountWidget extends AccountWidget
 				});
 				setWidget(row, 0, aProy);
 
-				Oferta ofertaPropia = null;
-				Oferta menorOferta = null;
-				for (final Oferta of : proyecto.getOfertas())
-				{
-					if (of.getUsuario().getLogin().equals(LoginWidget.getCurrentUser()))
-					{
-						ofertaPropia = of;
-						break;
-					}
-
-					if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
-						menorOferta = of;
-				}
-
-				if (ofertaPropia != null)
-				{
+				
+					
 					Anchor aOferta = new Anchor("" + ofertaPropia.getMonto());
 					final Oferta finalOferta = ofertaPropia;
 					aOferta.addClickHandler(new ClickHandler()
@@ -213,15 +216,16 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 					setWidget(row, 2, new HTML(ofertaPropia.getMoneda().getDescription()));
 					setWidget(row, 3, new HTML("" + ofertaPropia.getDias()));
-					setWidget(row, 4, new HTML(ofertaPropia.equals(menorOferta) ? "SI" : "NO"));
+					setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? "SI" : "NO"));
+				
+
+					DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
+					setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
+					if(accion)
+						setWidget(row, 6, getActionButton(proyecto));
 				}
-
-				DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
-				setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
-				if(accion)
-					setWidget(row, 6, getActionButton(proyecto));
-
 				row++;
+			}
 			}
 		}
 	}

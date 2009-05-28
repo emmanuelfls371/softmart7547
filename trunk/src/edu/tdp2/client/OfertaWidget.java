@@ -120,6 +120,11 @@ public class OfertaWidget extends VerticalPanel
 				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
+					HTML h2 = new HTML("*Usuario Bloqueado");
+					h2.setStyleName("blocked");
+					h2.setHorizontalAlignment(ALIGN_RIGHT);
+					add(h2);
+					h.setHTML(oferta.getUsuario()+"*");
 				}
 			}
 		};
