@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockPanel;
 
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -33,6 +34,8 @@ public class AccountWidget extends DockPanel{
 	protected Anchor califHecha;
 	protected Anchor califRecibida;
 	protected SimplePanel centerPanel = new SimplePanel();
+	protected SimplePanel eastPanel = new SimplePanel();
+	protected HorizontalPanel underPanel = new HorizontalPanel();
 	
 	protected boolean accion;
 	
@@ -79,7 +82,7 @@ public class AccountWidget extends DockPanel{
 	protected void putAlone(Widget widget)
 	{
 		centerPanel.clear();
-		centerPanel.add(widget);
+		centerPanel.setWidget(widget);
 	}
 	
 	protected RadioButton getActionButton(final Proyecto proyecto){
@@ -144,10 +147,7 @@ public class AccountWidget extends DockPanel{
 							}
 						});
 					}
-					
-					centerPanel.clear();
-
-					centerPanel.setWidget(vCerrados);
+					eastPanel.setWidget(vCerrados);
 				}
 				
 			}
@@ -199,12 +199,8 @@ public class AccountWidget extends DockPanel{
 							}
 						});
 					}
-					
-					centerPanel.clear();
-					centerPanel.setWidget(vCerrados);
+					eastPanel.setWidget(vCerrados);
 				}
-			
-				
 			}
 		};
 		ClientUtils.getSoftmartService().getCalificacionesRecibidas(LoginWidget.getCurrentUser(), callback);

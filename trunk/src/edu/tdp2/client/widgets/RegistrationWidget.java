@@ -15,11 +15,19 @@ import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
+
 /* TODO Pasar los mensajes de RegistrationWidget a messages*/
 public class RegistrationWidget extends FormWidget
 {
 	private static RegistrationWidget instance;
 
+	private boolean errorC;
+	private boolean errorE;
+	private boolean errorClave;
+	private boolean errorEmail;
+	private boolean errorClaveRep;
+	private boolean errorEmailRep;
+	
 	public static RegistrationWidget getInstance()
 	{
 		if (instance == null)
@@ -60,6 +68,12 @@ public class RegistrationWidget extends FormWidget
 		t.setMaxLength(255);
 		t.setName(RegistrationFields.Email.toString());
 		widgets.put(RegistrationFields.Email, t);
+		
+		t = new TextBox();
+		t.setMaxLength(255);
+		t.setName(RegistrationFields.ConfirmeEmail.toString());
+		widgets.put(RegistrationFields.ConfirmeEmail, t);
+		
 
 		t = new TextBox();
 		t.setMaxLength(50);
@@ -70,6 +84,11 @@ public class RegistrationWidget extends FormWidget
 		t.setMaxLength(50);
 		t.setName(RegistrationFields.Clave.toString());
 		widgets.put(RegistrationFields.Clave, t);
+		
+		t = new PasswordTextBox();
+		t.setMaxLength(50);
+		t.setName(RegistrationFields.ConfirmeClave.toString());
+		widgets.put(RegistrationFields.ConfirmeClave, t);
 
 		final ListBox lisPaises = new ListBox();
 		lisPaises.setName(RegistrationFields.Pais.toString());
@@ -126,24 +145,82 @@ public class RegistrationWidget extends FormWidget
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
 				&& !fileName.endsWith("JPEG"))
 			errMsgs.add("El archivo debe tener extensi�n PNG, GIF, JPG o JPEG");
+		
+		if (errorClave)
+			errMsgs.add("Debe ingresar la clave original");
+		
+		if(errorClaveRep)
+			errMsgs.add("Debe ingresar la clave repetida");
+		
+		if(errorC)
+			errMsgs.add("Las claves no son iguales");
+		
+		if (errorEmail)
+			errMsgs.add("Debe ingresar el email original");
+		if (errorEmailRep)
+			errMsgs.add("Debe ingresar el email repetido");
+		
+		if(errorE)
+			errMsgs.add("Los e-mail no son iguales");
 	}
 
 	private final class RegistrationSubmitHandler implements SubmitHandler
 	{
 		public void onSubmit(SubmitEvent event)
 		{
+			errorClave = false;
+			errorEmail = false;
+			errorClaveRep = false;
+			errorEmailRep = false;
+			errorC = false;
+			errorE = false;
 			dto = new UsuarioDto();
 			((UsuarioDto) dto).setNombre(((TextBox) instance.widgets.get(RegistrationFields.Nombre)).getText());
 			((UsuarioDto) dto).setApellido(((TextBox) instance.widgets.get(RegistrationFields.Apellido)).getText());
-			((UsuarioDto) dto).setEmail(((TextBox) instance.widgets.get(RegistrationFields.Email)).getText());
+			String email =(((TextBox) instance.widgets.get(RegistrationFields.Email)).getText());
+			String emailRepetido = ((TextBox) widgets.get(RegistrationFields.ConfirmeEmail)).getText();
+
 			((UsuarioDto) dto).setUsuario(((TextBox) instance.widgets.get(RegistrationFields.Usuario)).getText());
-			((UsuarioDto) dto).setClave(((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText());
+			String clave = (((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText());
+			String claveRepetida = ((PasswordTextBox) widgets.get(RegistrationFields.ConfirmeClave)).getText();
+
 			ListBox lisPaises = (ListBox) instance.widgets.get(RegistrationFields.Pais);
 			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
 			((UsuarioDto) dto).setCiudad(((TextBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
 			((UsuarioDto) dto).setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
 			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil))
 					.getText());
+			
+			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
+				((UsuarioDto) dto).setClave(claveRepetida);
+			else if (!clave.isEmpty() || !claveRepetida.isEmpty()){
+				if(claveRepetida.isEmpty()){
+					errorClaveRep = true;
+					((UsuarioDto) dto).setClave(clave);
+				}else if (clave.isEmpty()){
+					errorClave = true;
+					((UsuarioDto) dto).setClave(claveRepetida);
+				}else if(!clave.isEmpty() && !claveRepetida.isEmpty() && !clave.equals(claveRepetida)){
+					errorC=true;
+					((UsuarioDto) dto).setClave(claveRepetida);
+				}
+			}
+			
+			if (!email.isEmpty() && !emailRepetido.isEmpty() && email.equals(emailRepetido))
+				((UsuarioDto) dto).setEmail(emailRepetido);
+			else if (!email.isEmpty() || !emailRepetido.isEmpty()){
+				if(emailRepetido.isEmpty()){
+					errorEmailRep = true;
+					((UsuarioDto) dto).setEmail(email);
+				}else if (email.isEmpty()){
+					errorEmail = true;
+					((UsuarioDto) dto).setEmail(emailRepetido);
+				}else if (!email.isEmpty() && !emailRepetido.isEmpty() && !email.equals(emailRepetido)){
+					errorE=true;
+					((UsuarioDto) dto).setEmail(emailRepetido);
+				}
+			}
+			
 			if (!validate())
 				event.cancel();
 		}
@@ -184,7 +261,7 @@ public class RegistrationWidget extends FormWidget
 
 	private enum RegistrationFields implements FormFields
 	{
-		Nombre, Apellido, Email, Usuario("Nombre de usuario"), Clave("Contrase&ntilde;a"), Pais("Pa&iacute;s"), Ciudad, CodPostal(
+		Nombre, Apellido, Email,ConfirmeEmail("Confirmaci&oacute;n de E-mail"), Usuario("Nombre de usuario"), Clave("Contrase&ntilde;a"),ConfirmeClave("Confirmaci&oacute;n Contrase&ntilde;a"), Pais("Pa&iacute;s"), Ciudad, CodPostal(
 				"C&oacute;digo postal"), DescripPerfil("Descripci&oacute;n del perfil (opcional)"), Logo(
 				"Logo o imagen (opcional - PNG, GIF, JPEG. Tama&ntilde;o m&aacute;ximo 200KB");
 

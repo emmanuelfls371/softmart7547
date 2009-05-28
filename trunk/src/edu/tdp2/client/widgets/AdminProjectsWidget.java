@@ -34,6 +34,7 @@ public class AdminProjectsWidget extends AdminWidget
 	
 	public void load(){
 		container.add(vPanel, "Proyectos");
+		statusMessage = new HTML();
 		loadPanel();
 	}
 
@@ -45,7 +46,6 @@ public class AdminProjectsWidget extends AdminWidget
 		vPanel.clear();
 		final FlexTable table = new FlexTable();
 		table.setCellPadding(5);
-		statusMessage = new HTML();
 		statusMessage.setHeight("50px");
 		vPanel.add(statusMessage);
 		vPanel.add(table);

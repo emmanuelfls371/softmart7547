@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.Map;
 
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
+
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.MySpecificAccount;
 import edu.tdp2.client.dto.MyVendedorAccount;
@@ -42,6 +44,7 @@ public class MyAccountWidget extends NavigablePanel
 	public MyAccountWidget(String usuario)
 	{
 		super();
+		
 		AsyncCallback<MyAccountDto> callback = new AsyncCallback<MyAccountDto>()
 		{
 			public void onFailure(Throwable caught)
@@ -60,6 +63,7 @@ public class MyAccountWidget extends NavigablePanel
 	private void init(MyAccountDto dto)
 	{
 
+		
 		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
 		addRow(table, new HTML("<b>Datos de mi cuenta</b>"), ClientUtils.getBackAnchor());

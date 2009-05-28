@@ -152,7 +152,7 @@ public class Softmart implements EntryPoint, LoginListener
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
 		String currentUser = loginCookie.split(";")[0];
 		LoginWidget.setCurrentUser(currentUser);
-		centerPanel.add(new HTML(messages.welcomeUser(currentUser == null ? "" : currentUser)));
+		northPanel.add(new HTML(messages.welcomeUser(currentUser == null ? "" : currentUser)));
 
 		FocusPanel logout = new FocusPanel();
 		logout.setSize("30px", "10px");

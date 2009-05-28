@@ -19,6 +19,8 @@ public class PersonalModificationWidget extends FormWidget
 {
 	private MyAccountDto accountDto;
 	private boolean errorClave;
+	private boolean errorClaveRep;
+	private boolean errorC;
 
 	private static String INVALIDO = "0000";
 
@@ -129,7 +131,13 @@ public class PersonalModificationWidget extends FormWidget
 	protected void validate(List<String> errMsgs)
 	{
 		if (errorClave)
-			errMsgs.add("No ha ingresado la clave repetida correctamente");
+			errMsgs.add("Debe ingresar la clave original");
+		
+		if(errorClaveRep)
+			errMsgs.add("Debe ingresar la clave repetida");
+		
+		if(errorC)
+			errMsgs.add("Las claves no son iguales");
 	}
 
 	private final class ModificationSubmitHandler implements SubmitHandler
@@ -137,6 +145,8 @@ public class PersonalModificationWidget extends FormWidget
 		public void onSubmit(SubmitEvent event)
 		{
 			errorClave = false;
+			errorClaveRep = false;
+			errorC = false;
 			dto = new UsuarioDto();
 			((UsuarioDto) dto).setNombre(((TextBox) widgets.get(ModificationFields.Nombre)).getText());
 			((UsuarioDto) dto).setApellido(((TextBox) widgets.get(ModificationFields.Apellido)).getText());
@@ -156,8 +166,18 @@ public class PersonalModificationWidget extends FormWidget
 
 			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
 				((UsuarioDto) dto).setClave(claveRepetida);
-			else if (!clave.isEmpty() || !claveRepetida.isEmpty())
-				errorClave = true;
+			else if (!clave.isEmpty() || !claveRepetida.isEmpty()){
+				if(claveRepetida.isEmpty()){
+					errorClaveRep = true;
+					((UsuarioDto) dto).setClave(clave);
+				}else if (clave.isEmpty()){
+					errorClave = true;
+					((UsuarioDto) dto).setClave(claveRepetida);
+				}else if(!clave.isEmpty() && !claveRepetida.isEmpty() && !clave.equals(claveRepetida)){
+					errorC=true;
+					((UsuarioDto) dto).setClave(claveRepetida);
+				}
+			}
 
 			if (!validate())
 				event.cancel();

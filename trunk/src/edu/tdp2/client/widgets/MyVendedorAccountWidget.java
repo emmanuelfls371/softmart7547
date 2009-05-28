@@ -18,6 +18,7 @@ import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectWidget;
 import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.dto.OfertaDto;
+import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
 
@@ -32,22 +33,25 @@ public class MyVendedorAccountWidget extends AccountWidget
 		this.datos = datos;
 		add(getWestPanel(), WEST);
 		add(centerPanel, CENTER);
-
+		add(underPanel,SOUTH);
+		add(eastPanel, EAST);
 		centerPanel.setWidth("100%");
 	}
 
 	private Widget getWestPanel()
 	{
+		underPanel.clear();
 		VerticalPanel panel = new VerticalPanel();
 		panel.setSpacing(10);
-
+		
 		panel.add(new HTML("<big><b>Proyectos ofertados</b></big>"));
-
+		
 		Anchor abiertos = new Anchor("Abiertos");
 		abiertos.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
@@ -61,13 +65,16 @@ public class MyVendedorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=true;
 				proyCerrados = true;
+				VerticalPanel vCerr= new VerticalPanel();
 				vCerrados= new VerticalPanel();
-				vCerrados.add(new ProjectTable(datos.getProyectosCerrados()));
+				vCerr.add(new ProjectTable(datos.getProyectosCerrados()));
 				setLinkCalificacion();
-				centerPanel.setWidget(vCerrados);
+				centerPanel.setWidget(vCerr);
+				eastPanel.setWidth("100%");
 			}
 		});
 		panel.add(adjudicados);
@@ -77,6 +84,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
@@ -90,6 +98,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
@@ -103,13 +112,14 @@ public class MyVendedorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=true;
 				proyCerrados = false;	
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosSinCalificar()));
-				v.add(getCalificarAction());
-				
+				eastPanel.setWidget(getCalificarAction());
+				eastPanel.setWidth("100%");
 				centerPanel.setWidget(v);
 				
 			}
@@ -121,6 +131,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
@@ -130,6 +141,11 @@ public class MyVendedorAccountWidget extends AccountWidget
 		panel.add(sinRecibirCalif);
 
 		panel.setWidth("50px");
+		
+		for(Moneda ganancia : datos.getGananciaAcumulada().keySet()){
+			underPanel.add(new HTML("<p> Mi reputación como vendedor es: "+String.valueOf(datos.getReputacion())+" </p>" + "<p> Mi ganancia acumulada es: "+String.valueOf(datos.getGananciaAcumulada().get(ganancia))+" en "+ganancia.getDescription()+" </p> "));
+		}
+		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;
 	}
 
