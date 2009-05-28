@@ -38,11 +38,14 @@ public class MyCompradorAccountWidget extends AccountWidget
 		this.datos = datos;
 		add(getWestPanel(), WEST);
 		add(centerPanel, CENTER);
+		add(eastPanel, EAST);
+		add(underPanel,SOUTH);
 		centerPanel.setWidth("100%");
 	}
 
 	private Widget getWestPanel()
 	{
+		underPanel.clear();
 		VerticalPanel panel = new VerticalPanel();
 		panel.setSpacing(10);
 
@@ -54,6 +57,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=true;
 				proyCerrados = false;
@@ -107,9 +111,12 @@ public class MyCompradorAccountWidget extends AccountWidget
 				
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosAbiertos()));
-				v.add(menuLink);
-				v.add(menuLink2);
+				VerticalPanel v2= new VerticalPanel();
+				v2.add(menuLink);
+				v2.add(menuLink2);
+				eastPanel.setWidget(v2);
 				centerPanel.setWidget(v);
+				eastPanel.setWidth("100%");
 						
 			}
 		});
@@ -122,12 +129,14 @@ public class MyCompradorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=true;
 				proyCerrados = true;
 				vCerrados= new VerticalPanel();
+				VerticalPanel vCerr= new VerticalPanel();
 				
-				vCerrados.add(new ProjectTable(datos.getProyectosCerrados()));
+				vCerr.add(new ProjectTable(datos.getProyectosCerrados()));
 				
 				Anchor ofertaG = new Anchor("Ver Oferta Ganadora");
 				ofertaG.addClickHandler(new ClickHandler()
@@ -145,7 +154,8 @@ public class MyCompradorAccountWidget extends AccountWidget
 				vCerrados.add(ofertaG);
 				setLinkCalificacion();
 				
-				centerPanel.setWidget(vCerrados);
+				centerPanel.setWidget(vCerr);
+				eastPanel.setWidth("100%");
 			}
 		});
 		panel.add(cerrados);
@@ -156,6 +166,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 			
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
@@ -169,12 +180,13 @@ public class MyCompradorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=true;
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosSinCalificar()));
-				v.add(getCalificarAction());
-		
+				eastPanel.add(getCalificarAction());
+				eastPanel.setWidth("100%");
 				centerPanel.setWidget(v);
 			}
 		});
@@ -185,6 +197,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				eastPanel.clear();
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;			
@@ -197,6 +210,9 @@ public class MyCompradorAccountWidget extends AccountWidget
 		panel.add(sinRecibirCalif);
 
 		panel.setWidth("50px");
+		
+		underPanel.add(new HTML("<p> Mi reputación como comprador es: "+String.valueOf(datos.getReputacion())+" </p>"));
+		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;
 	}
 	
@@ -231,7 +247,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 			setWidget(0, 3, new HTML("Tama&ntilde;o"));
 			setWidget(0, 4, new HTML("Complejidad"));
 			setWidget(0, 5, new HTML("Fecha cierre"));
-			
+		
 			if(accion)
 				setWidget(0, 6, new HTML("Acción"));
 
@@ -247,17 +263,20 @@ public class MyCompradorAccountWidget extends AccountWidget
 					}
 				});
 				setWidget(row, 0, aProy);
-
+ 
 				setWidget(row, 1, new HTML(Presupuesto.armarRango(proyecto.getMinPresupuesto(), proyecto.getMaxPresupuesto())));
 				setWidget(row, 2, new HTML(proyecto.getMoneda().getDescription()));
 				setWidget(row, 3, new HTML(proyecto.getTamanio()));
 				setWidget(row, 4, new HTML(proyecto.getDificultad()));
 				DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 				setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
-				
-				if(accion)
-					setWidget(row, 6, getActionButton(proyecto));
-				
+				if(accion){
+					if(proyecto.isRevisado()){
+						setWidget(row, 6, getActionButton(proyecto));
+					}else{
+						setWidget(row, 6, new HTML("Pendiente de aprobación por el administrador"));
+					}
+				}
 				row++;
 			}
 		}

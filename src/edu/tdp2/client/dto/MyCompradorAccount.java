@@ -13,9 +13,12 @@ public class MyCompradorAccount extends MySpecificAccount implements Serializabl
 	@Override
 	protected List<Proyecto> prune(List<Proyecto> proyectos)
 	{
-		for (Proyecto proyecto : proyectos)
-			proyecto.pruneIncludingOffers();
+		if(proyectos!=null){
+			for (Proyecto proyecto : proyectos)
+				proyecto.pruneIncludingOffers();
+		}
 		return proyectos;
+		
 	}
 	
 	

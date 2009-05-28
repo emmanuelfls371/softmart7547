@@ -730,14 +730,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							+ "AND canceladoXAdmin = false ").setParameter(0, usuario).list());
 			comprador.setProyectosCerrados((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto AS proy JOIN FETCH proy.ofertas WHERE proy.usuario = ? AND proy IN "
-							+ "(SELECT proyecto FROM Contrato) AND proy.cancelado = false").setParameter(0, usuario)
+							+ "(SELECT proyecto FROM Contrato) AND proy.cancelado = false AND proy.canceladoXAdmin = false").setParameter(0, usuario)
 					.list());
 			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE usuario = ? AND cancelado = true").setParameter(0, usuario).list());
+					"FROM Proyecto WHERE usuario = ? AND (cancelado = true OR canceladoXAdmin = true)").setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
 							+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
-							+ "AND proy.revisado = true AND proy.canceladoXAdmin = false ").setParameter(0,
+							+ "AND proy.canceladoXAdmin = false ").setParameter(0,
 					usuario.getLogin()).list());
 
 			MyVendedorAccount vendedor = dto.getDatosVendedor();
@@ -749,23 +749,23 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			vendedor.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto y JOIN FETCH y.ofertas "
 							+ "WHERE y.contrato.ofertaGanadora.usuario = ? AND y.contrato.califAlComprador IS NULL "
-							+ "AND y.revisado = true AND y.canceladoXAdmin = false").setParameter(0, usuario).list());
+							+ "AND y.revisado = true AND y.canceladoXAdmin = false AND y.cancelado = false").setParameter(0, usuario).list());
 			vendedor.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
 					"FROM Proyecto y JOIN FETCH y.ofertas "
 							+ "WHERE y.contrato.ofertaGanadora.usuario = ? AND y.contrato.califAlVendedor IS NULL "
-							+ "AND y.revisado = true AND y.canceladoXAdmin = false").setParameter(0, usuario).list());
+							+ "AND y.revisado = true AND y.canceladoXAdmin = false AND y.cancelado = false").setParameter(0, usuario).list());
 			vendedor.setProyectosCerrados((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto y JOIN FETCH y.ofertas WHERE y.contrato.ofertaGanadora.usuario = ? AND "
-							+ "y.contrato.califAlComprador IS NOT NULL AND y.contrato.califAlVendedor IS NOT NULL")
+					"FROM Proyecto y JOIN FETCH y.ofertas WHERE y.contrato.ofertaGanadora.usuario = ? ")
 					.setParameter(0, usuario).list());
 			vendedor.setProyectosCancelados((List<Proyecto>) sess.createQuery(
-					"FROM Proyecto WHERE contrato.ofertaGanadora.usuario = ? AND cancelado = true").setParameter(0,
+					"FROM Proyecto proy JOIN FETCH proy.ofertas AS oferta "
+							+ "WHERE oferta.usuario =? AND cancelado = true").setParameter(0,
 					usuario).list());
 			vendedor.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
 							+ "WHERE oferta.usuario = ? AND proy.contrato IS EMPTY AND proy.revisado = true "
 							+ "AND proy.usuario.bloqueado = false AND proy.revisado = true "
-							+ "AND proy.canceladoXAdmin = false").setParameter(0, usuario).list());
+							+ "AND proy.canceladoXAdmin = false " + "AND proy.cancelado = false").setParameter(0, usuario).list());
 			vendedor.setProyectosPerdidos((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT proy FROM Proyecto proy JOIN proy.ofertas AS oferta "
 							+ "WHERE oferta.usuario = :u AND proy.contrato.ofertaGanadora.usuario <> :u").setParameter(

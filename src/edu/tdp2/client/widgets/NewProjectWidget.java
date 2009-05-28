@@ -31,6 +31,7 @@ public class NewProjectWidget extends FormWidget
 	private static NewProjectWidget instance;
 	private static final Format DATE_FORMAT = new DateFormat();
 	private SoftmartConstants constants;
+	private boolean hayRangos=false;
 
 	protected Map<String, Float> mapMonedas = new HashMap<String, Float>();
 
@@ -117,6 +118,7 @@ public class NewProjectWidget extends FormWidget
 				if (c != null)
 				{
 					ClientUtils.getSoftmartService().getPresupuestos(c, projectCallback);
+					hayRangos=true;
 					horiz.add(lisRangos);
 				}
 			}
@@ -237,9 +239,10 @@ public class NewProjectWidget extends FormWidget
 
 			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
 
-			ListBox lisRangos = (ListBox) panel.getWidget(1);
-			proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
-
+			if(hayRangos){
+				ListBox lisRangos = (ListBox) panel.getWidget(1);
+				proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
+			}
 			ListBox lisMonedas = (ListBox) panel.getWidget(0);
 			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
 
@@ -294,8 +297,10 @@ public class NewProjectWidget extends FormWidget
 					{
 						if (errMsg != null)
 							Window.alert(errMsg);
-						else
+						else{
+							Window.alert("Proyecto dado de alta, aparecerá en sus proyectos abiertos una vez revisado por el administrador del sistema");
 							reload();
+						}
 					}
 				});
 

@@ -17,7 +17,8 @@ public class ProjectWidget extends VerticalPanel
 
 	private Proyecto project;
 	private FlexTable table = new FlexTable();
-
+	private boolean bloqueado = false;
+	
 	public ProjectWidget(Proyecto project)
 	{
 		this.project = project;
@@ -32,7 +33,7 @@ public class ProjectWidget extends VerticalPanel
 	private void load()
 	{
 		final HTML h = new HTML(project.getUsuario().getLogin());
-
+		bloqueado = false;
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -46,6 +47,7 @@ public class ProjectWidget extends VerticalPanel
 				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
+					bloqueado = true;
 				}
 			}
 		};
@@ -68,7 +70,13 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(11, 0, new HTML("¿Revisado por Administrador?"));
 
 		int col = 1;
-		table.setWidget(0, col, h);
+		HTML h2;
+		if(bloqueado)
+			h2= new HTML(project.getUsuario().getLogin()+". Este usuario está bloqueado");
+		else
+			h2=h;
+		
+		table.setWidget(0, col, h2);
 		table.setWidget(1, col, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
 				.getMaxPresupuesto())));
 		table.setWidget(2, col, new HTML(project.getMoneda().getDescription()));

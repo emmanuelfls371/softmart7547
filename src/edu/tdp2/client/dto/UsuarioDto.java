@@ -22,14 +22,14 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 	private String apellido;
 
 	@NotEmpty(message = "Debe ingresar el email")
-	@NotNull
 	@Email(message = "El email no tiene el formato adecuado")
 	private String email;
 
 	@NotEmpty(message = "Debe ingresar el nombre de usuario")
 	@NotNull
 	private String usuario;
-
+	
+	@NotEmpty(message = "Debe ingresar la clave")
 	// En realidad solo se guarda el hash de la clave, no la clave
 	private String clave;
 
