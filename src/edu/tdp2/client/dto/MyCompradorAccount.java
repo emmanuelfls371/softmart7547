@@ -15,7 +15,7 @@ public class MyCompradorAccount extends MySpecificAccount implements Serializabl
 	{
 		if(proyectos!=null){
 			for (Proyecto proyecto : proyectos)
-				proyecto.pruneIncludingOffers();
+				proyecto.pruneNotIncludingOffers();
 		}
 		return proyectos;
 		

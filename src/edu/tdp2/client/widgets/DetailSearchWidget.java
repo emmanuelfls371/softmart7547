@@ -29,7 +29,6 @@ public class DetailSearchWidget extends VerticalPanel {
 	private FlexTable table;
 	private List<Oferta> ofertas;
 	private Oferta ofertaG;
-	private boolean bloqueado;
 	
 	public DetailSearchWidget(Proyecto proy){
 		this.proy=proy;
@@ -155,7 +154,7 @@ public class DetailSearchWidget extends VerticalPanel {
 	private void load(int row, final Oferta oferta)
 	{
 		final HTML h = new HTML(oferta.getUsuario().getLogin());
-		bloqueado=false;
+
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -169,7 +168,11 @@ public class DetailSearchWidget extends VerticalPanel {
 				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
-					bloqueado = true;
+					HTML h2 = new HTML("*Usuario Bloqueado");
+					h2.setStyleName("blocked");
+					h2.setHorizontalAlignment(ALIGN_RIGHT);
+					add(h2);
+					h.setHTML(oferta.getUsuario().getLogin()+"*");
 				}
 			}
 		};
@@ -192,14 +195,9 @@ public class DetailSearchWidget extends VerticalPanel {
 		}else{
 			menuLink.setEnabled(false);
 		}
-		HTML h2;
-
-		if(bloqueado)
-			h2= new HTML(oferta.getUsuario().getLogin()+"<p>Este usuario está bloqueado</p>");
-		else
-			h2=h;
+		
 		table.setWidget(row, 3, menuLink);
-		table.setWidget(row, 4, h2);
+		table.setWidget(row, 4, h);
 		
 		if(ofertaG!=null&&ofertaG.equals(oferta)){
 			table.setWidget(row, 5, new HTML("Oferta ganadora"));

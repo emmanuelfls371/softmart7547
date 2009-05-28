@@ -321,7 +321,7 @@ public class Proyecto extends AbstractDomainObject
 		
 	}
 
-	public void pruneIncludingOffers()
+	public void pruneNotIncludingOffers()
 	{
 		contrato = null;
 		ofertas = null;

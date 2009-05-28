@@ -13,8 +13,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.tdp2.client.ProjectWidget;
-
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.utils.ClientUtils;
@@ -55,7 +53,7 @@ public class DestacadosWidget extends SimplePanel
 					{
 						public void onClick(ClickEvent event)
 						{
-							setWidget(new ProjectWidget(proyecto));
+							setWidget(new DetailSearchWidget(proyecto));
 						}
 					});
 					table.setWidget(row, 0, aProy);
