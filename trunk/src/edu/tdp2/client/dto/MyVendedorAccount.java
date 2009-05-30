@@ -20,14 +20,9 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 		return gananciaAcumulada;
 	}
 
-	public void setGananciaAcumulada(Map<Moneda, Double> gananciaAcumulada)
+	public List<Proyecto> getProyectosAdjudicados()
 	{
-		this.gananciaAcumulada = gananciaAcumulada;
-	}
-
-	public void setProyectosPerdidos(List<Proyecto> proyectosPerdidos)
-	{
-		this.proyectosPerdidos = proyectosPerdidos;
+		return proyectosAdjudicados;
 	}
 
 	public List<Proyecto> getProyectosPerdidos()
@@ -35,13 +30,18 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 		return proyectosPerdidos;
 	}
 
+	public void setGananciaAcumulada(Map<Moneda, Double> gananciaAcumulada)
+	{
+		this.gananciaAcumulada = gananciaAcumulada;
+	}
+
 	public void setProyectosAdjudicados(List<Proyecto> proyectosAdjudicados)
 	{
 		this.proyectosAdjudicados = proyectosAdjudicados;
 	}
 
-	public List<Proyecto> getProyectosAdjudicados()
+	public void setProyectosPerdidos(List<Proyecto> proyectosPerdidos)
 	{
-		return proyectosAdjudicados;
+		this.proyectosPerdidos = proyectosPerdidos;
 	}
 }

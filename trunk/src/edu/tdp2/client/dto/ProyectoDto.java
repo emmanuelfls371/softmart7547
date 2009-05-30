@@ -43,84 +43,9 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 	@NotNull(message = "Debe ingresar la moneda en que se presupuesta")
 	private String moneda;
 
-	public String getMoneda()
+	public String getArchivo()
 	{
-		return moneda;
-	}
-
-	public void setMoneda(String moneda)
-	{
-		this.moneda = moneda;
-	}
-
-	public Date getFecha()
-	{
-		return Fecha;
-	}
-
-	public void setFecha(Date fecha)
-	{
-		Fecha = fecha;
-	}
-
-	public String getUsuario()
-	{
-		return usuario;
-	}
-
-	public void setUsuario(String usuario)
-	{
-		this.usuario = usuario;
-	}
-
-	public String getNombre()
-	{
-		return nombre;
-	}
-
-	public void setNombre(String nombre)
-	{
-		this.nombre = nombre;
-	}
-
-	public String getPresupuesto()
-	{
-		return presupuesto;
-	}
-
-	public void setPresupuesto(String presupuesto)
-	{
-		this.presupuesto = presupuesto;
-	}
-
-	public String getNivel()
-	{
-		return nivel;
-	}
-
-	public void setNivel(String nivel)
-	{
-		this.nivel = nivel;
-	}
-
-	public String getDificultad()
-	{
-		return dificultad;
-	}
-
-	public void setDificultad(String dificultad)
-	{
-		this.dificultad = dificultad;
-	}
-
-	public String getTamanio()
-	{
-		return tamanio;
-	}
-
-	public void setTamanio(String tamanio)
-	{
-		this.tamanio = tamanio;
+		return archivo;
 	}
 
 	public String getDescripcion()
@@ -128,14 +53,49 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 		return descripcion;
 	}
 
-	public void setDescripcion(String descripcion)
+	public String getDificultad()
 	{
-		this.descripcion = descripcion;
+		return dificultad;
 	}
 
-	public String getArchivo()
+	public Date getFecha()
 	{
-		return archivo;
+		return Fecha;
+	}
+
+	public long getId()
+	{
+		return id;
+	}
+
+	public String getMoneda()
+	{
+		return moneda;
+	}
+
+	public String getNivel()
+	{
+		return nivel;
+	}
+
+	public String getNombre()
+	{
+		return nombre;
+	}
+
+	public String getPresupuesto()
+	{
+		return presupuesto;
+	}
+
+	public String getTamanio()
+	{
+		return tamanio;
+	}
+
+	public String getUsuario()
+	{
+		return usuario;
 	}
 
 	public void setArchivo(String archivo)
@@ -143,13 +103,53 @@ public class ProyectoDto implements IValidatable, Serializable, Dto
 		this.archivo = archivo;
 	}
 
+	public void setDescripcion(String descripcion)
+	{
+		this.descripcion = descripcion;
+	}
+
+	public void setDificultad(String dificultad)
+	{
+		this.dificultad = dificultad;
+	}
+
+	public void setFecha(Date fecha)
+	{
+		Fecha = fecha;
+	}
+
 	public void setId(long id)
 	{
 		this.id = id;
 	}
 
-	public long getId()
+	public void setMoneda(String moneda)
 	{
-		return id;
+		this.moneda = moneda;
+	}
+
+	public void setNivel(String nivel)
+	{
+		this.nivel = nivel;
+	}
+
+	public void setNombre(String nombre)
+	{
+		this.nombre = nombre;
+	}
+
+	public void setPresupuesto(String presupuesto)
+	{
+		this.presupuesto = presupuesto;
+	}
+
+	public void setTamanio(String tamanio)
+	{
+		this.tamanio = tamanio;
+	}
+
+	public void setUsuario(String usuario)
+	{
+		this.usuario = usuario;
 	}
 }

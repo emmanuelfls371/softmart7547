@@ -16,14 +16,19 @@ public class ContratoDto implements IValidatable, Serializable, Dto
 
 	private CalificacionDto calif;
 
+	public CalificacionDto getCalif()
+	{
+		return calif;
+	}
+
 	public long getIdContrato()
 	{
 		return idContrato;
 	}
 
-	public void setIdContrato(long idContrato)
+	public OfertaDto getOferta()
 	{
-		this.idContrato = idContrato;
+		return oferta;
 	}
 
 	public ProyectoDto getProyecto()
@@ -31,19 +36,14 @@ public class ContratoDto implements IValidatable, Serializable, Dto
 		return proyecto;
 	}
 
-	public void setProyecto(ProyectoDto proyecto)
-	{
-		this.proyecto = proyecto;
-	}
-
-	public CalificacionDto getCalif()
-	{
-		return calif;
-	}
-
 	public void setCalif(CalificacionDto calif)
 	{
 		this.calif = calif;
+	}
+
+	public void setIdContrato(long idContrato)
+	{
+		this.idContrato = idContrato;
 	}
 
 	public void setOferta(OfertaDto oferta)
@@ -51,9 +51,9 @@ public class ContratoDto implements IValidatable, Serializable, Dto
 		this.oferta = oferta;
 	}
 
-	public OfertaDto getOferta()
+	public void setProyecto(ProyectoDto proyecto)
 	{
-		return oferta;
+		this.proyecto = proyecto;
 	}
 
 }

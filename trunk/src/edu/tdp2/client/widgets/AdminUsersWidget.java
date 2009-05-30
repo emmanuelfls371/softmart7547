@@ -29,7 +29,7 @@ public class AdminUsersWidget extends AdminWidget
 	@Override
 	public void load()
 	{
-		
+
 		History.newItem("AdminUsers");
 
 		VerticalPanel vPanel = new VerticalPanel();

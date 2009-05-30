@@ -5,7 +5,6 @@ import java.util.List;
 
 import edu.tdp2.client.model.Proyecto;
 
-
 public class MyCompradorAccount extends MySpecificAccount implements Serializable
 {
 	private static final long serialVersionUID = -739806195271426185L;
@@ -13,13 +12,11 @@ public class MyCompradorAccount extends MySpecificAccount implements Serializabl
 	@Override
 	protected List<Proyecto> prune(List<Proyecto> proyectos)
 	{
-		if(proyectos!=null){
+		if (proyectos != null)
 			for (Proyecto proyecto : proyectos)
 				proyecto.pruneNotIncludingOffers();
-		}
 		return proyectos;
-		
+
 	}
-	
-	
+
 }

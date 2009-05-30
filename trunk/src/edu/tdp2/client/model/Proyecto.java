@@ -1,9 +1,7 @@
 package edu.tdp2.client.model;
 
-
 import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
 import edu.tdp2.client.dto.ProyectoDto;
 
 @Entity
@@ -23,6 +20,11 @@ import edu.tdp2.client.dto.ProyectoDto;
 public class Proyecto extends AbstractDomainObject
 {
 	private static final long serialVersionUID = -4981789655579048475L;
+
+	public static long getSerialVersionUID()
+	{
+		return serialVersionUID;
+	}
 
 	@Column(name = "Nombre", length = 50, nullable = false)
 	private String nombre;
@@ -73,73 +75,9 @@ public class Proyecto extends AbstractDomainObject
 
 	@Column(name = "Revisado", nullable = false)
 	private boolean revisado;
-	
+
 	@Column(name = "Destacado", nullable = false)
 	private boolean destacado;
-
-	public List<Oferta> getOfertas()
-	{
-		return ofertas;
-	}
-
-	public void setOfertas(List<Oferta> ofertas)
-	{
-		this.ofertas = ofertas;
-	}
-
-	public boolean isCancelado()
-	{
-		return cancelado;
-	}
-
-	public void setCancelado(boolean cancelado)
-	{
-		this.cancelado = cancelado;
-	}
-
-	public Moneda getMoneda()
-	{
-		return moneda;
-	}
-
-	public void setMoneda(Moneda moneda)
-	{
-		this.moneda = moneda;
-	}
-
-	public Contrato getContrato()
-	{
-		return contrato;
-	}
-
-	public void setContrato(Contrato contrato)
-	{
-		this.contrato = contrato;
-	}
-
-	public boolean existe(Oferta of)
-	{
-		if (of != null)
-		{
-			for (Oferta oferta : ofertas)
-				if (oferta.equals(of))
-					return true;
-			return false;
-		}
-		else
-			return false;
-	}
-
-	public boolean addOferta(Oferta of)
-	{
-		if (of != null && !existe(of))
-		{
-			ofertas.add(of);
-			return true;
-		}
-		else
-			return false;
-	}
 
 	public Proyecto()
 	{
@@ -160,74 +98,48 @@ public class Proyecto extends AbstractDomainObject
 		setMoneda(moneda);
 	}
 
-	public Usuario getUsuario()
+	public boolean addOferta(Oferta of)
 	{
-		return usuario;
+		if (of != null && !existe(of))
+		{
+			ofertas.add(of);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void setUsuario(Usuario usuario)
+	public boolean existe(Oferta of)
 	{
-		this.usuario = usuario;
+		if (of != null)
+		{
+			for (Oferta oferta : ofertas)
+				if (oferta.equals(of))
+					return true;
+			return false;
+		}
+		else
+			return false;
 	}
 
-	public void setMaxPresupuesto(int maxPresupuesto)
+	public Contrato getContrato()
 	{
-		this.maxPresupuesto = maxPresupuesto;
+		return contrato;
 	}
 
-	public void setMinPresupuesto(int minPresupuesto)
+	public String getDescripcion()
 	{
-		this.minPresupuesto = minPresupuesto;
+		return descripcion;
 	}
 
-	public void setFecha(Date fecha)
+	public String getDificultad()
 	{
-		this.fecha = fecha;
+		return dificultad;
 	}
 
-	public void setNivel(String nivel)
+	public Date getFecha()
 	{
-		boolean existe = false;
-		for (NivelReputacion n : NivelReputacion.values())
-			if (n.name().compareTo(nivel) == 0)
-				existe = true;
-		if (existe)
-			this.nivel = nivel;
-	}
-
-	public void setDificultad(String dificultad)
-	{
-		boolean existe = false;
-		for (DificultadProyecto d : DificultadProyecto.values())
-			if (d.name().compareTo(dificultad) == 0)
-				existe = true;
-		if (existe)
-			this.dificultad = dificultad;
-	}
-
-	public void setTamanio(String tamanio)
-	{
-		boolean existe = false;
-		for (TamanioProyecto t : TamanioProyecto.values())
-			if (t.name().compareTo(tamanio) == 0)
-				existe = true;
-		if (existe)
-			this.tamanio = tamanio;
-	}
-
-	public void setDescripcion(String descripcion)
-	{
-		this.descripcion = descripcion;
-	}
-
-	public void setPathArchivo(String pathArchivo)
-	{
-		this.pathArchivo = pathArchivo;
-	}
-
-	public static long getSerialVersionUID()
-	{
-		return serialVersionUID;
+		return fecha;
 	}
 
 	public int getMaxPresupuesto()
@@ -240,9 +152,9 @@ public class Proyecto extends AbstractDomainObject
 		return minPresupuesto;
 	}
 
-	public Date getFecha()
+	public Moneda getMoneda()
 	{
-		return fecha;
+		return moneda;
 	}
 
 	public String getNivel()
@@ -250,19 +162,14 @@ public class Proyecto extends AbstractDomainObject
 		return nivel;
 	}
 
-	public String getDificultad()
+	public String getNombre()
 	{
-		return dificultad;
+		return nombre;
 	}
 
-	public String getTamanio()
+	public List<Oferta> getOfertas()
 	{
-		return tamanio;
-	}
-
-	public String getDescripcion()
-	{
-		return descripcion;
+		return ofertas;
 	}
 
 	public String getPathArchivo()
@@ -270,44 +177,34 @@ public class Proyecto extends AbstractDomainObject
 		return pathArchivo;
 	}
 
-	public String getNombre()
+	public String getTamanio()
 	{
-		return nombre;
+		return tamanio;
 	}
 
-	public void setNombre(String nombre)
+	public Usuario getUsuario()
 	{
-		this.nombre = nombre;
+		return usuario;
 	}
 
-	public void setRevisado(boolean revisado)
+	public boolean isCancelado()
 	{
-		this.revisado = revisado;
-	}
-	
-	public void setDestacado(boolean destacado)
-	{
-		this.destacado = destacado;
-	}
-
-	public boolean isRevisado()
-	{
-		return revisado;
-	}
-	
-	public boolean isDestacado()
-	{
-		return destacado;
-	}
-
-	public void setCanceladoXAdmin(boolean canceladoXAdmin)
-	{
-		this.canceladoXAdmin = canceladoXAdmin;
+		return cancelado;
 	}
 
 	public boolean isCanceladoXAdmin()
 	{
 		return canceladoXAdmin;
+	}
+
+	public boolean isDestacado()
+	{
+		return destacado;
+	}
+
+	public boolean isRevisado()
+	{
+		return revisado;
 	}
 
 	@Override
@@ -318,7 +215,7 @@ public class Proyecto extends AbstractDomainObject
 		for (Oferta oferta : ofertas)
 			oferta.prune();
 		usuario.prune();
-		
+
 	}
 
 	public void pruneNotIncludingOffers()
@@ -326,5 +223,105 @@ public class Proyecto extends AbstractDomainObject
 		contrato = null;
 		ofertas = null;
 		usuario.prune();
+	}
+
+	public void setCancelado(boolean cancelado)
+	{
+		this.cancelado = cancelado;
+	}
+
+	public void setCanceladoXAdmin(boolean canceladoXAdmin)
+	{
+		this.canceladoXAdmin = canceladoXAdmin;
+	}
+
+	public void setContrato(Contrato contrato)
+	{
+		this.contrato = contrato;
+	}
+
+	public void setDescripcion(String descripcion)
+	{
+		this.descripcion = descripcion;
+	}
+
+	public void setDestacado(boolean destacado)
+	{
+		this.destacado = destacado;
+	}
+
+	public void setDificultad(String dificultad)
+	{
+		boolean existe = false;
+		for (DificultadProyecto d : DificultadProyecto.values())
+			if (d.name().compareTo(dificultad) == 0)
+				existe = true;
+		if (existe)
+			this.dificultad = dificultad;
+	}
+
+	public void setFecha(Date fecha)
+	{
+		this.fecha = fecha;
+	}
+
+	public void setMaxPresupuesto(int maxPresupuesto)
+	{
+		this.maxPresupuesto = maxPresupuesto;
+	}
+
+	public void setMinPresupuesto(int minPresupuesto)
+	{
+		this.minPresupuesto = minPresupuesto;
+	}
+
+	public void setMoneda(Moneda moneda)
+	{
+		this.moneda = moneda;
+	}
+
+	public void setNivel(String nivel)
+	{
+		boolean existe = false;
+		for (NivelReputacion n : NivelReputacion.values())
+			if (n.name().compareTo(nivel) == 0)
+				existe = true;
+		if (existe)
+			this.nivel = nivel;
+	}
+
+	public void setNombre(String nombre)
+	{
+		this.nombre = nombre;
+	}
+
+	public void setOfertas(List<Oferta> ofertas)
+	{
+		this.ofertas = ofertas;
+	}
+
+	public void setPathArchivo(String pathArchivo)
+	{
+		this.pathArchivo = pathArchivo;
+	}
+
+	public void setRevisado(boolean revisado)
+	{
+		this.revisado = revisado;
+	}
+
+	public void setTamanio(String tamanio)
+	{
+		boolean existe = false;
+		for (TamanioProyecto t : TamanioProyecto.values())
+			if (t.name().compareTo(tamanio) == 0)
+				existe = true;
+		if (existe)
+			this.tamanio = tamanio;
+	}
+
+	public void setUsuario(Usuario usuario)
+	{
+		this.usuario = usuario;
 	}
 }

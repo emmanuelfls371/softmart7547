@@ -14,16 +14,6 @@ public class AdminHistoryHandler implements ValueChangeHandler<String>
 	protected HTML statusMessage;
 	protected DecoratedTabPanel container;
 
-	public void setStatusMessage(HTML statusMessage)
-	{
-		this.statusMessage = statusMessage;
-	}
-
-	public void setContainer(DecoratedTabPanel container)
-	{
-		this.container = container;
-	}
-
 	public void onValueChange(ValueChangeEvent<String> event)
 	{
 		AdminHistoryToken token;
@@ -49,5 +39,15 @@ public class AdminHistoryHandler implements ValueChangeHandler<String>
 		}
 		w.setContainer(container);
 		w.load();
+	}
+
+	public void setContainer(DecoratedTabPanel container)
+	{
+		this.container = container;
+	}
+
+	public void setStatusMessage(HTML statusMessage)
+	{
+		this.statusMessage = statusMessage;
 	}
 }

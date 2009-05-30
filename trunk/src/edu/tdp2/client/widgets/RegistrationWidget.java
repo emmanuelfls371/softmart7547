@@ -15,25 +15,151 @@ import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
-
 public class RegistrationWidget extends FormWidget
 {
+	private enum RegistrationFields implements FormFields
+	{
+		Nombre(constants.nombre()), Apellido(constants.apellido()), Email(constants.email()), ConfirmeEmail(constants
+				.confirmeEmail()), Usuario(constants.usuario()), Clave(constants.clave()), ConfirmeClave(constants
+				.confirmeClave()), Pais(constants.pais()), Ciudad(constants.ciudad()), CodPostal(constants.codPostal()), DescripPerfil(
+				constants.descripPerfil()), Logo(constants.logo());
+
+		public String description;
+
+		private RegistrationFields(String description)
+		{
+			this.description = description;
+		}
+
+		public String getDescription()
+		{
+			return description;
+		}
+	}
+
+	private final class RegistrationSubmitCompleteHandler implements SubmitCompleteHandler
+	{
+		public void onSubmitComplete(SubmitCompleteEvent event)
+		{
+			String results = event.getResults();
+			if (results.startsWith("OK:"))
+			{
+				((UsuarioDto) dto).setLogo(results.split(":", 2)[1]);
+
+				ClientUtils.getSoftmartService().registrar((UsuarioDto) dto, new AsyncCallback<String>()
+				{
+					public void onFailure(Throwable caught)
+					{
+						Window.alert(constants.failRegister());
+					}
+
+					public void onSuccess(String errMsg)
+					{
+						if (errMsg != null)
+							Window.alert(errMsg);
+						else
+							reload();
+					}
+				});
+
+			}
+			else if (results.startsWith("ERROR:"))
+				Window.alert(results.split(":", 2)[1]);
+			else
+				Window.alert(results);
+		}
+	}
+
+	private final class RegistrationSubmitHandler implements SubmitHandler
+	{
+		public void onSubmit(SubmitEvent event)
+		{
+			errorClave = false;
+			errorEmail = false;
+			errorClaveRep = false;
+			errorEmailRep = false;
+			errorC = false;
+			errorE = false;
+			dto = new UsuarioDto();
+			((UsuarioDto) dto).setNombre(((TextBox) instance.widgets.get(RegistrationFields.Nombre)).getText());
+			((UsuarioDto) dto).setApellido(((TextBox) instance.widgets.get(RegistrationFields.Apellido)).getText());
+			String email = ((TextBox) instance.widgets.get(RegistrationFields.Email)).getText();
+			String emailRepetido = ((TextBox) widgets.get(RegistrationFields.ConfirmeEmail)).getText();
+
+			((UsuarioDto) dto).setUsuario(((TextBox) instance.widgets.get(RegistrationFields.Usuario)).getText());
+			String clave = ((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText();
+			String claveRepetida = ((PasswordTextBox) widgets.get(RegistrationFields.ConfirmeClave)).getText();
+
+			ListBox lisPaises = (ListBox) instance.widgets.get(RegistrationFields.Pais);
+			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
+			((UsuarioDto) dto).setCiudad(((TextBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
+			((UsuarioDto) dto).setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
+			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil))
+					.getText());
+
+			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
+				((UsuarioDto) dto).setClave(claveRepetida);
+			else if (!clave.isEmpty() || !claveRepetida.isEmpty())
+				if (claveRepetida.isEmpty())
+				{
+					errorClaveRep = true;
+					((UsuarioDto) dto).setClave(clave);
+				}
+				else if (clave.isEmpty())
+				{
+					errorClave = true;
+					((UsuarioDto) dto).setClave(claveRepetida);
+				}
+				else if (!clave.isEmpty() && !claveRepetida.isEmpty() && !clave.equals(claveRepetida))
+				{
+					errorC = true;
+					((UsuarioDto) dto).setClave(claveRepetida);
+				}
+
+			if (!email.isEmpty() && !emailRepetido.isEmpty() && email.equals(emailRepetido))
+				((UsuarioDto) dto).setEmail(emailRepetido);
+			else if (!email.isEmpty() || !emailRepetido.isEmpty())
+				if (emailRepetido.isEmpty())
+				{
+					errorEmailRep = true;
+					((UsuarioDto) dto).setEmail(email);
+				}
+				else if (email.isEmpty())
+				{
+					errorEmail = true;
+					((UsuarioDto) dto).setEmail(emailRepetido);
+				}
+				else if (!email.isEmpty() && !emailRepetido.isEmpty() && !email.equals(emailRepetido))
+				{
+					errorE = true;
+					((UsuarioDto) dto).setEmail(emailRepetido);
+				}
+
+			if (!validate())
+				event.cancel();
+		}
+	}
+
 	private static RegistrationWidget instance;
 	private static RegistrationConstants constants;
 
-	private boolean errorC;
-	private boolean errorE;
-	private boolean errorClave;
-	private boolean errorEmail;
-	private boolean errorClaveRep;
-	private boolean errorEmailRep;
-	
 	public static RegistrationWidget getInstance()
 	{
 		if (instance == null)
 			instance = new RegistrationWidget();
 		return instance;
 	}
+
+	private boolean errorC;
+	private boolean errorE;
+
+	private boolean errorClave;
+
+	private boolean errorEmail;
+
+	private boolean errorClaveRep;
+
+	private boolean errorEmailRep;
 
 	private RegistrationWidget()
 	{
@@ -47,9 +173,17 @@ public class RegistrationWidget extends FormWidget
 	}
 
 	@Override
-	protected FormFields[] values()
+	protected void buildWidget()
 	{
-		return RegistrationFields.values();
+		super.buildWidget();
+		addSubmitCompleteHandler(new RegistrationSubmitCompleteHandler());
+		addSubmitHandler(new RegistrationSubmitHandler());
+	}
+
+	@Override
+	protected IValidator<Dto> getValidator()
+	{
+		return GWT.create(UsuarioDto.class);
 	}
 
 	@Override
@@ -69,12 +203,11 @@ public class RegistrationWidget extends FormWidget
 		t.setMaxLength(255);
 		t.setName(RegistrationFields.Email.toString());
 		widgets.put(RegistrationFields.Email, t);
-		
+
 		t = new TextBox();
 		t.setMaxLength(255);
 		t.setName(RegistrationFields.ConfirmeEmail.toString());
 		widgets.put(RegistrationFields.ConfirmeEmail, t);
-		
 
 		t = new TextBox();
 		t.setMaxLength(50);
@@ -85,7 +218,7 @@ public class RegistrationWidget extends FormWidget
 		t.setMaxLength(50);
 		t.setName(RegistrationFields.Clave.toString());
 		widgets.put(RegistrationFields.Clave, t);
-		
+
 		t = new PasswordTextBox();
 		t.setMaxLength(50);
 		t.setName(RegistrationFields.ConfirmeClave.toString());
@@ -132,157 +265,34 @@ public class RegistrationWidget extends FormWidget
 	}
 
 	@Override
-	protected void buildWidget()
-	{
-		super.buildWidget();
-		addSubmitCompleteHandler(new RegistrationSubmitCompleteHandler());
-		addSubmitHandler(new RegistrationSubmitHandler());
-	}
-
-	@Override
 	protected void validate(List<String> errMsgs)
 	{
 		String fileName = ((FileUpload) widgets.get(RegistrationFields.Logo)).getFilename().toUpperCase();
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
 				&& !fileName.endsWith("JPEG"))
 			errMsgs.add(constants.errorArchivoExtension());
-		
+
 		if (errorClave)
 			errMsgs.add(constants.errorClaveOrig());
-		
-		if(errorClaveRep)
+
+		if (errorClaveRep)
 			errMsgs.add(constants.errorClaveRep());
-		
-		if(errorC)
+
+		if (errorC)
 			errMsgs.add(constants.errorClavesDistintas());
-		
+
 		if (errorEmail)
 			errMsgs.add(constants.errorMailOrig());
 		if (errorEmailRep)
 			errMsgs.add(constants.errorMailRep());
-		
-		if(errorE)
+
+		if (errorE)
 			errMsgs.add(constants.errorMailsDistintos());
 	}
 
-	private final class RegistrationSubmitHandler implements SubmitHandler
-	{
-		public void onSubmit(SubmitEvent event)
-		{
-			errorClave = false;
-			errorEmail = false;
-			errorClaveRep = false;
-			errorEmailRep = false;
-			errorC = false;
-			errorE = false;
-			dto = new UsuarioDto();
-			((UsuarioDto) dto).setNombre(((TextBox) instance.widgets.get(RegistrationFields.Nombre)).getText());
-			((UsuarioDto) dto).setApellido(((TextBox) instance.widgets.get(RegistrationFields.Apellido)).getText());
-			String email =(((TextBox) instance.widgets.get(RegistrationFields.Email)).getText());
-			String emailRepetido = ((TextBox) widgets.get(RegistrationFields.ConfirmeEmail)).getText();
-
-			((UsuarioDto) dto).setUsuario(((TextBox) instance.widgets.get(RegistrationFields.Usuario)).getText());
-			String clave = (((TextBox) instance.widgets.get(RegistrationFields.Clave)).getText());
-			String claveRepetida = ((PasswordTextBox) widgets.get(RegistrationFields.ConfirmeClave)).getText();
-
-			ListBox lisPaises = (ListBox) instance.widgets.get(RegistrationFields.Pais);
-			((UsuarioDto) dto).setPais(lisPaises.getValue(lisPaises.getSelectedIndex()));
-			((UsuarioDto) dto).setCiudad(((TextBox) instance.widgets.get(RegistrationFields.Ciudad)).getText());
-			((UsuarioDto) dto).setCodPostal(((TextBox) instance.widgets.get(RegistrationFields.CodPostal)).getText());
-			((UsuarioDto) dto).setDescripPerfil(((TextBox) instance.widgets.get(RegistrationFields.DescripPerfil))
-					.getText());
-			
-			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
-				((UsuarioDto) dto).setClave(claveRepetida);
-			else if (!clave.isEmpty() || !claveRepetida.isEmpty()){
-				if(claveRepetida.isEmpty()){
-					errorClaveRep = true;
-					((UsuarioDto) dto).setClave(clave);
-				}else if (clave.isEmpty()){
-					errorClave = true;
-					((UsuarioDto) dto).setClave(claveRepetida);
-				}else if(!clave.isEmpty() && !claveRepetida.isEmpty() && !clave.equals(claveRepetida)){
-					errorC=true;
-					((UsuarioDto) dto).setClave(claveRepetida);
-				}
-			}
-			
-			if (!email.isEmpty() && !emailRepetido.isEmpty() && email.equals(emailRepetido))
-				((UsuarioDto) dto).setEmail(emailRepetido);
-			else if (!email.isEmpty() || !emailRepetido.isEmpty()){
-				if(emailRepetido.isEmpty()){
-					errorEmailRep = true;
-					((UsuarioDto) dto).setEmail(email);
-				}else if (email.isEmpty()){
-					errorEmail = true;
-					((UsuarioDto) dto).setEmail(emailRepetido);
-				}else if (!email.isEmpty() && !emailRepetido.isEmpty() && !email.equals(emailRepetido)){
-					errorE=true;
-					((UsuarioDto) dto).setEmail(emailRepetido);
-				}
-			}
-			
-			if (!validate())
-				event.cancel();
-		}
-	}
-
-	private final class RegistrationSubmitCompleteHandler implements SubmitCompleteHandler
-	{
-		public void onSubmitComplete(SubmitCompleteEvent event)
-		{
-			String results = event.getResults();
-			if (results.startsWith("OK:"))
-			{
-				((UsuarioDto) dto).setLogo(results.split(":", 2)[1]);
-
-				ClientUtils.getSoftmartService().registrar((UsuarioDto) dto, new AsyncCallback<String>()
-				{
-					public void onFailure(Throwable caught)
-					{
-						Window.alert(constants.failRegister());
-					}
-
-					public void onSuccess(String errMsg)
-					{
-						if (errMsg != null)
-							Window.alert(errMsg);
-						else
-							reload();
-					}
-				});
-
-			}
-			else if (results.startsWith("ERROR:"))
-				Window.alert(results.split(":", 2)[1]);
-			else
-				Window.alert(results);
-		}
-	}
-
-	private enum RegistrationFields implements FormFields
-	{
-		Nombre(constants.nombre()), Apellido(constants.apellido()), Email(constants.email()), ConfirmeEmail(constants
-				.confirmeEmail()), Usuario(constants.usuario()), Clave(constants.clave()), ConfirmeClave(constants
-				.confirmeClave()), Pais(constants.pais()), Ciudad(constants.ciudad()), CodPostal(constants.codPostal()), DescripPerfil(
-				constants.descripPerfil()), Logo(constants.logo());
-
-		private RegistrationFields(String description)
-		{
-			this.description = description;
-		}
-
-		public String description;
-
-		public String getDescription()
-		{
-			return description;
-		}
-	}
-
 	@Override
-	protected IValidator<Dto> getValidator()
+	protected FormFields[] values()
 	{
-		return GWT.create(UsuarioDto.class);
+		return RegistrationFields.values();
 	}
 }

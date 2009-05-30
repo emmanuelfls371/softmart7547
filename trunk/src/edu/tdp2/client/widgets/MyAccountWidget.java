@@ -2,7 +2,6 @@ package edu.tdp2.client.widgets;
 
 import java.util.Map;
 
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -16,7 +15,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectList;
-
 import edu.tdp2.client.dto.MyAccountDto;
 import edu.tdp2.client.dto.MySpecificAccount;
 import edu.tdp2.client.dto.MyVendedorAccount;
@@ -27,12 +25,20 @@ import edu.tdp2.client.utils.OneParamDelegate;
 
 public class MyAccountWidget extends NavigablePanel
 {
+	public class EarningsMap extends VerticalPanel
+	{
+		public EarningsMap(Map<Moneda, Double> gananciaAcumulada)
+		{
+			for (Moneda moneda : gananciaAcumulada.keySet())
+				add(new HTML(moneda.getDescription() + ": " + gananciaAcumulada.get(moneda)));
+		}
+	}
+
 	private FlexTable tableDatos = new FlexTable();
 	private FlexTable tableComp = new FlexTable();
+
 	private FlexTable tableVend = new FlexTable();
 
-
-	
 	private OneParamDelegate<Proyecto> onShowOwnOfertaDelegate = new OneParamDelegate<Proyecto>()
 	{
 		public void invoke(Proyecto p)
@@ -44,7 +50,7 @@ public class MyAccountWidget extends NavigablePanel
 	public MyAccountWidget(String usuario)
 	{
 		super();
-		
+
 		AsyncCallback<MyAccountDto> callback = new AsyncCallback<MyAccountDto>()
 		{
 			public void onFailure(Throwable caught)
@@ -60,10 +66,67 @@ public class MyAccountWidget extends NavigablePanel
 		ClientUtils.getSoftmartService().getMyAccountData(usuario, callback);
 	}
 
+	public void onModuleLoad()
+	{
+
+	}
+
+	protected void onShowOwnOferta(Proyecto proyectoActual)
+	{
+		putAlone(new OfertaWidget(proyectoActual, LoginWidget.getCurrentUser()));
+	}
+
+	private void addRow(FlexTable table, Widget... widgets)
+	{
+		int row = table.getRowCount();
+		for (int i = 0; i < widgets.length; i++)
+			table.setWidget(row, i, widgets[i]);
+		table.getWidget(row, 0).setWidth("200px");
+	}
+
+	private void addRowComp(Widget... widgets)
+	{
+		addRow(tableComp, widgets);
+	}
+
+	private void addRowDatos(Widget... widgets)
+	{
+		addRow(tableDatos, widgets);
+	}
+
+	private void addRowVend(Widget... widgets)
+	{
+		addRow(tableVend, widgets);
+	}
+
+	private Widget getModificationAnchor(final MyAccountDto dto)
+	{
+		Anchor anchor = new Anchor("Modificar");
+		anchor.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				putAlone(new PersonalModificationWidget(dto));
+			}
+		});
+		return anchor;
+	}
+
+	private Widget getOwnOfferAnchorForProjects(ProjectList projs)
+	{
+		Anchor anchor = new Anchor("Ver mi oferta");
+		anchor.addClickHandler(getOwnOfferHandlerFormProjectList(projs));
+		return anchor;
+	}
+
+	private ClickHandler getOwnOfferHandlerFormProjectList(final ProjectList projects)
+	{
+		return ClientUtils.getHandlerForProjects(projects, onShowOwnOfertaDelegate);
+	}
+
 	private void init(MyAccountDto dto)
 	{
 
-		
 		FlexTable table = new FlexTable();
 		table.setCellPadding(10);
 		addRow(table, new HTML("<b>Datos de mi cuenta</b>"), ClientUtils.getBackAnchor());
@@ -71,10 +134,10 @@ public class MyAccountWidget extends NavigablePanel
 
 		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
 		tabPanel.setAnimationEnabled(true);
-		tabPanel.setPixelSize(getAbsoluteLeft()+getOffsetWidth()-40, getAbsoluteTop()+getOffsetHeight());
+		tabPanel.setPixelSize(getAbsoluteLeft() + getOffsetWidth() - 40, getAbsoluteTop() + getOffsetHeight());
 
 		tabPanel.getDeckPanel().addStyleName("dock");
-		
+
 		tableDatos.setCellPadding(10);
 		tableComp.setCellPadding(10);
 		tableVend.setCellPadding(10);
@@ -89,8 +152,7 @@ public class MyAccountWidget extends NavigablePanel
 		addRowDatos(new HTML("Ciudad"), new HTML(dto.getCiudad()));
 		addRowDatos(new HTML("Codigo Postal"), new HTML(dto.getCodigoPostal().toString()));
 		addRowDatos(new HTML("Descripcion"), new HTML(dto.getDescripcion().toString()));
-		addRowDatos(new HTML("Mi categor&iacute;a como usuario de Softmart"),
-				new HTML(dto.getNivel().toString()));
+		addRowDatos(new HTML("Mi categor&iacute;a como usuario de Softmart"), new HTML(dto.getNivel().toString()));
 
 		MySpecificAccount comprador = dto.getDatosComprador();
 		addRowComp(new HTML("Reputación como comprador"), new HTML(((Double) comprador.getReputacion()).toString()));
@@ -146,76 +208,6 @@ public class MyAccountWidget extends NavigablePanel
 		add(tabPanel);
 
 	}
-
-	private void addRow(FlexTable table, Widget... widgets)
-	{
-		int row = table.getRowCount();
-		for (int i = 0; i < widgets.length; i++)
-			table.setWidget(row, i, widgets[i]);
-		table.getWidget(row, 0).setWidth("200px");
-	}
-
-	private void addRowDatos(Widget... widgets)
-	{
-		addRow(tableDatos, widgets);
-	}
-
-	private void addRowComp(Widget... widgets)
-	{
-		addRow(tableComp, widgets);
-	}
-
-	private void addRowVend(Widget... widgets)
-	{
-		addRow(tableVend, widgets);
-	}
-
-	public class EarningsMap extends VerticalPanel
-	{
-		public EarningsMap(Map<Moneda, Double> gananciaAcumulada)
-		{
-			for (Moneda moneda : gananciaAcumulada.keySet())
-				add(new HTML(moneda.getDescription() + ": " + gananciaAcumulada.get(moneda)));
-		}
-	}
-
-	private Widget getOwnOfferAnchorForProjects(ProjectList projs)
-	{
-		Anchor anchor = new Anchor("Ver mi oferta");
-		anchor.addClickHandler(getOwnOfferHandlerFormProjectList(projs));
-		return anchor;
-	}
-
-	private ClickHandler getOwnOfferHandlerFormProjectList(final ProjectList projects)
-	{
-		return ClientUtils.getHandlerForProjects(projects, onShowOwnOfertaDelegate);
-	}
-
-	protected void onShowOwnOferta(Proyecto proyectoActual)
-	{
-		putAlone(new OfertaWidget(proyectoActual, LoginWidget.getCurrentUser()));
-	}
-
-	private Widget getModificationAnchor(final MyAccountDto dto)
-	{
-		Anchor anchor = new Anchor("Modificar");
-		anchor.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				putAlone(new PersonalModificationWidget(dto));
-			}
-		});
-		return anchor;
-	}
-
-	public void onModuleLoad()
-	{
-
-	}
-	
-	
-	
 
 	/*
 	 * private class MyAccountHistoryHandler implements ValueChangeHandler<String> { public void

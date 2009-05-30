@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.model.Oferta;
 
@@ -22,13 +21,11 @@ public class ComentarioWidget extends DialogBox
 		super(true);
 		c = oferta.getDescripcion();
 		load();
-		/*this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-	          public void setPosition(int offsetWidth, int offsetHeight) {
-	            int left = (Window.getClientWidth() - offsetWidth);
-	            int top = (Window.getClientHeight() - offsetHeight);
-	            setPopupPosition(left, top);
-	          }
-	        });*/
+		/*
+		 * this.setPopupPositionAndShow(new PopupPanel.PositionCallback() { public void setPosition(int offsetWidth, int
+		 * offsetHeight) { int left = (Window.getClientWidth() - offsetWidth); int top = (Window.getClientHeight() -
+		 * offsetHeight); setPopupPosition(left, top); } });
+		 */
 
 	}
 
@@ -38,13 +35,11 @@ public class ComentarioWidget extends DialogBox
 		constants = GWT.create(ComentarioConstants.class);
 		c = oferta.getDescripcion();
 		load();
-		/*this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-	          public void setPosition(int offsetWidth, int offsetHeight) {
-	            int left = (Window.getClientWidth() - offsetWidth) / 3;
-	            int top = (Window.getClientHeight() - offsetHeight) / 3;
-	            setPopupPosition(left, top);
-	          }
-	        });*/
+		/*
+		 * this.setPopupPositionAndShow(new PopupPanel.PositionCallback() { public void setPosition(int offsetWidth, int
+		 * offsetHeight) { int left = (Window.getClientWidth() - offsetWidth) / 3; int top = (Window.getClientHeight() -
+		 * offsetHeight) / 3; setPopupPosition(left, top); } });
+		 */
 	}
 
 	protected native void reload() /*-{
@@ -58,11 +53,10 @@ public class ComentarioWidget extends DialogBox
 		table.clear();
 		panel.add(new HTML(constants.comentario()));
 		int row = 0;
-		if(c.isEmpty()){
+		if (c.isEmpty())
 			table.setWidget(row, 0, new HTML(constants.noHayComentario()));
-		}
 		table.setWidget(row, 0, new HTML(c));
-		
+
 		panel.add(table);
 		setWidget(panel);
 	}

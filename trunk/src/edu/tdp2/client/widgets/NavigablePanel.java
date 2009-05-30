@@ -50,22 +50,6 @@ public class NavigablePanel extends VerticalPanel
 		return anchor;
 	}
 
-	private ClickHandler getOfferHandlerFormProjectList(final ProjectList projects)
-	{
-		return ClientUtils.getHandlerForProjects(projects, onShowOfertaDelegate);
-	}
-
-	private ClickHandler getHandlerFormProjectList(final ProjectList projects)
-	{
-		return ClientUtils.getHandlerForProjects(projects, onShowProyectoDelegate);
-	}
-
-	private void onShowProyecto(Proyecto project)
-	{
-
-		putAlone(new ProjectWidget(project));
-	}
-
 	protected void onShowOferta(Proyecto proyectoActual)
 	{
 
@@ -77,6 +61,22 @@ public class NavigablePanel extends VerticalPanel
 		History.newItem("");
 		clear();
 		add(widget);
+	}
+
+	private ClickHandler getHandlerFormProjectList(final ProjectList projects)
+	{
+		return ClientUtils.getHandlerForProjects(projects, onShowProyectoDelegate);
+	}
+
+	private ClickHandler getOfferHandlerFormProjectList(final ProjectList projects)
+	{
+		return ClientUtils.getHandlerForProjects(projects, onShowOfertaDelegate);
+	}
+
+	private void onShowProyecto(Proyecto project)
+	{
+
+		putAlone(new ProjectWidget(project));
 	}
 
 	/*

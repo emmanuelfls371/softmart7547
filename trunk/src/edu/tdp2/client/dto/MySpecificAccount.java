@@ -30,44 +30,9 @@ public abstract class MySpecificAccount implements Serializable
 
 	private List<Proyecto> proyectosAbiertos;
 
-	public double getReputacion()
+	public List<Proyecto> getProyectosAbiertos()
 	{
-		return reputacion;
-	}
-
-	public void setReputacion(double reputacion)
-	{
-		this.reputacion = reputacion;
-	}
-
-	public List<Proyecto> getProyectosSinRecibirCalif()
-	{
-		return proyectosSinRecibirCalif;
-	}
-
-	public void setProyectosSinRecibirCalif(List<Proyecto> proyectosSinRecibirCalif)
-	{
-		this.proyectosSinRecibirCalif = prune(proyectosSinRecibirCalif);
-	}
-
-	public List<Proyecto> getProyectosSinCalificar()
-	{
-		return proyectosSinCalificar;
-	}
-
-	public void setProyectosSinCalificar(List<Proyecto> contratosSinCalificar)
-	{
-		proyectosSinCalificar = prune(contratosSinCalificar);
-	}
-
-	public List<Proyecto> getProyectosCerrados()
-	{
-		return proyectosCerrados;
-	}
-
-	public void setProyectosCerrados(List<Proyecto> proyectosCerrados)
-	{
-		this.proyectosCerrados = prune(proyectosCerrados);
+		return proyectosAbiertos;
 	}
 
 	public List<Proyecto> getProyectosCancelados()
@@ -75,9 +40,54 @@ public abstract class MySpecificAccount implements Serializable
 		return proyectosCancelados;
 	}
 
+	public List<Proyecto> getProyectosCerrados()
+	{
+		return proyectosCerrados;
+	}
+
+	public List<Proyecto> getProyectosSinCalificar()
+	{
+		return proyectosSinCalificar;
+	}
+
+	public List<Proyecto> getProyectosSinRecibirCalif()
+	{
+		return proyectosSinRecibirCalif;
+	}
+
+	public double getReputacion()
+	{
+		return reputacion;
+	}
+
+	public void setProyectosAbiertos(List<Proyecto> proyectosAbiertos)
+	{
+		this.proyectosAbiertos = prune(proyectosAbiertos);
+	}
+
 	public void setProyectosCancelados(List<Proyecto> proyectosCancelados)
 	{
 		this.proyectosCancelados = prune(proyectosCancelados);
+	}
+
+	public void setProyectosCerrados(List<Proyecto> proyectosCerrados)
+	{
+		this.proyectosCerrados = prune(proyectosCerrados);
+	}
+
+	public void setProyectosSinCalificar(List<Proyecto> contratosSinCalificar)
+	{
+		proyectosSinCalificar = prune(contratosSinCalificar);
+	}
+
+	public void setProyectosSinRecibirCalif(List<Proyecto> proyectosSinRecibirCalif)
+	{
+		this.proyectosSinRecibirCalif = prune(proyectosSinRecibirCalif);
+	}
+
+	public void setReputacion(double reputacion)
+	{
+		this.reputacion = reputacion;
 	}
 
 	protected List<Proyecto> prune(List<Proyecto> proyectos)
@@ -85,15 +95,5 @@ public abstract class MySpecificAccount implements Serializable
 		for (Proyecto proyecto : proyectos)
 			proyecto.prune();
 		return proyectos;
-	}
-
-	public List<Proyecto> getProyectosAbiertos()
-	{
-		return proyectosAbiertos;
-	}
-
-	public void setProyectosAbiertos(List<Proyecto> proyectosAbiertos)
-	{
-		this.proyectosAbiertos = prune(proyectosAbiertos);
 	}
 }

@@ -29,9 +29,22 @@ public class ProjectList extends ListBox
 		load();
 	}
 
-	private void setWidth()
+	public Proyecto getSelectedItem()
 	{
-		setWidth("200px");
+		int index = getSelectedIndex();
+		if (index == -1)
+			return null;
+		else
+			return projects.get(getValue(index));
+	}
+
+	/**
+	 * Este metodo debe ser implementado en las subclases
+	 * 
+	 * @param callback
+	 */
+	protected void doCall(AsyncCallback<List<Proyecto>> callback)
+	{
 	}
 
 	protected void load()
@@ -51,6 +64,12 @@ public class ProjectList extends ListBox
 		doCall(callback);
 	}
 
+	private void addItem(Proyecto project)
+	{
+		addItem(project.getNombre(), project.getId().toString());
+		projects.put(project.getId().toString(), project);
+	}
+
 	private void loadProjects(List<Proyecto> projects)
 	{
 		clear();
@@ -58,27 +77,8 @@ public class ProjectList extends ListBox
 			addItem(project);
 	}
 
-	/**
-	 * Este metodo debe ser implementado en las subclases
-	 * 
-	 * @param callback
-	 */
-	protected void doCall(AsyncCallback<List<Proyecto>> callback)
+	private void setWidth()
 	{
-	}
-
-	private void addItem(Proyecto project)
-	{
-		addItem(project.getNombre(), project.getId().toString());
-		projects.put(project.getId().toString(), project);
-	}
-
-	public Proyecto getSelectedItem()
-	{
-		int index = getSelectedIndex();
-		if (index == -1)
-			return null;
-		else
-			return projects.get(getValue(index));
+		setWidth("200px");
 	}
 }

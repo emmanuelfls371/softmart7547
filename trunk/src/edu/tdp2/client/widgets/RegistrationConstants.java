@@ -5,35 +5,23 @@ import com.google.gwt.i18n.client.Constants;
 public interface RegistrationConstants extends Constants
 {
 
-	String nombre();
-
 	String apellido();
-
-	String email();
-
-	String confirmeEmail();
-
-	String usuario();
-
-	String clave();
-
-	String logo();
-
-	String descripPerfil();
-
-	String confirmeClave();
-
-	String pais();
 
 	String ciudad();
 
+	String clave();
+
 	String codPostal();
 
-	String registrese();
+	String confirmeClave();
 
-	String failGetPaises();
+	String confirmeEmail();
+
+	String descripPerfil();
 
 	String elijaPais();
+
+	String email();
 
 	String errorArchivoExtension();
 
@@ -49,5 +37,17 @@ public interface RegistrationConstants extends Constants
 
 	String errorMailsDistintos();
 
+	String failGetPaises();
+
 	String failRegister();
+
+	String logo();
+
+	String nombre();
+
+	String pais();
+
+	String registrese();
+
+	String usuario();
 }

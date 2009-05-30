@@ -22,110 +22,27 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class NewOfertaWidget extends FormWidget
 {
-	private static NewOfertaWidget instance;
-	private List<String> errMsgs;
-	private long projectId;
-	private String moneda;
-
-	public static NewOfertaWidget getInstance(Proyecto project)
+	private enum OfertaFields implements FormFields
 	{
+		Proyecto, Usuario("Comprador"), Presupuesto, Dias("D&iacute;as"), Descripcion("Descripci&oacute;n"), MailNotification(
+				"Desea ser notificado de una oferta menor?");
 
-		if (instance == null)
-			instance = new NewOfertaWidget(project);
-		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
-		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
-		instance.projectId = project.getId();
-		instance.moneda = project.getMoneda().getDescription();
+		public String description;
 
-		final FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-		AsyncCallback<List<Moneda>> callback = new AsyncCallback<List<Moneda>>()
+		private OfertaFields()
 		{
-			public void onFailure(Throwable caught)
-			{
-				Window.alert("No se pudo recuperar las monedas");
-			}
+			description = name();
+		}
 
-			public void onSuccess(List<Moneda> monedas)
-			{
-				((ListBox) f.getWidget(1)).clear();
-				for (Moneda moneda : monedas)
-					if (moneda.getDescription().compareTo(instance.moneda) == 0)
-					{
-						((ListBox) f.getWidget(1)).addItem(moneda.getDescription(), moneda.getDescription());
-						((ListBox) f.getWidget(1)).setItemSelected(0, true);
-					}
-				((ListBox) f.getWidget(1)).setEnabled(false);
-			}
-		};
-		ClientUtils.getSoftmartService().buscarMonedas(callback);
+		private OfertaFields(String description)
+		{
+			this.description = description;
+		}
 
-		return instance;
-	}
-
-	private NewOfertaWidget(Proyecto project)
-	{
-		tituloWidget = "<b>Nueva oferta</b>";
-		anchoWidget = "200px";
-		anchoTabla = "100px";
-		dto = new OfertaDto();
-		errMsgs = new ArrayList<String>();
-		init();
-	}
-
-	@Override
-	protected void populateWidgets()
-	{
-		widgets.put(OfertaFields.Proyecto, new Label());
-
-		widgets.put(OfertaFields.Usuario, new Label());
-
-		FlowPanel p = new FlowPanel();
-
-		TextBox t = new TextBox();
-		t.setMaxLength(50);
-		t.setName(OfertaFields.Presupuesto.toString());
-		p.add(t);
-
-		final ListBox lisMonedas = new ListBox();
-		lisMonedas.setName(OfertaFields.Presupuesto.toString());
-
-		p.add(lisMonedas);
-		widgets.put(OfertaFields.Presupuesto, p);
-
-		t = new TextBox();
-		t.setMaxLength(50);
-		t.setName(OfertaFields.Dias.toString());
-		widgets.put(OfertaFields.Dias, t);
-
-		FlowPanel panel = new FlowPanel();
-		panel.setStyleName(OfertaFields.MailNotification.toString());
-		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), "Si"));
-		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), "No"));
-		widgets.put(OfertaFields.MailNotification, panel);
-
-		t = new TextBox();
-		t.setHeight("100px");
-		t.setName(OfertaFields.Descripcion.toString());
-		widgets.put(OfertaFields.Descripcion, t);
-	}
-
-	@Override
-	protected FormFields[] values()
-	{
-		return OfertaFields.values();
-	}
-
-	@Override
-	protected void buildWidget()
-	{
-		super.buildWidget();
-		addSubmitHandler(new OfertaSubmitHandler());
-	}
-
-	@Override
-	protected void validate(List<String> errMsgs)
-	{
-		errMsgs.addAll(this.errMsgs);
+		public String getDescription()
+		{
+			return description;
+		}
 	}
 
 	private final class OfertaSubmitHandler implements SubmitHandler
@@ -177,39 +94,125 @@ public class NewOfertaWidget extends FormWidget
 			}
 			catch (NumberFormatException e)
 			{
-				errMsgs.add("El formato de dias y/o monto no es valido." +
-						" Verifique está ingresando los días cómo números enteros y el monto como un número real");
+				errMsgs.add("El formato de dias y/o monto no es valido."
+						+ " Verifique está ingresando los días cómo números enteros y el monto como un número real");
 				validate();
 			}
 		}
 	}
 
-	private enum OfertaFields implements FormFields
+	private static NewOfertaWidget instance;
+
+	public static NewOfertaWidget getInstance(Proyecto project)
 	{
-		Proyecto, Usuario("Comprador"), Presupuesto, Dias("D&iacute;as"), Descripcion("Descripci&oacute;n"), MailNotification(
-				"Desea ser notificado de una oferta menor?");
 
-		private OfertaFields(String description)
+		if (instance == null)
+			instance = new NewOfertaWidget(project);
+		((Label) instance.widgets.get(OfertaFields.Proyecto)).setText(project.getNombre());
+		((Label) instance.widgets.get(OfertaFields.Usuario)).setText(project.getUsuario().getLogin());
+		instance.projectId = project.getId();
+		instance.moneda = project.getMoneda().getDescription();
+
+		final FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+		AsyncCallback<List<Moneda>> callback = new AsyncCallback<List<Moneda>>()
 		{
-			this.description = description;
-		}
+			public void onFailure(Throwable caught)
+			{
+				Window.alert("No se pudo recuperar las monedas");
+			}
 
-		public String description;
+			public void onSuccess(List<Moneda> monedas)
+			{
+				((ListBox) f.getWidget(1)).clear();
+				for (Moneda moneda : monedas)
+					if (moneda.getDescription().compareTo(instance.moneda) == 0)
+					{
+						((ListBox) f.getWidget(1)).addItem(moneda.getDescription(), moneda.getDescription());
+						((ListBox) f.getWidget(1)).setItemSelected(0, true);
+					}
+				((ListBox) f.getWidget(1)).setEnabled(false);
+			}
+		};
+		ClientUtils.getSoftmartService().buscarMonedas(callback);
 
-		private OfertaFields()
-		{
-			description = name();
-		}
+		return instance;
+	}
 
-		public String getDescription()
-		{
-			return description;
-		}
+	private List<String> errMsgs;
+
+	private long projectId;
+
+	private String moneda;
+
+	private NewOfertaWidget(Proyecto project)
+	{
+		tituloWidget = "<b>Nueva oferta</b>";
+		anchoWidget = "200px";
+		anchoTabla = "100px";
+		dto = new OfertaDto();
+		errMsgs = new ArrayList<String>();
+		init();
+	}
+
+	@Override
+	protected void buildWidget()
+	{
+		super.buildWidget();
+		addSubmitHandler(new OfertaSubmitHandler());
 	}
 
 	@Override
 	protected IValidator<Dto> getValidator()
 	{
 		return GWT.create(OfertaDto.class);
+	}
+
+	@Override
+	protected void populateWidgets()
+	{
+		widgets.put(OfertaFields.Proyecto, new Label());
+
+		widgets.put(OfertaFields.Usuario, new Label());
+
+		FlowPanel p = new FlowPanel();
+
+		TextBox t = new TextBox();
+		t.setMaxLength(50);
+		t.setName(OfertaFields.Presupuesto.toString());
+		p.add(t);
+
+		final ListBox lisMonedas = new ListBox();
+		lisMonedas.setName(OfertaFields.Presupuesto.toString());
+
+		p.add(lisMonedas);
+		widgets.put(OfertaFields.Presupuesto, p);
+
+		t = new TextBox();
+		t.setMaxLength(50);
+		t.setName(OfertaFields.Dias.toString());
+		widgets.put(OfertaFields.Dias, t);
+
+		FlowPanel panel = new FlowPanel();
+		panel.setStyleName(OfertaFields.MailNotification.toString());
+		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), "Si"));
+		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), "No"));
+		widgets.put(OfertaFields.MailNotification, panel);
+
+		t = new TextBox();
+		t.setHeight("100px");
+		t.setName(OfertaFields.Descripcion.toString());
+		widgets.put(OfertaFields.Descripcion, t);
+	}
+
+	@Override
+	protected void validate(List<String> errMsgs)
+	{
+		errMsgs.addAll(this.errMsgs);
+	}
+
+	@Override
+	protected FormFields[] values()
+	{
+		return OfertaFields.values();
 	}
 }

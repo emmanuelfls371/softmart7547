@@ -4,8 +4,6 @@ import com.google.gwt.i18n.client.Constants;
 
 public interface ProjectConstants extends Constants
 {
-	String failGetUser();
-
 	String bajar();
 
 	String canceladoXAdmin();
@@ -19,6 +17,8 @@ public interface ProjectConstants extends Constants
 	String descripcion();
 
 	String dificultad();
+
+	String failGetUser();
 
 	String fechaCierre();
 

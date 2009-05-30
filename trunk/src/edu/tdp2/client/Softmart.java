@@ -9,12 +9,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-
 import com.google.gwt.user.client.ui.DockPanel;
-
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -22,7 +19,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ImageBundle;
-
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -33,7 +29,6 @@ import edu.tdp2.client.widgets.DestacadosWidget;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
 import edu.tdp2.client.widgets.MyAccountWidget;
-
 import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
 import edu.tdp2.client.widgets.SearchWidget;
@@ -43,130 +38,58 @@ import edu.tdp2.client.widgets.SearchWidget;
  */
 public class Softmart implements EntryPoint, LoginListener
 {
-	private SoftmartConstants constants;
-	private VerticalPanel centerPanel;
-	private AbsolutePanel northPanel;
-
-	private Images images;
-
 	public interface Images extends ImageBundle
 	{
+		AbstractImagePrototype footer();
+
 		AbstractImagePrototype header();
 
 		AbstractImagePrototype header2();
-
-		AbstractImagePrototype footer();
 	}
 
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad()
+	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
-		if (RootPanel.get("SoftmartIdentifierDiv") == null)
-			return;
-
-		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
-		images = (Images) GWT.create(Images.class);
-		History.addValueChangeHandler(new SoftmartHistoryHandler());
-
-		HorizontalPanel hPanel = new HorizontalPanel();
-		DockPanel dPanel = new DockPanel();
-
-		dPanel.add(getFooterPanel(), DockPanel.SOUTH);
-		dPanel.add(getCenterPanel(), DockPanel.CENTER);
-		dPanel.add(getHeaderPanel(), DockPanel.NORTH);
-		dPanel.add(getNorthPanel(), DockPanel.NORTH);
-		showWelcome();
-		History.newItem(HistoryToken.Welcome.toString());
-
-		hPanel.add(dPanel);
-		hPanel.setWidth("100%");
-		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
-		RootPanel.get().add(hPanel);
-	}
-
-	private void showWelcome()
-	{
-		centerPanel.clear();
-
-		String loginCookie = Cookies.getCookie(constants.loginCookieName());
-		if (loginCookie != null && !loginCookie.equals(""))
-			onLogin();
-		else
+		@SuppressWarnings("incomplete-switch")
+		public void onValueChange(ValueChangeEvent<String> event)
 		{
-			centerPanel.clear();
-			LoginWidget loginWidget = LoginWidget.getInstance();
-			centerPanel.add(loginWidget);
-			loginWidget.getUserNameTextBox().setText("");
-			loginWidget.getPasswordTextBox().setText("");
-			loginWidget.setLoginListener(this);
+			HistoryToken token;
+			try
+			{
+				token = HistoryToken.valueOf(event.getValue());
+			}
+			catch (IllegalArgumentException e)
+			{
+				return;
+			}
+
+			switch (token)
+			{
+			case onShowNewProject:
+				onShowNewProject();
+				break;
+			case onShowRegistration:
+				onShowRegistration();
+				break;
+			case Welcome:
+				showWelcome();
+				break;
+			case onShowMyAccount:
+				onShowMyAccount();
+				break;
+			case onShowSearch:
+				onShowSearch();
+				break;
+			}
 		}
 	}
 
-	private void onShowDestacados()
-	{
-		centerPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		centerPanel.add(new DestacadosWidget());
-	}
+	private SoftmartConstants constants;
 
-	private Widget getFooterPanel()
-	{
-		SimplePanel panel = new SimplePanel();
-		Image header = images.footer().createImage();
-		panel.add(header);
-		return panel;
-	}
+	private VerticalPanel centerPanel;
 
-	private Panel getCenterPanel()
-	{
-		centerPanel = new VerticalPanel();
-		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		centerPanel.setSize("100%", "450px");
-		return centerPanel;
-	}
+	private AbsolutePanel northPanel;
 
-	private Panel getHeaderPanel()
-	{
-		AbsolutePanel panel = new AbsolutePanel();
-
-		SimplePanel bannerPanel = new SimplePanel();
-		Image header = images.header().createImage();
-		bannerPanel.add(header);
-		panel.add(bannerPanel);
-
-		FocusPanel localeEs = new FocusPanel();
-		localeEs.setSize("54px", "15px");
-		localeEs.addStyleName("cursorPointer");
-		localeEs.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Window.open("Softmart.html", "_self", "");
-			}
-		});
-		panel.add(localeEs, 11, 72);
-
-		FocusPanel localeEn = new FocusPanel();
-		localeEn.setSize("54px", "15px");
-		localeEn.addStyleName("cursorPointer");
-		localeEn.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Window.open("Softmart.html?locale=en", "_self", "");
-			}
-		});
-		panel.add(localeEn, 73, 72);
-
-		return panel;
-	}
-
-	private Panel getNorthPanel()
-	{
-		northPanel = new AbsolutePanel();
-		return northPanel;
-	}
+	private Images images;
 
 	public void onLogin()
 	{
@@ -250,19 +173,111 @@ public class Softmart implements EntryPoint, LoginListener
 		showWelcome();
 	}
 
-	public void onShowRegistration()
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad()
 	{
-		putAlone(RegistrationWidget.getInstance(), HistoryToken.onShowRegistration.toString());
-	}
+		if (RootPanel.get("SoftmartIdentifierDiv") == null)
+			return;
 
-	private void onShowMyAccount()
-	{
-		putAlone(new MyAccountWidget(LoginWidget.getCurrentUser()), HistoryToken.onShowMyAccount.toString());
+		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
+		images = (Images) GWT.create(Images.class);
+		History.addValueChangeHandler(new SoftmartHistoryHandler());
+
+		HorizontalPanel hPanel = new HorizontalPanel();
+		DockPanel dPanel = new DockPanel();
+
+		dPanel.add(getFooterPanel(), DockPanel.SOUTH);
+		dPanel.add(getCenterPanel(), DockPanel.CENTER);
+		dPanel.add(getHeaderPanel(), DockPanel.NORTH);
+		dPanel.add(getNorthPanel(), DockPanel.NORTH);
+		showWelcome();
+		History.newItem(HistoryToken.Welcome.toString());
+
+		hPanel.add(dPanel);
+		hPanel.setWidth("100%");
+		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
+		RootPanel.get().add(hPanel);
 	}
 
 	public void onShowNewProject()
 	{
 		putAlone(NewProjectWidget.getInstance(), HistoryToken.onShowNewProject.toString());
+	}
+
+	public void onShowRegistration()
+	{
+		putAlone(RegistrationWidget.getInstance(), HistoryToken.onShowRegistration.toString());
+	}
+
+	private Panel getCenterPanel()
+	{
+		centerPanel = new VerticalPanel();
+		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		centerPanel.setSize("100%", "450px");
+		return centerPanel;
+	}
+
+	private Widget getFooterPanel()
+	{
+		SimplePanel panel = new SimplePanel();
+		Image header = images.footer().createImage();
+		panel.add(header);
+		return panel;
+	}
+
+	private Panel getHeaderPanel()
+	{
+		AbsolutePanel panel = new AbsolutePanel();
+
+		SimplePanel bannerPanel = new SimplePanel();
+		Image header = images.header().createImage();
+		bannerPanel.add(header);
+		panel.add(bannerPanel);
+
+		FocusPanel localeEs = new FocusPanel();
+		localeEs.setSize("54px", "15px");
+		localeEs.addStyleName("cursorPointer");
+		localeEs.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Window.open("Softmart.html", "_self", "");
+			}
+		});
+		panel.add(localeEs, 11, 72);
+
+		FocusPanel localeEn = new FocusPanel();
+		localeEn.setSize("54px", "15px");
+		localeEn.addStyleName("cursorPointer");
+		localeEn.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Window.open("Softmart.html?locale=en", "_self", "");
+			}
+		});
+		panel.add(localeEn, 73, 72);
+
+		return panel;
+	}
+
+	private Panel getNorthPanel()
+	{
+		northPanel = new AbsolutePanel();
+		return northPanel;
+	}
+
+	private void onShowDestacados()
+	{
+		centerPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		centerPanel.add(new DestacadosWidget());
+	}
+
+	private void onShowMyAccount()
+	{
+		putAlone(new MyAccountWidget(LoginWidget.getCurrentUser()), HistoryToken.onShowMyAccount.toString());
 	}
 
 	private void onShowSearch()
@@ -277,39 +292,21 @@ public class Softmart implements EntryPoint, LoginListener
 		centerPanel.add(widget);
 	}
 
-	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
+	private void showWelcome()
 	{
-		@SuppressWarnings("incomplete-switch")
-		public void onValueChange(ValueChangeEvent<String> event)
-		{
-			HistoryToken token;
-			try
-			{
-				token = HistoryToken.valueOf(event.getValue());
-			}
-			catch (IllegalArgumentException e)
-			{
-				return;
-			}
+		centerPanel.clear();
 
-			switch (token)
-			{
-			case onShowNewProject:
-				onShowNewProject();
-				break;
-			case onShowRegistration:
-				onShowRegistration();
-				break;
-			case Welcome:
-				showWelcome();
-				break;
-			case onShowMyAccount:
-				onShowMyAccount();
-				break;
-			case onShowSearch:
-				onShowSearch();
-				break;
-			}
+		String loginCookie = Cookies.getCookie(constants.loginCookieName());
+		if (loginCookie != null && !loginCookie.equals(""))
+			onLogin();
+		else
+		{
+			centerPanel.clear();
+			LoginWidget loginWidget = LoginWidget.getInstance();
+			centerPanel.add(loginWidget);
+			loginWidget.getUserNameTextBox().setText("");
+			loginWidget.getPasswordTextBox().setText("");
+			loginWidget.setLoginListener(this);
 		}
 	}
 

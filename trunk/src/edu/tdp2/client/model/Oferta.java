@@ -1,6 +1,5 @@
 package edu.tdp2.client.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,8 +7,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-
 
 import edu.tdp2.client.dto.OfertaDto;
 
@@ -47,16 +44,6 @@ public class Oferta extends AbstractDomainObject
 	@JoinColumn(name = "Moneda", nullable = false)
 	private Moneda moneda;
 
-	public Contrato getContrato()
-	{
-		return contrato;
-	}
-
-	public void setContrato(Contrato contrato)
-	{
-		this.contrato = contrato;
-	}
-
 	public Oferta()
 	{
 
@@ -73,82 +60,21 @@ public class Oferta extends AbstractDomainObject
 		setMoneda(moneda);
 	}
 
-	public Usuario getUsuario()
+	/** Compara ofertas de un mismo proyecto */
+	public boolean compare(Oferta o)
 	{
-		return usuario;
-	}
 
-	public void setUsuario(Usuario usuario)
-	{
-		this.usuario = usuario;
-	}
+		if (o.getDias() != getDias())
+			return false;
+		if (o.getMonto() != getMonto())
+			return false;
+		if (!o.getMoneda().equals(getMoneda()))
+			return false;
+		if (o.getUsuario().getId().longValue() != getUsuario().getId().longValue())
+			return false;
 
-	public Proyecto getProyecto()
-	{
-		return proyecto;
-	}
+		return true;
 
-	public void setProyecto(Proyecto proyecto)
-	{
-		this.proyecto = proyecto;
-	}
-
-	public float getMonto()
-	{
-		return monto;
-	}
-
-	public void setMonto(float monto)
-	{
-		this.monto = monto;
-	}
-
-	public int getDias()
-	{
-		return dias;
-	}
-
-	public void setDias(int dias)
-	{
-		this.dias = dias;
-	}
-
-	public String getDescripcion()
-	{
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion)
-	{
-		this.descripcion = descripcion;
-	}
-
-	public String getNotificacion()
-	{
-		return notificacion;
-	}
-
-	public void setNotificacion(String notificacion)
-	{
-		this.notificacion = notificacion;
-	}
-
-	@Override
-	public void prune()
-	{
-		proyecto = null;
-		usuario.prune();
-		contrato = null;
-	}
-
-	public void setMoneda(Moneda moneda)
-	{
-		this.moneda = moneda;
-	}
-
-	public Moneda getMoneda()
-	{
-		return moneda;
 	}
 
 	@Override
@@ -172,21 +98,92 @@ public class Oferta extends AbstractDomainObject
 		else
 			return false;
 	}
-	
-	/** Compara ofertas de un mismo proyecto */
-	public boolean compare(Oferta o)
+
+	public Contrato getContrato()
 	{
-	
-			if (o.getDias() != getDias())
-				return false;
-			if (o.getMonto() != getMonto())
-				return false;
-			if (!o.getMoneda().equals(getMoneda()))
-				return false;
-			if (o.getUsuario().getId().longValue() != getUsuario().getId().longValue())
-				return false;
-			
-			return true;
-	
+		return contrato;
+	}
+
+	public String getDescripcion()
+	{
+		return descripcion;
+	}
+
+	public int getDias()
+	{
+		return dias;
+	}
+
+	public Moneda getMoneda()
+	{
+		return moneda;
+	}
+
+	public float getMonto()
+	{
+		return monto;
+	}
+
+	public String getNotificacion()
+	{
+		return notificacion;
+	}
+
+	public Proyecto getProyecto()
+	{
+		return proyecto;
+	}
+
+	public Usuario getUsuario()
+	{
+		return usuario;
+	}
+
+	@Override
+	public void prune()
+	{
+		proyecto = null;
+		usuario.prune();
+		contrato = null;
+	}
+
+	public void setContrato(Contrato contrato)
+	{
+		this.contrato = contrato;
+	}
+
+	public void setDescripcion(String descripcion)
+	{
+		this.descripcion = descripcion;
+	}
+
+	public void setDias(int dias)
+	{
+		this.dias = dias;
+	}
+
+	public void setMoneda(Moneda moneda)
+	{
+		this.moneda = moneda;
+	}
+
+	public void setMonto(float monto)
+	{
+		this.monto = monto;
+	}
+
+	public void setNotificacion(String notificacion)
+	{
+		this.notificacion = notificacion;
+	}
+
+	public void setProyecto(Proyecto proyecto)
+	{
+		this.proyecto = proyecto;
+	}
+
+	public void setUsuario(Usuario usuario)
+	{
+		this.usuario = usuario;
 	}
 }

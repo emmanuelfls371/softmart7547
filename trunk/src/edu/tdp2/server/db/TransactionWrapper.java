@@ -8,33 +8,9 @@ import edu.tdp2.client.model.AbstractDomainObject;
 
 public class TransactionWrapper
 {
-	/**
-	 * Graba el objeto o usando la sesion pasada por parametros, envolviendo la operacion en una transaccion que incluye
-	 * esta operacion sola. La sesion no se cierra.
-	 * 
-	 * @param session
-	 * @param o
-	 */
-	public static void save(final Session session, final AbstractDomainObject o)
+	public interface Action
 	{
-		execute(session, new Action()
-		{
-			public void execute()
-			{
-				session.save(o);
-			}
-		});
-	}
-
-	public static void update(final Session session, final AbstractDomainObject o)
-	{
-		execute(session, new Action()
-		{
-			public void execute()
-			{
-				session.update(o);
-			}
-		});
+		void execute();
 	}
 
 	public static void delete(final Session session, final AbstractDomainObject o)
@@ -65,8 +41,32 @@ public class TransactionWrapper
 		}
 	}
 
-	public interface Action
+	/**
+	 * Graba el objeto o usando la sesion pasada por parametros, envolviendo la operacion en una transaccion que incluye
+	 * esta operacion sola. La sesion no se cierra.
+	 * 
+	 * @param session
+	 * @param o
+	 */
+	public static void save(final Session session, final AbstractDomainObject o)
 	{
-		void execute();
+		execute(session, new Action()
+		{
+			public void execute()
+			{
+				session.save(o);
+			}
+		});
+	}
+
+	public static void update(final Session session, final AbstractDomainObject o)
+	{
+		execute(session, new Action()
+		{
+			public void execute()
+			{
+				session.update(o);
+			}
+		});
 	}
 }

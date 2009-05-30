@@ -33,29 +33,9 @@ public class Contrato extends AbstractDomainObject
 
 	}
 
-	public Proyecto getProyecto()
+	public Calificacion getCalifAlComprador()
 	{
-		return proyecto;
-	}
-
-	public void setProyecto(Proyecto proyecto)
-	{
-		this.proyecto = proyecto;
-	}
-
-	public Oferta getOfertaGanadora()
-	{
-		return ofertaGanadora;
-	}
-
-	public void setOfertaGanadora(Oferta ofertaGanadora)
-	{
-		this.ofertaGanadora = ofertaGanadora;
-	}
-
-	public void setCalifAlVendedor(Calificacion califVendedor)
-	{
-		califAlVendedor = califVendedor;
+		return califAlComprador;
 	}
 
 	public Calificacion getCalifAlVendedor()
@@ -63,14 +43,34 @@ public class Contrato extends AbstractDomainObject
 		return califAlVendedor;
 	}
 
+	public Oferta getOfertaGanadora()
+	{
+		return ofertaGanadora;
+	}
+
+	public Proyecto getProyecto()
+	{
+		return proyecto;
+	}
+
 	public void setCalifAlComprador(Calificacion califComprador)
 	{
 		califAlComprador = califComprador;
 	}
 
-	public Calificacion getCalifAlComprador()
+	public void setCalifAlVendedor(Calificacion califVendedor)
 	{
-		return califAlComprador;
+		califAlVendedor = califVendedor;
+	}
+
+	public void setOfertaGanadora(Oferta ofertaGanadora)
+	{
+		this.ofertaGanadora = ofertaGanadora;
+	}
+
+	public void setProyecto(Proyecto proyecto)
+	{
+		this.proyecto = proyecto;
 	}
 
 }
