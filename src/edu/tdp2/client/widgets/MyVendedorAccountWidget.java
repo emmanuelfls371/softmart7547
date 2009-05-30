@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Anchor;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,10 +33,14 @@ public class MyVendedorAccountWidget extends AccountWidget
 	{
 		this.datos = datos;
 		add(getWestPanel(), WEST);
+		underPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		centerPanel.add(underPanel);
 		add(centerPanel, CENTER);
-		add(underPanel,SOUTH);
-		add(eastPanel, EAST);
+		eastPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		add(eastPanel, SOUTH);
 		centerPanel.setWidth("100%");
+		centerPanel.setSpacing(10);
 	}
 
 	private Widget getWestPanel()
@@ -55,7 +60,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosAbiertos()));
+				centerPanel.clear();
+				centerPanel.add(new ProjectTable(datos.getProyectosAbiertos()));
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(abiertos);
@@ -73,7 +80,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 				vCerrados= new VerticalPanel();
 				vCerr.add(new ProjectTable(datos.getProyectosCerrados()));
 				setLinkCalificacion();
-				centerPanel.setWidget(vCerr);
+				centerPanel.clear();
+				centerPanel.add(vCerr);
+				centerPanel.add(underPanel);
 				eastPanel.setWidth("100%");
 			}
 		});
@@ -88,7 +97,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosPerdidos()));
+				centerPanel.clear();
+				centerPanel.add(new ProjectTable(datos.getProyectosPerdidos()));
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(perdidos);
@@ -102,7 +113,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosCancelados()));
+				centerPanel.clear();
+				centerPanel.add(new ProjectTable(datos.getProyectosCancelados()));
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(cancelados);
@@ -118,9 +131,11 @@ public class MyVendedorAccountWidget extends AccountWidget
 				proyCerrados = false;	
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosSinCalificar()));
-				eastPanel.setWidget(getCalificarAction());
+				eastPanel.add(getCalificarAction());
 				eastPanel.setWidth("100%");
-				centerPanel.setWidget(v);
+				centerPanel.clear();
+				centerPanel.add(v);
+				centerPanel.add(underPanel);
 				
 			}
 		});
@@ -135,13 +150,15 @@ public class MyVendedorAccountWidget extends AccountWidget
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosSinRecibirCalif()));
+				centerPanel.clear();
+				centerPanel.add(new ProjectTable(datos.getProyectosSinRecibirCalif()));
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(sinRecibirCalif);
 
 		panel.setWidth("50px");
-		
+		panel.addStyleName("hl");
 		for(Moneda ganancia : datos.getGananciaAcumulada().keySet()){
 			underPanel.add(new HTML("<p> Mi reputación como vendedor es: "+String.valueOf(datos.getReputacion())+" </p>" + "<p> Mi ganancia acumulada es: "+String.valueOf(datos.getGananciaAcumulada().get(ganancia))+" en "+ganancia.getDescription()+" </p> "));
 		}
@@ -162,14 +179,23 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 		private void buildWidget()
 		{
+			
+			addStyleName("table");
+			
+			for(int i=0; i<6 ;i++){
+				getCellFormatter().addStyleName(0, i, "firstRow");
+			}
+			
 			setWidget(0, 0, new HTML("Proyecto"));
 			setWidget(0, 1, new HTML("Mi oferta"));
 			setWidget(0, 2, new HTML("Moneda"));
 			setWidget(0, 3, new HTML("D&iacute;as"));
 			setWidget(0, 4, new HTML("Es la menor"));
 			setWidget(0, 5, new HTML("Fecha cierre proy."));
-			if(accion)
+			if(accion){
 				setWidget(0, 6, new HTML("Acción"));
+				getCellFormatter().addStyleName(0, 6, "firstRow");
+			}
 
 			int row = 1;
 			for (final Proyecto proyecto : proyectos)
@@ -196,7 +222,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 				{
 					public void onClick(ClickEvent event)
 					{
-						centerPanel.setWidget(new ProjectWidget(proyecto));
+						centerPanel.clear();
+						centerPanel.add(new ProjectWidget(proyecto));
+						//centerPanel.add(underPanel);
 					}
 				});
 				setWidget(row, 0, aProy);
@@ -209,7 +237,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 					{
 						public void onClick(ClickEvent event)
 						{
-							centerPanel.setWidget(new OfertaWidget(OfertaDto.fromOferta(finalOferta), proyecto.getDescripcion()));
+							centerPanel.clear();
+							centerPanel.add(new OfertaWidget(OfertaDto.fromOferta(finalOferta), proyecto.getDescripcion()));
+							//centerPanel.add(underPanel);
 						}
 					});
 					setWidget(row, 1, aOferta);
@@ -221,9 +251,16 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 					DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 					setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
-					if(accion)
+					if(accion){
 						setWidget(row, 6, getActionButton(proyecto));
+						getCellFormatter().addStyleName(row, 6, "column");
+					}
 				}
+				
+				for(int i=0; i<6 ;i++){
+					getCellFormatter().addStyleName(row, i, "column");
+				}
+				
 				row++;
 			}
 			}

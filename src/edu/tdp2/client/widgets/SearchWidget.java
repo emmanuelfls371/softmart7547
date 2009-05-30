@@ -201,6 +201,12 @@ public class SearchWidget extends NavigablePanel
 								
 								FlexTable table = new FlexTable();
 								
+								table.addStyleName("table");
+								
+								for(int i=0; i<6 ;i++){
+									table.getCellFormatter().addStyleName(0, i, "firstRow");
+								}
+								
 								table.setWidget(0, 0, new HTML("Nombre"));
 								table.setWidget(0, 1, new HTML("Presupuesto"));
 								table.setWidget(0, 2, new HTML("Moneda"));
@@ -229,6 +235,10 @@ public class SearchWidget extends NavigablePanel
 									DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 									table.setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
 
+									for(int i=0; i<6 ;i++){
+										table.getCellFormatter().addStyleName(row, i, "column");
+									}
+									
 									row++;
 								}					
 								

@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -155,6 +156,7 @@ public class DetailSearchWidget extends VerticalPanel {
 	{
 		final HTML h = new HTML(oferta.getUsuario().getLogin());
 
+		
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -189,7 +191,10 @@ public class DetailSearchWidget extends VerticalPanel {
 			{
 				public void onClick(ClickEvent event)
 				{
-					new ComentarioWidget(oferta).show();			
+					DialogBox dialogBox = new ComentarioWidget(oferta);
+					dialogBox.setAnimationEnabled(true);
+					dialogBox.center();
+					dialogBox.show();			
 				}
 			});
 		}else{

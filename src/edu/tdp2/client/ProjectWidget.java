@@ -59,7 +59,7 @@ public class ProjectWidget extends VerticalPanel
 
 		add(new Label("Proyecto " + project.getNombre()));
 		
-		
+			
 		table.setWidget(0, 0, new HTML("Comprador"));
 		table.setWidget(1, 0, new HTML("Presupuesto"));
 		table.setWidget(2, 0, new HTML("Moneda"));
@@ -104,6 +104,7 @@ public class ProjectWidget extends VerticalPanel
 			table.setWidget(11, col, new HTML("No"));
 		
 		table.setBorderWidth(1);
+		
 		add(table);
 		
 	}

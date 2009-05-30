@@ -6,6 +6,8 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -139,7 +141,11 @@ public class OfertaWidget extends VerticalPanel
 		{
 			public void onClick(ClickEvent event)
 			{
-				new ComentarioWidget(oferta).show();
+				 final DialogBox dialogBox = new ComentarioWidget(oferta);
+				 dialogBox.setAnimationEnabled(true);
+				 dialogBox.center();
+				 dialogBox.show();
+				        
 			}
 		});
 

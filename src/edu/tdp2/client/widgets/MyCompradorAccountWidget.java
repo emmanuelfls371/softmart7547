@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,10 +38,14 @@ public class MyCompradorAccountWidget extends AccountWidget
 	{
 		this.datos = datos;
 		add(getWestPanel(), WEST);
+		underPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		centerPanel.add(underPanel);
 		add(centerPanel, CENTER);
-		add(eastPanel, EAST);
-		add(underPanel,SOUTH);
+		eastPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		add(eastPanel, SOUTH);
 		centerPanel.setWidth("100%");
+		centerPanel.setSpacing(10);
 	}
 
 	private Widget getWestPanel()
@@ -57,6 +62,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 		{
 			public void onClick(ClickEvent event)
 			{
+				centerPanel.clear();
 				eastPanel.clear();
 				proySelected=null;
 				accion=true;
@@ -108,14 +114,15 @@ public class MyCompradorAccountWidget extends AccountWidget
 						}
 					}
 				});
-				
+				centerPanel.clear();
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosAbiertos()));
 				VerticalPanel v2= new VerticalPanel();
 				v2.add(menuLink);
 				v2.add(menuLink2);
-				eastPanel.setWidget(v2);
-				centerPanel.setWidget(v);
+				eastPanel.add(v2);
+				centerPanel.add(v);
+				centerPanel.add(underPanel);
 				eastPanel.setWidth("100%");
 						
 			}
@@ -153,8 +160,9 @@ public class MyCompradorAccountWidget extends AccountWidget
 				
 				vCerrados.add(ofertaG);
 				setLinkCalificacion();
-				
-				centerPanel.setWidget(vCerr);
+				centerPanel.clear();
+				centerPanel.add(vCerr);
+				centerPanel.add(underPanel);
 				eastPanel.setWidth("100%");
 			}
 		});
@@ -170,7 +178,9 @@ public class MyCompradorAccountWidget extends AccountWidget
 				proySelected=null;
 				accion=false;
 				proyCerrados = false;
-				centerPanel.setWidget(new ProjectTable(datos.getProyectosCancelados()));
+				centerPanel.clear();
+				centerPanel.add(new ProjectTable(datos.getProyectosCancelados()));
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(cancelados);
@@ -185,9 +195,13 @@ public class MyCompradorAccountWidget extends AccountWidget
 				accion=true;
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosSinCalificar()));
-				eastPanel.add(getCalificarAction());
+				Anchor w = getCalificarAction();
+				w.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+				eastPanel.add(w);
 				eastPanel.setWidth("100%");
-				centerPanel.setWidget(v);
+				centerPanel.clear();
+				centerPanel.add(v);
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(sinCalificar);
@@ -203,14 +217,15 @@ public class MyCompradorAccountWidget extends AccountWidget
 				proyCerrados = false;			
 				VerticalPanel v= new VerticalPanel();
 				v.add(new ProjectTable(datos.getProyectosSinRecibirCalif()));
-				
-				centerPanel.setWidget(v);
+				centerPanel.clear();
+				centerPanel.add(v);
+				centerPanel.add(underPanel);
 			}
 		});
 		panel.add(sinRecibirCalif);
 
 		panel.setWidth("50px");
-		
+		panel.addStyleName("hl");
 		HTML rep=new HTML("<p> Mi reputación como comprador es: "+String.valueOf(datos.getReputacion())+" </p>");
 		underPanel.add(rep);
 		return panel;
@@ -241,6 +256,12 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 		private void buildWidget()
 		{
+			addStyleName("table");
+			
+			for(int i=0; i<6 ;i++){
+				getCellFormatter().addStyleName(0, i, "firstRow");
+			}
+			
 			setWidget(0, 0, new HTML("Nombre"));
 			setWidget(0, 1, new HTML("Presupuesto"));
 			setWidget(0, 2, new HTML("Moneda"));
@@ -248,8 +269,10 @@ public class MyCompradorAccountWidget extends AccountWidget
 			setWidget(0, 4, new HTML("Complejidad"));
 			setWidget(0, 5, new HTML("Fecha cierre"));
 		
-			if(accion)
+			if(accion){
 				setWidget(0, 6, new HTML("Acción"));
+				getCellFormatter().addStyleName(0, 6, "firstRow");
+			}
 
 			int row = 1;
 			for (final Proyecto proyecto : proyectos)
@@ -259,7 +282,8 @@ public class MyCompradorAccountWidget extends AccountWidget
 				{
 					public void onClick(ClickEvent event)
 					{
-						centerPanel.setWidget(new ProjectWidget(proyecto));
+						centerPanel.clear();
+						centerPanel.add(new ProjectWidget(proyecto));
 					}
 				});
 				setWidget(row, 0, aProy);
@@ -273,9 +297,14 @@ public class MyCompradorAccountWidget extends AccountWidget
 				if(accion){
 					if(proyecto.isRevisado()){
 						setWidget(row, 6, getActionButton(proyecto));
+						getCellFormatter().addStyleName(row, 6, "column");
 					}else{
 						setWidget(row, 6, new HTML("Pendiente de aprobación por el administrador"));
+						getCellFormatter().addStyleName(row, 6, "column");
 					}
+				}
+				for(int i=0; i<6 ;i++){
+					getCellFormatter().addStyleName(row, i, "column");
 				}
 				row++;
 			}

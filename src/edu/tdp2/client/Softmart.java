@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ImageBundle;
@@ -109,7 +110,7 @@ public class Softmart implements EntryPoint, LoginListener
 	}
 	
 	private void onShowDestacados(){
-		centerPanel.add(new HTML("<big>Proyectos Destacados</big>"));
+		centerPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		centerPanel.add(new DestacadosWidget());
 	}
 
