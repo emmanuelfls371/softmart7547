@@ -27,8 +27,8 @@ public class PersonalModificationWidget extends FormWidget
 	public PersonalModificationWidget(MyAccountDto dto)
 	{
 		tituloWidget = "<b>Modificación de datos personales</b>";
-		anchoWidget = "200px";
-		anchoTabla = "200px";
+		anchoWidget = "100px";
+		anchoTabla = "100px";
 		url = "modification";
 		accountDto = dto;
 		init();

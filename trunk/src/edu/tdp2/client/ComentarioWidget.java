@@ -1,14 +1,15 @@
 package edu.tdp2.client;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.model.Oferta;
 
-public class ComentarioWidget extends PopupPanel
+public class ComentarioWidget extends DialogBox
 {
 
 	private String c;
@@ -19,13 +20,13 @@ public class ComentarioWidget extends PopupPanel
 		super(true);
 		c = oferta.getDescripcion();
 		load();
-		this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+		/*this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 	          public void setPosition(int offsetWidth, int offsetHeight) {
 	            int left = (Window.getClientWidth() - offsetWidth);
 	            int top = (Window.getClientHeight() - offsetHeight);
 	            setPopupPosition(left, top);
 	          }
-	        });
+	        });*/
 
 	}
 
@@ -34,13 +35,13 @@ public class ComentarioWidget extends PopupPanel
 		super(true);
 		c = oferta.getDescripcion();
 		load();
-		this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+		/*this.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 	          public void setPosition(int offsetWidth, int offsetHeight) {
 	            int left = (Window.getClientWidth() - offsetWidth) / 3;
 	            int top = (Window.getClientHeight() - offsetHeight) / 3;
 	            setPopupPosition(left, top);
 	          }
-	        });
+	        });*/
 	}
 
 	protected native void reload() /*-{
@@ -49,15 +50,18 @@ public class ComentarioWidget extends PopupPanel
 
 	private void load()
 	{
+		VerticalPanel panel = new VerticalPanel();
+		panel.setSpacing(10);
 		table.clear();
-		table.setWidget(0, 0, new HTML("Comentario"));
-		int row = 1;
+		panel.add(new HTML("<big>Comentario</big>"));
+		int row = 0;
 		if(c.isEmpty()){
 			table.setWidget(row, 0,new HTML("No hay comentario disponible para esta oferta"));
 		}
 		table.setWidget(row, 0, new HTML(c));
 		
-		setWidget(table);
+		panel.add(table);
+		setWidget(panel);
 	}
 
 }

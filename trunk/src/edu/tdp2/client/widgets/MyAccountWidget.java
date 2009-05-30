@@ -71,8 +71,10 @@ public class MyAccountWidget extends NavigablePanel
 
 		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
 		tabPanel.setAnimationEnabled(true);
+		tabPanel.setPixelSize(getAbsoluteLeft()+getOffsetWidth()-40, getAbsoluteTop()+getOffsetHeight());
 
-
+		tabPanel.getDeckPanel().addStyleName("dock");
+		
 		tableDatos.setCellPadding(10);
 		tableComp.setCellPadding(10);
 		tableVend.setCellPadding(10);

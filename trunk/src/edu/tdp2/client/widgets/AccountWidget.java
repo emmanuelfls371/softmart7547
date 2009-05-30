@@ -11,9 +11,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockPanel;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.SimplePanel;
+
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,8 +34,8 @@ public class AccountWidget extends DockPanel{
 	protected boolean proyCerrados;
 	protected Anchor califHecha;
 	protected Anchor califRecibida;
-	protected SimplePanel centerPanel = new SimplePanel();
-	protected SimplePanel eastPanel = new SimplePanel();
+	protected VerticalPanel centerPanel = new VerticalPanel();
+	protected HorizontalPanel eastPanel = new HorizontalPanel();
 	protected HorizontalPanel underPanel = new HorizontalPanel();
 	
 	protected boolean accion;
@@ -82,7 +83,7 @@ public class AccountWidget extends DockPanel{
 	protected void putAlone(Widget widget)
 	{
 		centerPanel.clear();
-		centerPanel.setWidget(widget);
+		centerPanel.add(widget);
 	}
 	
 	protected RadioButton getActionButton(final Proyecto proyecto){
@@ -130,7 +131,6 @@ public class AccountWidget extends DockPanel{
 					}
 					if (c == null){
 						califHecha.setEnabled(false);
-						//Window.alert("No ha hecho calificación hasta el momento");
 					}
 					else{
 						final ContratoDto c2=c;
@@ -147,7 +147,8 @@ public class AccountWidget extends DockPanel{
 							}
 						});
 					}
-					eastPanel.setWidget(vCerrados);
+					vCerrados.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+					eastPanel.add(vCerrados);
 				}
 				
 			}
@@ -199,7 +200,8 @@ public class AccountWidget extends DockPanel{
 							}
 						});
 					}
-					eastPanel.setWidget(vCerrados);
+					vCerrados.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+					eastPanel.add(vCerrados);
 				}
 			}
 		};
