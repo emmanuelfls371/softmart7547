@@ -65,7 +65,7 @@ public class ProjectWidget extends VerticalPanel
 		add(lineHoriz);
 		table.addStyleName("tableProjectWidget");
 		
-		table.setCellPadding(10);
+		table.setCellPadding(5);
 
 		
 		table.getCellFormatter().addStyleName(0, 1, "row0c1ProjectWidget");
@@ -113,15 +113,12 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(4, 0, new HTML("¿Revisado por Administrador?"));
 		table.setWidget(5, 0, new HTML("Nivel de reputaci&oacute;n requerido:"));
 		
-		
 		table.setWidget(0, 2, new HTML("Presupuesto:"));
 		table.setWidget(1, 2, new HTML("Fecha de cierre:"));
 		table.setWidget(2, 2, new HTML("Dificultad:"));
 		table.setWidget(3, 2, new HTML("Tama&ntilde;o:"));
 		table.setWidget(4, 2, new HTML("Descripci&oacute;n:"));
 		
-		
-
 		int col = 1;
 		
 		table.setWidget(0, col, h);

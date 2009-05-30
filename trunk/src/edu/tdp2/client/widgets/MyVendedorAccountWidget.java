@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.tdp2.client.OfertaWidget;
 import edu.tdp2.client.ProjectWidget;
 import edu.tdp2.client.dto.MyVendedorAccount;
-import edu.tdp2.client.dto.OfertaDto;
+
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
@@ -238,7 +238,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 						public void onClick(ClickEvent event)
 						{
 							centerPanel.clear();
-							centerPanel.add(new OfertaWidget(proyecto));
+							centerPanel.add(new OfertaWidget(finalOferta, proyecto.getNombre()));
 							//centerPanel.add(underPanel);
 						}
 					});

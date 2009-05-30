@@ -183,7 +183,7 @@ public class Oferta extends AbstractDomainObject
 				return false;
 			if (!o.getMoneda().equals(getMoneda()))
 				return false;
-			if (o.getUsuario().getId() != getUsuario().getId())
+			if (o.getUsuario().getId().longValue() != getUsuario().getId().longValue())
 				return false;
 			
 			return true;

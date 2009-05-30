@@ -103,12 +103,16 @@
 	border-bottom-style: ridge;
 }
 
-.hl {
-	border-right-style: ridge;
+.styleOfganadora {
+	font-family: Verdana, sans-serif, Arial;
+	font-weight: bold;
+	font-style:italic; 
+	font-size: 12px;
+	color: #8B0000;
 }
 
-.gwt-Anchor {
-	color: #8B0000;
+.hl {
+	border-right-style: ridge;
 }
 
 .dock{

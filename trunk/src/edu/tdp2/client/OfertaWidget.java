@@ -28,6 +28,15 @@ public class OfertaWidget extends VerticalPanel
 	private Usuario usOferta;
 	private FlexTable table = new FlexTable();
 	
+	public OfertaWidget(final Oferta oferta, final String proyecto)
+	{
+		this.oferta=OfertaDto.fromOferta(oferta);
+		this.proyecto = proyecto;
+		this.usOferta=oferta.getUsuario();
+		initialize();
+		load();
+	}
+	
 	public OfertaWidget(final Proyecto proyecto)
 	{
 		this.proyecto = proyecto.getNombre();
@@ -91,9 +100,9 @@ public class OfertaWidget extends VerticalPanel
 	
 	private void initialize(){
 		
-		setSpacing(10);
+		setSpacing(7);
 		
-		add(new Label("Ofertas para el proyecto " + proyecto));
+		add(new Label("Oferta para el proyecto " + proyecto));
 		table.clear();
 		add(table);
 		table.setWidget(0, 2, new HTML("Monto:"));
@@ -109,7 +118,7 @@ public class OfertaWidget extends VerticalPanel
 
 		table.addStyleName("tableProjectWidget");
 		
-		table.setCellPadding(10);
+		table.setCellPadding(5);
 		
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
