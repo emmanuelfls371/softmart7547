@@ -1,5 +1,6 @@
 package edu.tdp2.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -13,13 +14,14 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class ProjectWidget extends VerticalPanel
 {
-
+	private ProjectConstants constants;
 	private Proyecto project;
 	private FlexTable table = new FlexTable();
 	
 	public ProjectWidget(Proyecto project)
 	{
 		this.project = project;
+		constants = GWT.create(ProjectConstants.class);
 		load();
 	}
 
@@ -39,7 +41,7 @@ public class ProjectWidget extends VerticalPanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar el usuario");
+				Window.alert(constants.failGetUser());
 			}
 
 			public void onSuccess(Boolean isBloqueado)
@@ -48,7 +50,7 @@ public class ProjectWidget extends VerticalPanel
 				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
-					HTML h2 = new HTML("* No puede ofertar este proyecto ya que el usuario está bloqueado por el administrador");
+					HTML h2 = new HTML(constants.cannotOfferBlocked());
 					h2.setStyleName("blocked");
 					h2.addStyleName("c1y2ProjectWidget");
 					h2.setWidth("580px");
@@ -59,7 +61,7 @@ public class ProjectWidget extends VerticalPanel
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(project.getUsuario().getLogin(), callback);
 
-		HTML lineHoriz= new HTML("<h3> Proyecto " + project.getNombre() + "</h3>");
+		HTML lineHoriz= new HTML(constants.proyectoBegin() + project.getNombre() + constants.proyectoEnd()); //$NON-NLS-2$
 		lineHoriz.addStyleName("hl2");
 		lineHoriz.setWidth("250px");
 		add(lineHoriz);
@@ -106,18 +108,18 @@ public class ProjectWidget extends VerticalPanel
 		table.getCellFormatter().addStyleName(4, 3, "c1y2ProjectWidget");
 		table.getCellFormatter().addStyleName(5, 3, "c1y2ProjectWidget");
 			
-		table.setWidget(0, 0, new HTML("Comprador:"));
-		table.setWidget(1, 0, new HTML("Nivel de reputaci&oacute;n de usuario:"));
-		table.setWidget(2, 0, new HTML("¿Cancelado por Usuario?"));
-		table.setWidget(3, 0, new HTML("¿Cancelado por Administrador?"));
-		table.setWidget(4, 0, new HTML("¿Revisado por Administrador?"));
-		table.setWidget(5, 0, new HTML("Nivel de reputaci&oacute;n requerido:"));
+		table.setWidget(0, 0, new HTML(constants.comprador()));
+		table.setWidget(1, 0, new HTML(constants.reputacion()));
+		table.setWidget(2, 0, new HTML(constants.canceladoXUsuario()));
+		table.setWidget(3, 0, new HTML(constants.canceladoXAdmin()));
+		table.setWidget(4, 0, new HTML(constants.revisadoXAdmin()));
+		table.setWidget(5, 0, new HTML(constants.reputacionRequerida()));
 		
-		table.setWidget(0, 2, new HTML("Presupuesto:"));
-		table.setWidget(1, 2, new HTML("Fecha de cierre:"));
-		table.setWidget(2, 2, new HTML("Dificultad:"));
-		table.setWidget(3, 2, new HTML("Tama&ntilde;o:"));
-		table.setWidget(4, 2, new HTML("Descripci&oacute;n:"));
+		table.setWidget(0, 2, new HTML(constants.presupuesto()));
+		table.setWidget(1, 2, new HTML(constants.fechaCierre()));
+		table.setWidget(2, 2, new HTML(constants.dificultad()));
+		table.setWidget(3, 2, new HTML(constants.tamano()));
+		table.setWidget(4, 2, new HTML(constants.descripcion()));
 		
 		int col = 1;
 		
@@ -125,23 +127,24 @@ public class ProjectWidget extends VerticalPanel
 		table.setWidget(1, col, new HTML (project.getUsuario().getNivel()));
 		
 		if (project.isCancelado())
-			table.setWidget(2, col, new HTML("Si"));
+			table.setWidget(2, col, new HTML(constants.si()));
 		else
-			table.setWidget(2, col, new HTML("No"));
+			table.setWidget(2, col, new HTML(constants.no()));
 		if (project.isCanceladoXAdmin())
-			table.setWidget(3, col, new HTML("Si"));
+			table.setWidget(3, col, new HTML(constants.si()));
 		else
-			table.setWidget(3, col, new HTML("No"));
+			table.setWidget(3, col, new HTML(constants.no()));
 		if (project.isRevisado())
-			table.setWidget(4, col, new HTML("Si"));
+			table.setWidget(4, col, new HTML(constants.si()));
 		else
-			table.setWidget(4, col, new HTML("No"));
+			table.setWidget(4, col, new HTML(constants.no()));
 		table.setWidget(5, col, new HTML(project.getNivel()));
 		
 		col=3;
 		
 		table.setWidget(0, col, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
-				.getMaxPresupuesto())+ " en " +project.getMoneda().getDescription()));
+				.getMaxPresupuesto())
+				+ " " + constants.preposicionEn() + " " + project.getMoneda().getDescription()));
 		
 		table.setWidget(1, col, new HTML(String.valueOf(project.getFecha().getDate()) + "/"
 				+ String.valueOf(project.getFecha().getMonth() + 1) + "/"
@@ -152,11 +155,11 @@ public class ProjectWidget extends VerticalPanel
 		if (project.getDescripcion() != null && !project.getDescripcion().isEmpty())
 			table.setWidget(4, col, new HTML(project.getDescripcion()));
 		else
-			table.setWidget(4, col, new HTML("No hay descripci&oacute;n disponible"));
+			table.setWidget(4, col, new HTML(constants.noHayDescripcion()));
 		if (project.getPathArchivo() != null && !project.getPathArchivo().isEmpty())
-			table.setWidget(5, 2, new Anchor("Bajar"));
+			table.setWidget(5, 2, new Anchor(constants.bajar()));
 		else
-			table.setWidget(5, 2, new HTML("No se ha cargado un archivo"));
+			table.setWidget(5, 2, new HTML(constants.noHayArchivo()));
 		
 		
 		add(table);

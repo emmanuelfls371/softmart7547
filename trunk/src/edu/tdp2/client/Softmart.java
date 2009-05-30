@@ -1,7 +1,5 @@
 package edu.tdp2.client;
 
-
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,6 +8,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -30,7 +29,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-
 import edu.tdp2.client.widgets.DestacadosWidget;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
@@ -40,14 +38,12 @@ import edu.tdp2.client.widgets.NewProjectWidget;
 import edu.tdp2.client.widgets.RegistrationWidget;
 import edu.tdp2.client.widgets.SearchWidget;
 
-
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Softmart implements EntryPoint, LoginListener
 {
 	private SoftmartConstants constants;
-	private SoftmartMessages messages;
 	private VerticalPanel centerPanel;
 	private AbsolutePanel northPanel;
 
@@ -71,7 +67,6 @@ public class Softmart implements EntryPoint, LoginListener
 			return;
 
 		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
-		messages = (SoftmartMessages) GWT.create(SoftmartMessages.class);
 		images = (Images) GWT.create(Images.class);
 		History.addValueChangeHandler(new SoftmartHistoryHandler());
 
@@ -108,8 +103,9 @@ public class Softmart implements EntryPoint, LoginListener
 			loginWidget.setLoginListener(this);
 		}
 	}
-	
-	private void onShowDestacados(){
+
+	private void onShowDestacados()
+	{
 		centerPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		centerPanel.add(new DestacadosWidget());
 	}
@@ -132,9 +128,37 @@ public class Softmart implements EntryPoint, LoginListener
 
 	private Panel getHeaderPanel()
 	{
-		SimplePanel panel = new SimplePanel();
+		AbsolutePanel panel = new AbsolutePanel();
+
+		SimplePanel bannerPanel = new SimplePanel();
 		Image header = images.header().createImage();
-		panel.add(header);
+		bannerPanel.add(header);
+		panel.add(bannerPanel);
+
+		FocusPanel localeEs = new FocusPanel();
+		localeEs.setSize("54px", "15px");
+		localeEs.addStyleName("cursorPointer");
+		localeEs.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Window.open("Softmart.html", "_self", "");
+			}
+		});
+		panel.add(localeEs, 11, 72);
+
+		FocusPanel localeEn = new FocusPanel();
+		localeEn.setSize("54px", "15px");
+		localeEn.addStyleName("cursorPointer");
+		localeEn.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Window.open("Softmart.html?locale=en", "_self", "");
+			}
+		});
+		panel.add(localeEn, 73, 72);
+
 		return panel;
 	}
 
@@ -153,7 +177,7 @@ public class Softmart implements EntryPoint, LoginListener
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
 		String currentUser = loginCookie.split(";")[0];
 		LoginWidget.setCurrentUser(currentUser);
-		northPanel.add(new HTML(messages.welcomeUser(currentUser == null ? "" : currentUser)));
+		northPanel.add(new HTML(constants.welcomeUser()));
 
 		FocusPanel logout = new FocusPanel();
 		logout.setSize("30px", "10px");
@@ -255,6 +279,7 @@ public class Softmart implements EntryPoint, LoginListener
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
 	{
+		@SuppressWarnings("incomplete-switch")
 		public void onValueChange(ValueChangeEvent<String> event)
 		{
 			HistoryToken token;

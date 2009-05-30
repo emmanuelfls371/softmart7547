@@ -14,4 +14,5 @@ public interface SoftmartConstants extends Constants
 
 	String elijaRango();
 
+	String welcomeUser();
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
@@ -16,10 +17,12 @@ public abstract class CalificacionList extends ListBox
 	protected String user;
 
 	private Map<String, ContratoDto> contratos = new HashMap<String, ContratoDto>();
+	private CalificacionConstants constants;
 
 	protected CalificacionList(String user)
 	{
 		super();
+		constants = GWT.create(CalificacionConstants.class);
 		this.user = user;
 		setWidth("200px");
 		load();
@@ -31,7 +34,7 @@ public abstract class CalificacionList extends ListBox
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudieron recuperar los contratos");
+				Window.alert(constants.failDoCall());
 			}
 
 			public void onSuccess(List<ContratoDto> contratos)

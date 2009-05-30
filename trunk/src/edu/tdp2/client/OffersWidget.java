@@ -2,6 +2,7 @@ package edu.tdp2.client;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
@@ -24,12 +25,14 @@ public class OffersWidget extends VerticalPanel
 {
 	private static final int COL_HIDDEN = 5;
 	private static final int COL_RADIO = 4;
+	private OfertaConstants constants;
 	private Proyecto project;
 	private FlexTable table = new FlexTable();
 
 	public OffersWidget(Proyecto project)
 	{
 		this.project = project;
+		constants = GWT.create(OfertaConstants.class);
 		load();
 	}
 
@@ -39,23 +42,23 @@ public class OffersWidget extends VerticalPanel
 
 	private void load()
 	{
-		add(new Label("Ofertas para el proyecto " + project.getNombre()));
+		add(new Label(constants.ofertasParaProyecto() + project.getNombre()));
 		AsyncCallback<List<Oferta>> callback = new AsyncCallback<List<Oferta>>()
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar las ofertas");
+				Window.alert(constants.failGetOffers());
 			}
 
 			public void onSuccess(List<Oferta> ofertas)
 			{
 				table.clear();
 				add(table);
-				table.setWidget(0, 0, new HTML("Usuario"));
-				table.setWidget(0, 1, new HTML("Monto"));
-				table.setWidget(0, 2, new HTML("D&iacute;as (corridos)"));
-				table.setWidget(0, 3, new HTML("Comentario"));
-				table.setWidget(0, 4, new HTML("Elegir"));
+				table.setWidget(0, 0, new HTML(constants.usuario()));
+				table.setWidget(0, 1, new HTML(constants.monto()));
+				table.setWidget(0, 2, new HTML(constants.dias()));
+				table.setWidget(0, 3, new HTML(constants.comentario()));
+				table.setWidget(0, 4, new HTML(constants.elegir()));
 
 				for (int i = 0; i < ofertas.size(); i++)
 				{
@@ -66,7 +69,7 @@ public class OffersWidget extends VerticalPanel
 					table.setWidget(row, 1, new HTML(((Float) oferta.getMonto()).toString()));
 					table.setWidget(row, 2, new HTML(((Integer) oferta.getDias()).toString()));
 
-					Anchor menuLink = new Anchor("Ver Comentario");
+					Anchor menuLink = new Anchor(constants.verComentario());
 					menuLink.addClickHandler(new ClickHandler()
 					{
 						public void onClick(ClickEvent event)
@@ -93,7 +96,7 @@ public class OffersWidget extends VerticalPanel
 
 	private Button getSubmitButton()
 	{
-		Button submit = new Button("Elegir", new ClickHandler()
+		Button submit = new Button(constants.elegir(), new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
@@ -101,7 +104,7 @@ public class OffersWidget extends VerticalPanel
 				long offerId;
 				if (rowWithCheckedRadio == -1)
 				{
-					Window.alert("Debe elegir una oferta");
+					Window.alert(constants.debeElegirOferta());
 					return;
 				}
 				else
@@ -110,7 +113,7 @@ public class OffersWidget extends VerticalPanel
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("No se pudo guardar las ofertas");
+						Window.alert(constants.failChooseOffer());
 					}
 
 					public void onSuccess(String errMsg)
