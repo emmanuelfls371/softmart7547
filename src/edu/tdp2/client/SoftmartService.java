@@ -84,4 +84,6 @@ public interface SoftmartService extends RemoteService
 	public String setProyectoDestacado(Long projectId, Boolean value);
 	
 	public List<Proyecto> getProyectosDestacados();
+	
+	public Oferta getOfertaGanadora(Long id);
 }

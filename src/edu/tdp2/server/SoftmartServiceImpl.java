@@ -1117,5 +1117,22 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+
+	public Oferta getOfertaGanadora(Long id) {
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Oferta offer = (Oferta) sess.createQuery("SELECT ofertaGanadora FROM Contrato AS c WHERE c.proyecto.id = ?")
+					.setParameter(0, id).uniqueResult();
+			if (offer != null)
+				offer.prune();
+			return offer;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 	
 }

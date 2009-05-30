@@ -48,6 +48,8 @@ public interface SoftmartServiceAsync
 	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
 
 	public void getOfertaGanadora(Proyecto project, AsyncCallback<Oferta> callback);
+	
+	public void getOfertaGanadora(Long id, AsyncCallback<Oferta> callback);
 
 	public void chooseOffer(long offerId, AsyncCallback<String> callback);
 
