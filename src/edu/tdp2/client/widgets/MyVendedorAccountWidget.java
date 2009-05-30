@@ -238,7 +238,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 						public void onClick(ClickEvent event)
 						{
 							centerPanel.clear();
-							centerPanel.add(new OfertaWidget(OfertaDto.fromOferta(finalOferta), proyecto.getDescripcion()));
+							centerPanel.add(new OfertaWidget(proyecto));
 							//centerPanel.add(underPanel);
 						}
 					});

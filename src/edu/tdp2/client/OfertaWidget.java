@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.model.Usuario;
 import edu.tdp2.client.utils.ClientUtils;
 
 public class OfertaWidget extends VerticalPanel
@@ -24,18 +25,10 @@ public class OfertaWidget extends VerticalPanel
 
 	private OfertaDto oferta;
 	private String proyecto;
+	private Usuario usOferta;
 	private FlexTable table = new FlexTable();
-
-	public OfertaWidget(OfertaDto oferta, String proyecto)
-	{
-		this.oferta = oferta;
-		this.proyecto = proyecto;
-		initialize();
-		load(1);
-	}
-
 	
-	public OfertaWidget(Proyecto proyecto)
+	public OfertaWidget(final Proyecto proyecto)
 	{
 		this.proyecto = proyecto.getNombre();
 		final OfertaWidget ow = this;
@@ -55,16 +48,17 @@ public class OfertaWidget extends VerticalPanel
 				}
 				else
 				{
+					usOferta = proyecto.getUsuario();
 					ow.oferta = OfertaDto.fromOferta(oferta);
 					initialize();
-					load(1);
+					load();
 				}
 			}
 		};
 		ClientUtils.getSoftmartService().getOfertaGanadora(proyecto, callback);
 	}
 
-	public OfertaWidget(Proyecto proyecto, String usuario)
+	public OfertaWidget(final Proyecto proyecto, String usuario)
 	{
 		this.proyecto = proyecto.getNombre();
 		final OfertaWidget ow = this;
@@ -81,9 +75,10 @@ public class OfertaWidget extends VerticalPanel
 					Window.alert("El usuario no ha realizado ofertas para este proyecto");
 				else
 				{
+					usOferta = proyecto.getUsuario();
 					ow.oferta = OfertaDto.fromOferta(oferta);
 					initialize();
-					load(1);
+					load();
 				}
 			}
 		};
@@ -95,20 +90,27 @@ public class OfertaWidget extends VerticalPanel
 	  }-*/;
 	
 	private void initialize(){
+		
+		setSpacing(10);
+		
 		add(new Label("Ofertas para el proyecto " + proyecto));
 		table.clear();
 		add(table);
-		table.setWidget(0, 0, new HTML("Monto"));
-		table.setWidget(0, 1, new HTML("Moneda"));
-		table.setWidget(0, 2, new HTML("D&iacute;as"));
-		table.setWidget(0, 3, new HTML("Comentario"));
-		table.setWidget(0, 4, new HTML("Vendedor"));
+		table.setWidget(0, 2, new HTML("Monto:"));
+		table.setWidget(1, 2, new HTML("D&iacute;as:"));
+		
+		table.setWidget(0, 0, new HTML("Vendedor:"));
+		table.setWidget(1, 0, new HTML("Nivel de reputaci&oacute;n de usuario:"));
 	}
 
-	private void load(int row)
+	private void load()
 	{
 		final HTML h = new HTML(oferta.getUsuario());
 
+		table.addStyleName("tableProjectWidget");
+		
+		table.setCellPadding(10);
+		
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
 		{
 			public void onFailure(Throwable caught)
@@ -124,7 +126,8 @@ public class OfertaWidget extends VerticalPanel
 					h.setStyleName("blocked");
 					HTML h2 = new HTML("*Usuario Bloqueado");
 					h2.setStyleName("blocked");
-					h2.setHorizontalAlignment(ALIGN_RIGHT);
+					h2.addStyleName("c1y2ProjectWidget");
+					h2.setWidth("200px");
 					add(h2);
 					h.setHTML(oferta.getUsuario()+"*");
 				}
@@ -132,9 +135,30 @@ public class OfertaWidget extends VerticalPanel
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(oferta.getUsuario(), callback);
 
-		table.setWidget(row, 0, new HTML(Float.toString(oferta.getMonto())));
-		table.setWidget(row, 1, new HTML(oferta.getMoneda()));
-		table.setWidget(row, 2, new HTML(Integer.toString(oferta.getDias())));
+		table.getCellFormatter().addStyleName(0, 1, "row0c1ProjectWidget");
+		table.getCellFormatter().addStyleName(1, 1, "row0c1ProjectWidget");
+		
+		table.getCellFormatter().addStyleName(2, 2, "row2c2ProjectWidget");
+		
+		table.getCellFormatter().addStyleName(0, 0, "c0ProjectWidget");
+		table.getCellFormatter().addStyleName(1, 0, "c0ProjectWidget");
+
+		table.getCellFormatter().addStyleName(0, 2, "c0ProjectWidget");
+		table.getCellFormatter().addStyleName(1, 2, "c0ProjectWidget");
+		
+		table.getCellFormatter().addStyleName(0, 1, "c1y2ProjectWidget");
+		table.getCellFormatter().addStyleName(1, 1, "c1y2ProjectWidget");
+	
+		table.getCellFormatter().addStyleName(0, 3, "c1y2ProjectWidget");
+		table.getCellFormatter().addStyleName(1, 3, "c1y2ProjectWidget");
+		table.getCellFormatter().addStyleName(2, 2, "c1y2ProjectWidget");
+
+		
+		
+		table.setWidget(0, 1, h);
+		table.setWidget(1, 1, new HTML(usOferta.getNivel()));
+		table.setWidget(0, 3, new HTML(Float.toString(oferta.getMonto()) + " en "+ oferta.getMoneda()));
+		table.setWidget(1, 3, new HTML(Integer.toString(oferta.getDias())));
 
 		Anchor menuLink = new Anchor("Ver Comentario");
 		menuLink.addClickHandler(new ClickHandler()
@@ -143,15 +167,14 @@ public class OfertaWidget extends VerticalPanel
 			{
 				 final DialogBox dialogBox = new ComentarioWidget(oferta);
 				 dialogBox.setAnimationEnabled(true);
-				 dialogBox.center();
 				 dialogBox.show();
 				        
 			}
 		});
 
-		table.setWidget(row, 3, menuLink);
-		table.setWidget(row, 4, h);
-		table.setBorderWidth(1);
+		table.setWidget(2, 2, menuLink);
+		
+		
 	}
 
 }

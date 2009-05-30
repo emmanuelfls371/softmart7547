@@ -34,7 +34,7 @@
 }
 
 .firstRow {
-	background-color: #BDB76B;
+	background-color: #FFD700;
 	border-right: 2px solid #000000;
 	border-bottom: 2px solid #000000;
 	text-align: center;
@@ -50,6 +50,57 @@
 	font-size: 14px;
 	font-family: Verdana, sans-serif, Arial;
 	padding: 3px;
+}
+
+.tableProjectWidget {
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+.c1ProjectWidget{
+	border-right: 2px ridge;
+}
+
+.c0ProjectWidget{
+	font-family: Verdana, sans-serif, Arial;
+	font-weight: bold;
+	font-style:italic; 
+	font-size: 12px;
+}
+
+.c1y2ProjectWidget{
+	font-family: Verdana, sans-serif, Arial;
+	font-size: 12px;
+}
+
+.row5c3ProjectWidget{
+	border-top: 2px ridge;
+	text-align: center;
+}
+
+.row0ProjectWidget{
+	border-top: 2px ridge;
+}
+
+.row0c1ProjectWidget{
+	border-right: 2px ridge;
+}
+
+.row1c1ProjectWidget{
+	border-right: 2px ridge;
+	border-bottom: 2px ridge;
+}
+
+.row1c0ProjectWidget{
+	border-bottom: 2px ridge;
+}
+
+.row2c2ProjectWidget{
+	border-left: 2px ridge;
+}
+
+.hl2 {
+	border-bottom-style: ridge;
 }
 
 .hl {
@@ -97,13 +148,13 @@
 }
 
 .gwt-DecoratedTabBar .tabTopLeft {
-    background: no-repeat -6px -55px;
-  	-background: no-repeat -6px -55px;
+    background: no-repeat ;
+  	-background: no-repeat ;
 }
 
 .gwt-DecoratedTabBar .tabTopRight {
-  background: no-repeat -6px -55px;
-  -background: no-repeat -6px -55px;
+  background: no-repeat ;
+  -background: no-repeat ;
 }
 
 .gwt-DecoratedTabBar .tabMiddleLeft,
