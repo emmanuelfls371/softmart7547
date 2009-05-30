@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -28,7 +29,7 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class AccountWidget extends DockPanel{
 
-	
+	private AccountConstants constants;
 	protected Proyecto proySelected;
 	protected VerticalPanel vCerrados;
 	protected boolean proyCerrados;
@@ -41,6 +42,7 @@ public class AccountWidget extends DockPanel{
 	protected boolean accion;
 	
 	public AccountWidget(){
+		constants = GWT.create(AccountConstants.class);
 		proySelected = null;
 		vCerrados = null;
 		proyCerrados = false;
@@ -49,8 +51,8 @@ public class AccountWidget extends DockPanel{
 	
 	protected void setLinkCalificacion(){
 		
-		califRecibida = new Anchor("Ver calificaci&oacute;n recibida", true);
-		califHecha = new Anchor("Ver calificaci&oacute;n hecha", true);
+		califRecibida = new Anchor(constants.verCalifRecibida(), true);
+		califHecha = new Anchor(constants.verCalifHecha(), true);
 		vCerrados.add(califRecibida);
 		vCerrados.add(califHecha);
 	}
@@ -58,14 +60,14 @@ public class AccountWidget extends DockPanel{
 	protected Anchor getCalificarAction(){
 				
 			proyCerrados = false;
-			Anchor menuLink = new Anchor("Calificar");
+			Anchor menuLink = new Anchor(constants.calificar());
 			menuLink.addClickHandler(new ClickHandler()
 			{
 				public void onClick(ClickEvent event)
 				{
 					Proyecto proyecto = proySelected;
 					if (proyecto == null)
-						Window.alert("Debe seleccionar un proyecto para calificar");
+						Window.alert(constants.debeSeleccionarProyCalif());
 					else
 						onShowNewCalificacion(proyecto);
 				}
@@ -88,7 +90,7 @@ public class AccountWidget extends DockPanel{
 	
 	protected RadioButton getActionButton(final Proyecto proyecto){
 
-		RadioButton r = new RadioButton("Acción", "");
+		RadioButton r = new RadioButton(constants.accion(), "");
 		
 		r.addValueChangeHandler(new ValueChangeHandler<Boolean>()
 			{
@@ -115,7 +117,7 @@ public class AccountWidget extends DockPanel{
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo ver la calificacion");
+				Window.alert(constants.failVerCalif());
 			}
 			
 			public void onSuccess(List<ContratoDto> contratos)
@@ -140,7 +142,7 @@ public class AccountWidget extends DockPanel{
 							public void onClick(ClickEvent event)
 							{
 								if(proySelected==null){
-									Window.alert("Debe seleccionar un proyecto");
+									Window.alert(constants.debeSeleccionarProy());
 								}else{
 									onShowCalification(c2, TipoCalificacion.Hecha);
 								}
@@ -167,7 +169,7 @@ public class AccountWidget extends DockPanel{
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo ver la calificacion");
+				Window.alert(constants.failVerCalif());
 			}
 
 			public void onSuccess(List<ContratoDto> contratos)
@@ -193,7 +195,7 @@ public class AccountWidget extends DockPanel{
 							public void onClick(ClickEvent event)
 							{
 								if(proySelected==null){
-									Window.alert("Debe seleccionar un proyecto");
+									Window.alert(constants.debeSeleccionarProy());
 								}else{
 									onShowCalification(c2, TipoCalificacion.Recibida);
 								}

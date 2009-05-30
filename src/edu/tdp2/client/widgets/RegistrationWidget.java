@@ -16,10 +16,10 @@ import edu.tdp2.client.dto.UsuarioDto;
 import edu.tdp2.client.utils.ClientUtils;
 
 
-/* TODO Pasar los mensajes de RegistrationWidget a messages*/
 public class RegistrationWidget extends FormWidget
 {
 	private static RegistrationWidget instance;
+	private static RegistrationConstants constants;
 
 	private boolean errorC;
 	private boolean errorE;
@@ -37,7 +37,8 @@ public class RegistrationWidget extends FormWidget
 
 	private RegistrationWidget()
 	{
-		tituloWidget = "<big><big><b>Reg&iacute;strese</b></big></big>";
+		constants = GWT.create(RegistrationConstants.class);
+		tituloWidget = constants.registrese();
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		url = "registration";
@@ -96,13 +97,13 @@ public class RegistrationWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los paises");
+				Window.alert(constants.failGetPaises());
 			}
 
 			public void onSuccess(List<String> paises)
 			{
 				lisPaises.clear();
-				lisPaises.addItem("---- Elija un pais ----", "");
+				lisPaises.addItem(constants.elijaPais(), "");
 				for (String pais : paises)
 					lisPaises.addItem(pais, pais);
 			}
@@ -144,24 +145,24 @@ public class RegistrationWidget extends FormWidget
 		String fileName = ((FileUpload) widgets.get(RegistrationFields.Logo)).getFilename().toUpperCase();
 		if (!fileName.isEmpty() && !fileName.endsWith("PNG") && !fileName.endsWith("GIF") && !fileName.endsWith("JPG")
 				&& !fileName.endsWith("JPEG"))
-			errMsgs.add("El archivo debe tener extensi�n PNG, GIF, JPG o JPEG");
+			errMsgs.add(constants.errorArchivoExtension());
 		
 		if (errorClave)
-			errMsgs.add("Debe ingresar la clave original");
+			errMsgs.add(constants.errorClaveOrig());
 		
 		if(errorClaveRep)
-			errMsgs.add("Debe ingresar la clave repetida");
+			errMsgs.add(constants.errorClaveRep());
 		
 		if(errorC)
-			errMsgs.add("Las claves no son iguales");
+			errMsgs.add(constants.errorClavesDistintas());
 		
 		if (errorEmail)
-			errMsgs.add("Debe ingresar el email original");
+			errMsgs.add(constants.errorMailOrig());
 		if (errorEmailRep)
-			errMsgs.add("Debe ingresar el email repetido");
+			errMsgs.add(constants.errorMailRep());
 		
 		if(errorE)
-			errMsgs.add("Los e-mail no son iguales");
+			errMsgs.add(constants.errorMailsDistintos());
 	}
 
 	private final class RegistrationSubmitHandler implements SubmitHandler
@@ -239,7 +240,7 @@ public class RegistrationWidget extends FormWidget
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("Error inesperado, no se pudo registrar el usuario");
+						Window.alert(constants.failRegister());
 					}
 
 					public void onSuccess(String errMsg)
@@ -261,9 +262,10 @@ public class RegistrationWidget extends FormWidget
 
 	private enum RegistrationFields implements FormFields
 	{
-		Nombre, Apellido, Email,ConfirmeEmail("Confirmaci&oacute;n de E-mail"), Usuario("Nombre de usuario"), Clave("Contrase&ntilde;a"),ConfirmeClave("Confirmaci&oacute;n Contrase&ntilde;a"), Pais("Pa&iacute;s"), Ciudad, CodPostal(
-				"C&oacute;digo postal"), DescripPerfil("Descripci&oacute;n del perfil (opcional)"), Logo(
-				"Logo o imagen (opcional - PNG, GIF, JPEG. Tama&ntilde;o m&aacute;ximo 200KB");
+		Nombre(constants.nombre()), Apellido(constants.apellido()), Email(constants.email()), ConfirmeEmail(constants
+				.confirmeEmail()), Usuario(constants.usuario()), Clave(constants.clave()), ConfirmeClave(constants
+				.confirmeClave()), Pais(constants.pais()), Ciudad(constants.ciudad()), CodPostal(constants.codPostal()), DescripPerfil(
+				constants.descripPerfil()), Logo(constants.logo());
 
 		private RegistrationFields(String description)
 		{
@@ -272,16 +274,10 @@ public class RegistrationWidget extends FormWidget
 
 		public String description;
 
-		private RegistrationFields()
-		{
-			description = name();
-		}
-
 		public String getDescription()
 		{
 			return description;
 		}
-
 	}
 
 	@Override

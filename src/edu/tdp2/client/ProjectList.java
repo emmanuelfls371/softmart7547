@@ -12,6 +12,7 @@ import edu.tdp2.client.model.Proyecto;
 
 public class ProjectList extends ListBox
 {
+	private ProjectListConstants constants;
 	private Map<String, Proyecto> projects = new HashMap<String, Proyecto>();
 
 	public ProjectList(List<Proyecto> projects)
@@ -39,7 +40,7 @@ public class ProjectList extends ListBox
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudieron recuperar los proyectos");
+				Window.alert(constants.failGetProjects());
 			}
 
 			public void onSuccess(List<Proyecto> projects)

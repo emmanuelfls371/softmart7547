@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.SoftmartConstants;
-import edu.tdp2.client.SoftmartMessages;
 import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.utils.MD5;
 
@@ -32,8 +31,8 @@ public class LoginWidget extends SimplePanel
 	private final TextBox userNameTextBox;
 	private final PasswordTextBox passwordTextBox;
 	private LoginListener loginListener;
-	private SoftmartConstants constants;
-	private SoftmartMessages messages;
+	private SoftmartConstants softmartConstants;
+	private LoginConstants constants;
 
 	public static LoginWidget getInstance()
 	{
@@ -54,8 +53,8 @@ public class LoginWidget extends SimplePanel
 
 	private LoginWidget()
 	{
-		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
-		messages = (SoftmartMessages) GWT.create(SoftmartMessages.class);
+		softmartConstants = GWT.create(SoftmartConstants.class);
+		constants = GWT.create(LoginConstants.class);
 		userNameTextBox = new TextBox();
 		userNameTextBox.setWidth("200px");
 		passwordTextBox = new PasswordTextBox();
@@ -79,25 +78,21 @@ public class LoginWidget extends SimplePanel
 	private FlexTable getTable()
 	{
 		FlexTable table = new FlexTable();
-		HTML prompt = new HTML("<big><big><b>Inicie sesi&oacute;n</b></big></big>");
+		HTML prompt = new HTML(constants.inicieSesion());
 		prompt.setWidth("150px");
 		table.setWidget(0, 0, prompt);
 		table.setWidget(1, 1, getRegisterLink());
-		table.setWidget(2, 0, new HTML("Usuario: "));
+		table.setWidget(2, 0, new HTML(constants.usuario()));
 		table.setWidget(2, 1, userNameTextBox);
-		table.setWidget(3, 0, new HTML("Contrase&ntilde;a: "));
+		table.setWidget(3, 0, new HTML(constants.contrasena()));
 		table.setWidget(3, 1, passwordTextBox);
 		table.setWidget(4, 1, getSubmitPanel());
-		/*
-		 * String sImage = "http://localhost:8888/edu.tdp2.Softmart/logo.jpg"; Image image = new Image(sImage);
-		 * table.setWidget(0, 0, image);
-		 */
 		return table;
 	}
 
 	private Widget getRegisterLink()
 	{
-		Anchor link = new Anchor("Reg&iacute;strese", true);
+		Anchor link = new Anchor(constants.registrese(), true);
 		link.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -121,7 +116,7 @@ public class LoginWidget extends SimplePanel
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert(messages.badLogin());
+						Window.alert(constants.badLogin());
 					}
 
 					public void onSuccess(String result)
@@ -132,7 +127,7 @@ public class LoginWidget extends SimplePanel
 						{
 							Date expire = new Date();
 							expire.setTime(expire.getTime() + 1000 * 60 * 60 * 24); // Un dia
-							Cookies.setCookie(constants.loginCookieName(), result, expire);
+							Cookies.setCookie(softmartConstants.loginCookieName(), result, expire);
 							setCurrentUser(userNameTextBox.getText());
 							if (loginListener != null)
 								loginListener.onLogin();

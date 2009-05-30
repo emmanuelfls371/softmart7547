@@ -1,5 +1,6 @@
 package edu.tdp2.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -17,12 +18,14 @@ public class CalificationWidget extends VerticalPanel
 	private String proyecto;
 	private String tipo;
 	private FlexTable table = new FlexTable();
+	private CalificacionConstants constants;
 
 	public CalificationWidget(CalificacionDto calif, String proyecto, TipoCalificacion tipo)
 	{
 		this.calif = calif;
 		this.proyecto = proyecto;
 		this.tipo = tipo.getDescription();
+		constants = GWT.create(CalificacionConstants.class);
 		load();
 	}
 
@@ -39,7 +42,7 @@ public class CalificationWidget extends VerticalPanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar el usuario");
+				Window.alert(constants.failIsUsuarioBloqueado());
 			}
 
 			public void onSuccess(Boolean isBloqueado)
@@ -53,11 +56,11 @@ public class CalificationWidget extends VerticalPanel
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(calif.getUsuario(), callback);
 
-		add(new Label("Calificacion para Proyecto " + proyecto));
+		add(new Label(constants.califParaProyecto() + proyecto));
 		table.clear();
 		add(table);
-		table.setWidget(0, 0, new HTML("Calificacion"));
-		table.setWidget(0, 1, new HTML("Comentario"));
+		table.setWidget(0, 0, new HTML(constants.calificacion()));
+		table.setWidget(0, 1, new HTML(constants.comentario()));
 		table.setWidget(0, 2, new HTML(tipo));
 
 		int row = 1;

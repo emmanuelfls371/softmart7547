@@ -32,6 +32,7 @@ public class AdminProjectsWidget extends AdminWidget
 		return instance;
 	}
 	
+	@Override
 	public void load(){
 		container.add(vPanel, "Proyectos");
 		statusMessage = new HTML();
