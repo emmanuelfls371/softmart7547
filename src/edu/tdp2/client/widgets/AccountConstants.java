@@ -5,18 +5,18 @@ import com.google.gwt.i18n.client.Constants;
 public interface AccountConstants extends Constants
 {
 
-	String verCalifRecibida();
-
-	String verCalifHecha();
+	String accion();
 
 	String calificar();
 
-	String debeSeleccionarProyCalif();
+	String debeSeleccionarProy();
 
-	String accion();
+	String debeSeleccionarProyCalif();
 
 	String failVerCalif();
 
-	String debeSeleccionarProy();
+	String verCalifHecha();
+
+	String verCalifRecibida();
 
 }

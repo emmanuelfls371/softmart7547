@@ -28,6 +28,17 @@ public abstract class CalificacionList extends ListBox
 		load();
 	}
 
+	public ContratoDto getSelectedItem()
+	{
+		int index = getSelectedIndex();
+		if (index == -1)
+			return null;
+		else
+			return contratos.get(getValue(index));
+	}
+
+	protected abstract void doCall(AsyncCallback<List<ContratoDto>> callback);
+
 	protected void load()
 	{
 		AsyncCallback<List<ContratoDto>> callback = new AsyncCallback<List<ContratoDto>>()
@@ -51,17 +62,6 @@ public abstract class CalificacionList extends ListBox
 	{
 		addItem(contrato.getProyecto().getNombre(), Long.toString(contrato.getIdContrato()));
 		contratos.put(Long.toString(contrato.getIdContrato()), contrato);
-	}
-
-	protected abstract void doCall(AsyncCallback<List<ContratoDto>> callback);
-
-	public ContratoDto getSelectedItem()
-	{
-		int index = getSelectedIndex();
-		if (index == -1)
-			return null;
-		else
-			return contratos.get(getValue(index));
 	}
 
 }

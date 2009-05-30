@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Proyecto;
@@ -24,22 +23,23 @@ public class AdminProjectsWidget extends AdminWidget
 {
 	private static AdminProjectsWidget instance;
 
-	private VerticalPanel vPanel = new VerticalPanel();
 	public static AdminProjectsWidget getInstance()
 	{
 		if (instance == null)
 			instance = new AdminProjectsWidget();
 		return instance;
 	}
-	
+
+	private VerticalPanel vPanel = new VerticalPanel();
+
 	@Override
-	public void load(){
+	public void load()
+	{
 		container.add(vPanel, "Proyectos");
 		statusMessage = new HTML();
 		loadPanel();
 	}
 
-	
 	public void loadPanel()
 	{
 		History.newItem("AdminProjects");
@@ -50,8 +50,7 @@ public class AdminProjectsWidget extends AdminWidget
 		statusMessage.setHeight("50px");
 		vPanel.add(statusMessage);
 		vPanel.add(table);
-		
-	
+
 		AsyncCallback<List<Proyecto>> callback = new AsyncCallback<List<Proyecto>>()
 		{
 			public void onFailure(Throwable caught)
@@ -82,9 +81,9 @@ public class AdminProjectsWidget extends AdminWidget
 					table.setWidget(row, 5, new HTML(p.getDificultad()));
 					DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 					table.setWidget(row, 6, new HTML(format.format(p.getFecha())));
-					CheckBox c= getCheckBoxRevisado(p);
-					CheckBox c2=getCheckBoxDestacado(p);
-					Anchor c3=getAnchorCancelarProyecto(p);
+					CheckBox c = getCheckBoxRevisado(p);
+					CheckBox c2 = getCheckBoxDestacado(p);
+					Anchor c3 = getAnchorCancelarProyecto(p);
 					table.setWidget(row, 7, c);
 					table.setWidget(row, 8, c3);
 					table.setWidget(row, 9, c2);
@@ -98,11 +97,10 @@ public class AdminProjectsWidget extends AdminWidget
 	private Anchor getAnchorCancelarProyecto(final Proyecto p)
 	{
 		Anchor a = new Anchor("Cancelar proyecto");
-		if(p.isRevisado()){
+		if (p.isRevisado())
 			a.setEnabled(false);
-		}else{
+		else
 			a.setEnabled(true);
-		}
 		a.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -118,11 +116,13 @@ public class AdminProjectsWidget extends AdminWidget
 
 					public void onSuccess(String result)
 					{
-						if(result==null){	
+						if (result == null)
+						{
 							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" ha sido cancelado");
-							
+
 							loadPanel();
-						}else
+						}
+						else
 						{
 							Window.alert(result);
 							statusMessage.setHTML("Error al intentar cancelar el proyecto");
@@ -135,11 +135,58 @@ public class AdminProjectsWidget extends AdminWidget
 		return a;
 	}
 
+	private CheckBox getCheckBoxDestacado(final Proyecto p)
+	{
+
+		CheckBox c = new CheckBox();
+		if (p.isRevisado())
+			c.setEnabled(true);
+		else
+			c.setEnabled(false);
+		c.setValue(p.isDestacado());
+		c.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+		{
+			public void onValueChange(ValueChangeEvent<Boolean> event)
+			{
+				final boolean value = event.getValue();
+				if (p.isRevisado() && !p.isCancelado() && !p.isCanceladoXAdmin())
+				{
+					AsyncCallback<String> callback = new AsyncCallback<String>()
+					{
+
+						public void onFailure(Throwable caught)
+						{
+							Window.alert("No se pudo marcar el proyecto como destacado");
+						}
+
+						public void onSuccess(String result)
+						{
+							if (result == null)
+								statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
+										+ (value ? "" : "no ") + "destacado");
+							else
+							{
+								Window.alert(result);
+								statusMessage.setHTML("Error al intentar marcar el proyecto como destacado");
+							}
+						}
+					};
+					ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), event.getValue(), callback);
+				}
+				else
+					Window.alert("No se pudo marcar el proyecto. El proyecto aún no fue revisado o ha sido cancelado");
+			}
+		});
+		return c;
+
+	}
+
 	private CheckBox getCheckBoxRevisado(final Proyecto p)
 	{
 		final CheckBox c = new CheckBox();
 		c.setValue(p.isRevisado());
-		if(p.isRevisado()) c.setEnabled(false);
+		if (p.isRevisado())
+			c.setEnabled(false);
 		c.addValueChangeHandler(new ValueChangeHandler<Boolean>()
 		{
 			public void onValueChange(ValueChangeEvent<Boolean> event)
@@ -155,12 +202,13 @@ public class AdminProjectsWidget extends AdminWidget
 
 					public void onSuccess(String result)
 					{
-						if (result == null){
+						if (result == null)
+						{
 							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
 									+ (value ? "" : "no ") + "revisado");
-							
+
 							loadPanel();
-						}						
+						}
 						else
 						{
 							Window.alert(result);
@@ -173,50 +221,5 @@ public class AdminProjectsWidget extends AdminWidget
 		});
 		return c;
 	}
-	
-	private CheckBox getCheckBoxDestacado(final Proyecto p){
-		
-		CheckBox c = new CheckBox();
-		if(p.isRevisado()){
-			c.setEnabled(true);
-		}else{
-			c.setEnabled(false);
-		}
-		c.setValue(p.isDestacado());
-		c.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-		{
-			public void onValueChange(ValueChangeEvent<Boolean> event)
-			{
-				final boolean value = event.getValue();
-				if(p.isRevisado()&&!p.isCancelado()&&!p.isCanceladoXAdmin()){
-					AsyncCallback<String> callback = new AsyncCallback<String>()
-					{
-	
-						public void onFailure(Throwable caught)
-						{
-							Window.alert("No se pudo marcar el proyecto como destacado");
-						}
-	
-						public void onSuccess(String result)
-						{
-							if (result == null)
-								statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
-										+ (value ? "" : "no ") + "destacado");
-							else
-							{
-								Window.alert(result);
-								statusMessage.setHTML("Error al intentar marcar el proyecto como destacado");
-							}
-						}
-					};
-					ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), event.getValue(), callback);
-				}else{
-					Window.alert("No se pudo marcar el proyecto. El proyecto aún no fue revisado o ha sido cancelado");
-				}
-			}
-		});
-		return c;
-	
-	}
-	
+
 }

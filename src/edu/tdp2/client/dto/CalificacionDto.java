@@ -10,8 +10,8 @@ public class CalificacionDto implements IValidatable, Serializable, Dto
 {
 	private static final long serialVersionUID = -2846072920110853529L;
 
-	@Min(minimum = -1, message = "La calificacion está por debajo del mínimo")
-	@Max(maximum = 11, message = "La calificacion supera el máximo")
+	@Min(minimum = -1, message = "La calificacion estï¿½ por debajo del mï¿½nimo")
+	@Max(maximum = 11, message = "La calificacion supera el mï¿½ximo")
 	private int calificacion;
 
 	private String comentario;
@@ -25,29 +25,9 @@ public class CalificacionDto implements IValidatable, Serializable, Dto
 		return calificacion;
 	}
 
-	public void setCalificacion(int calificacion)
-	{
-		this.calificacion = calificacion;
-	}
-
 	public String getComentario()
 	{
 		return comentario;
-	}
-
-	public void setComentario(String comentario)
-	{
-		this.comentario = comentario;
-	}
-
-	public String getUsuario()
-	{
-		return usuario;
-	}
-
-	public void setUsuario(String usuario)
-	{
-		this.usuario = usuario;
 	}
 
 	public long getProyecto()
@@ -55,8 +35,28 @@ public class CalificacionDto implements IValidatable, Serializable, Dto
 		return proyecto;
 	}
 
+	public String getUsuario()
+	{
+		return usuario;
+	}
+
+	public void setCalificacion(int calificacion)
+	{
+		this.calificacion = calificacion;
+	}
+
+	public void setComentario(String comentario)
+	{
+		this.comentario = comentario;
+	}
+
 	public void setProyecto(long proyecto)
 	{
 		this.proyecto = proyecto;
+	}
+
+	public void setUsuario(String usuario)
+	{
+		this.usuario = usuario;
 	}
 }

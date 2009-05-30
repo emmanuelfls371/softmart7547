@@ -8,14 +8,11 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
-
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import com.google.gwt.user.client.ui.SimplePanel;
-
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
@@ -23,14 +20,15 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class DestacadosWidget extends SimplePanel
 {
-	
-	public DestacadosWidget(){
+
+	public DestacadosWidget()
+	{
 		load();
 	}
-	
+
 	private void load()
 	{
-		
+
 		AsyncCallback<List<Proyecto>> callback = new AsyncCallback<List<Proyecto>>()
 		{
 			public void onFailure(Throwable caught)
@@ -43,25 +41,24 @@ public class DestacadosWidget extends SimplePanel
 				VerticalPanel panel = new VerticalPanel();
 				panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 				panel.add(new HTML("<big>Proyectos Destacados</big> <p></p>"));
-				
-				
+
 				FlexTable table = new FlexTable();
 				table.addStyleName("table");
-								
+
 				table.getCellFormatter().addStyleName(0, 0, "firstRow");
 				table.getCellFormatter().addStyleName(0, 1, "firstRow");
 				table.getCellFormatter().addStyleName(0, 2, "firstRow");
 				table.getCellFormatter().addStyleName(0, 3, "firstRow");
 				table.getCellFormatter().addStyleName(0, 4, "firstRow");
 				table.getCellFormatter().addStyleName(0, 5, "firstRow");
-								
+
 				table.setWidget(0, 0, new HTML("Nombre"));
 				table.setWidget(0, 1, new HTML("Presupuesto"));
 				table.setWidget(0, 2, new HTML("Moneda"));
 				table.setWidget(0, 3, new HTML("Tama&ntilde;o"));
 				table.setWidget(0, 4, new HTML("Complejidad"));
 				table.setWidget(0, 5, new HTML("Fecha cierre"));
-				
+
 				int row = 1;
 				for (final Proyecto proyecto : proyectos)
 				{
@@ -74,8 +71,9 @@ public class DestacadosWidget extends SimplePanel
 						}
 					});
 					table.setWidget(row, 0, aProy);
-		
-					table.setWidget(row, 1, new HTML(Presupuesto.armarRango(proyecto.getMinPresupuesto(), proyecto.getMaxPresupuesto())));
+
+					table.setWidget(row, 1, new HTML(Presupuesto.armarRango(proyecto.getMinPresupuesto(), proyecto
+							.getMaxPresupuesto())));
 					table.setWidget(row, 2, new HTML(proyecto.getMoneda().getDescription()));
 					table.setWidget(row, 3, new HTML(proyecto.getTamanio()));
 					table.setWidget(row, 4, new HTML(proyecto.getDificultad()));
@@ -88,17 +86,17 @@ public class DestacadosWidget extends SimplePanel
 					table.getCellFormatter().addStyleName(row, 3, "column");
 					table.getCellFormatter().addStyleName(row, 4, "column");
 					table.getCellFormatter().addStyleName(row, 5, "column");
-					
+
 					row++;
-					
+
 				}
 				panel.add(table);
 				setWidget(panel);
-				
+
 			}
 		};
 		ClientUtils.getSoftmartService().getProyectosDestacados(callback);
-		
+
 	}
 
 }

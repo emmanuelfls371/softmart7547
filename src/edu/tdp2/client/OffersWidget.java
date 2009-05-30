@@ -36,9 +36,53 @@ public class OffersWidget extends VerticalPanel
 		load();
 	}
 
+	protected int findChecked()
+	{
+		for (int row = 1; row < table.getRowCount() - 1; row++)
+			if (((RadioButton) table.getWidget(row, COL_RADIO)).getValue())
+				return row;
+		return -1;
+	}
+
 	protected native void reload() /*-{
 	   $wnd.location.reload();
 	  }-*/;
+
+	private Button getSubmitButton()
+	{
+		Button submit = new Button(constants.elegir(), new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				int rowWithCheckedRadio = findChecked();
+				long offerId;
+				if (rowWithCheckedRadio == -1)
+				{
+					Window.alert(constants.debeElegirOferta());
+					return;
+				}
+				else
+					offerId = Long.parseLong(((Hidden) table.getWidget(rowWithCheckedRadio, COL_HIDDEN)).getValue());
+				AsyncCallback<String> callback = new AsyncCallback<String>()
+				{
+					public void onFailure(Throwable caught)
+					{
+						Window.alert(constants.failChooseOffer());
+					}
+
+					public void onSuccess(String errMsg)
+					{
+						if (errMsg != null)
+							Window.alert(errMsg);
+						else
+							reload();
+					}
+				};
+				ClientUtils.getSoftmartService().chooseOffer(offerId, callback);
+			}
+		});
+		return submit;
+	}
 
 	private void load()
 	{
@@ -92,49 +136,5 @@ public class OffersWidget extends VerticalPanel
 			}
 		};
 		ClientUtils.getSoftmartService().getOffers(project, callback);
-	}
-
-	private Button getSubmitButton()
-	{
-		Button submit = new Button(constants.elegir(), new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				int rowWithCheckedRadio = findChecked();
-				long offerId;
-				if (rowWithCheckedRadio == -1)
-				{
-					Window.alert(constants.debeElegirOferta());
-					return;
-				}
-				else
-					offerId = Long.parseLong(((Hidden) table.getWidget(rowWithCheckedRadio, COL_HIDDEN)).getValue());
-				AsyncCallback<String> callback = new AsyncCallback<String>()
-				{
-					public void onFailure(Throwable caught)
-					{
-						Window.alert(constants.failChooseOffer());
-					}
-
-					public void onSuccess(String errMsg)
-					{
-						if (errMsg != null)
-							Window.alert(errMsg);
-						else
-							reload();
-					}
-				};
-				ClientUtils.getSoftmartService().chooseOffer(offerId, callback);
-			}
-		});
-		return submit;
-	}
-
-	protected int findChecked()
-	{
-		for (int row = 1; row < table.getRowCount() - 1; row++)
-			if (((RadioButton) table.getWidget(row, COL_RADIO)).getValue())
-				return row;
-		return -1;
 	}
 }

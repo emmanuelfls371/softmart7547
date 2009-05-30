@@ -28,12 +28,118 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class NewProjectWidget extends FormWidget
 {
-	private static NewProjectWidget instance;
-	private static final Format DATE_FORMAT = new DateFormat();
-	private SoftmartConstants constants;
-	private boolean hayRangos=false;
+	private enum ProjectFields implements FormFields
+	{
+		Nombre, Presupuesto, Fecha("Fecha de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
+				"Tama&ntilde;o"), Descripcion("Descripci&oacute;n"), Archivo("Archivo (opcional - m&aacute;ximo 5MB)");
 
-	protected Map<String, Float> mapMonedas = new HashMap<String, Float>();
+		public String description;
+
+		private ProjectFields()
+		{
+			description = name();
+		}
+
+		private ProjectFields(String description)
+		{
+			this.description = description;
+		}
+
+		public String getDescription()
+		{
+			return description;
+		}
+	}
+
+	private final class ProjectSubmitCompleteHandler implements SubmitCompleteHandler
+	{
+		public void onSubmitComplete(SubmitCompleteEvent event)
+		{
+			String results = event.getResults();
+			if (results.startsWith("OK:"))
+			{
+				((ProyectoDto) dto).setArchivo(results.split(":", 2)[1]);
+
+				ClientUtils.getSoftmartService().publicar((ProyectoDto) dto, new AsyncCallback<String>()
+				{
+					public void onFailure(Throwable caught)
+					{
+						Window.alert("Error inesperado, no se pudo publicar el proyecto");
+					}
+
+					public void onSuccess(String errMsg)
+					{
+						if (errMsg != null)
+							Window.alert(errMsg);
+						else
+						{
+							Window
+									.alert("Proyecto dado de alta, aparecerá en sus proyectos abiertos una vez revisado por el administrador del sistema");
+							reload();
+						}
+					}
+				});
+
+			}
+			else if (results.startsWith("ERROR:"))
+				Window.alert(results.split(":", 2)[1]);
+			else
+				Window.alert(results);
+		}
+	}
+
+	private final class ProjectSubmitHandler implements SubmitHandler
+	{
+		public void onSubmit(SubmitEvent event)
+		{
+			dto = new ProyectoDto();
+			ProyectoDto proyectoDto = (ProyectoDto) dto;
+			proyectoDto.setNombre(((TextBox) instance.widgets.get(ProjectFields.Nombre)).getText());
+
+			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
+
+			if (hayRangos)
+			{
+				ListBox lisRangos = (ListBox) panel.getWidget(1);
+				proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
+			}
+			ListBox lisMonedas = (ListBox) panel.getWidget(0);
+			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+
+			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
+			proyectoDto.setFecha(dateFecha.getValue());
+
+			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
+			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
+
+			FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
+			for (Widget widget : panelDificultad)
+			{
+				RadioButton b = (RadioButton) widget;
+				if (b.getValue())
+					proyectoDto.setDificultad(b.getHTML());
+			}
+
+			FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
+			for (Widget widget : panelTamanio)
+			{
+				RadioButton b = (RadioButton) widget;
+				if (b.getValue())
+					proyectoDto.setTamanio(b.getHTML());
+			}
+
+			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
+
+			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
+
+			if (!validate())
+				event.cancel();
+		}
+	}
+
+	private static NewProjectWidget instance;
+
+	private static final Format DATE_FORMAT = new DateFormat();
 
 	public static NewProjectWidget getInstance()
 	{
@@ -41,6 +147,12 @@ public class NewProjectWidget extends FormWidget
 			instance = new NewProjectWidget();
 		return instance;
 	}
+
+	private SoftmartConstants constants;
+
+	private boolean hayRangos = false;
+
+	protected Map<String, Float> mapMonedas = new HashMap<String, Float>();
 
 	private NewProjectWidget()
 	{
@@ -51,6 +163,20 @@ public class NewProjectWidget extends FormWidget
 		url = "newproject";
 		dto = new ProyectoDto();
 		init();
+	}
+
+	@Override
+	protected void buildWidget()
+	{
+		super.buildWidget();
+		addSubmitHandler(new ProjectSubmitHandler());
+		addSubmitCompleteHandler(new ProjectSubmitCompleteHandler());
+	}
+
+	@Override
+	protected IValidator<Dto> getValidator()
+	{
+		return GWT.create(ProyectoDto.class);
 	}
 
 	@Override
@@ -118,7 +244,7 @@ public class NewProjectWidget extends FormWidget
 				if (c != null)
 				{
 					ClientUtils.getSoftmartService().getPresupuestos(c, projectCallback);
-					hayRangos=true;
+					hayRangos = true;
 					horiz.add(lisRangos);
 				}
 			}
@@ -204,140 +330,17 @@ public class NewProjectWidget extends FormWidget
 	}
 
 	@Override
-	protected void buildWidget()
-	{
-		super.buildWidget();
-		addSubmitHandler(new ProjectSubmitHandler());
-		addSubmitCompleteHandler(new ProjectSubmitCompleteHandler());
-	}
-
-	@Override
 	protected void validate(List<String> errMsgs)
 	{
 		if (((ProyectoDto) dto).getFecha() == null)
 			errMsgs.add("Debe ingresar la fecha de cierre");
-		else{
-			if(((ProyectoDto) dto).getFecha().before(new Date())){
-				errMsgs.add("La fecha de cierre es anterior al día de hoy");
-			}
-		}
+		else if (((ProyectoDto) dto).getFecha().before(new Date()))
+			errMsgs.add("La fecha de cierre es anterior al día de hoy");
 	}
 
 	@Override
 	protected FormFields[] values()
 	{
 		return ProjectFields.values();
-	}
-
-	private final class ProjectSubmitHandler implements SubmitHandler
-	{
-		public void onSubmit(SubmitEvent event)
-		{
-			dto = new ProyectoDto();
-			ProyectoDto proyectoDto = (ProyectoDto) dto;
-			proyectoDto.setNombre(((TextBox) instance.widgets.get(ProjectFields.Nombre)).getText());
-
-			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
-
-			if(hayRangos){
-				ListBox lisRangos = (ListBox) panel.getWidget(1);
-				proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
-			}
-			ListBox lisMonedas = (ListBox) panel.getWidget(0);
-			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
-
-			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
-			proyectoDto.setFecha(dateFecha.getValue());
-			
-			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
-			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
-
-			FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
-			for (Widget widget : panelDificultad)
-			{
-				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					proyectoDto.setDificultad(b.getHTML());
-			}
-
-			FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
-			for (Widget widget : panelTamanio)
-			{
-				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					proyectoDto.setTamanio(b.getHTML());
-			}
-
-			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
-
-			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
-
-			if (!validate())
-				event.cancel();
-		}
-	}
-
-	private final class ProjectSubmitCompleteHandler implements SubmitCompleteHandler
-	{
-		public void onSubmitComplete(SubmitCompleteEvent event)
-		{
-			String results = event.getResults();
-			if (results.startsWith("OK:"))
-			{
-				((ProyectoDto) dto).setArchivo(results.split(":", 2)[1]);
-
-				ClientUtils.getSoftmartService().publicar((ProyectoDto) dto, new AsyncCallback<String>()
-				{
-					public void onFailure(Throwable caught)
-					{
-						Window.alert("Error inesperado, no se pudo publicar el proyecto");
-					}
-
-					public void onSuccess(String errMsg)
-					{
-						if (errMsg != null)
-							Window.alert(errMsg);
-						else{
-							Window.alert("Proyecto dado de alta, aparecerá en sus proyectos abiertos una vez revisado por el administrador del sistema");
-							reload();
-						}
-					}
-				});
-
-			}
-			else if (results.startsWith("ERROR:"))
-				Window.alert(results.split(":", 2)[1]);
-			else
-				Window.alert(results);
-		}
-	}
-
-	private enum ProjectFields implements FormFields
-	{
-		Nombre, Presupuesto, Fecha("Fecha de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
-				"Tama&ntilde;o"), Descripcion("Descripci&oacute;n"), Archivo("Archivo (opcional - m&aacute;ximo 5MB)");
-
-		private ProjectFields(String description)
-		{
-			this.description = description;
-		}
-
-		public String description;
-
-		private ProjectFields()
-		{
-			description = name();
-		}
-
-		public String getDescription()
-		{
-			return description;
-		}
-	}
-
-	@Override
-	protected IValidator<Dto> getValidator()
-	{
-		return GWT.create(ProyectoDto.class);
 	}
 }

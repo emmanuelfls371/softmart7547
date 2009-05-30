@@ -45,6 +45,22 @@ public abstract class AbstractDomainObject implements Serializable
 	}
 
 	/**
+	 * @return the version
+	 */
+	public Long getVersion()
+	{
+		return version;
+	}
+
+	/**
+	 * Setea a <tt>null</tt> el valor de todas las variables que sean de tipos de Hibernate y tengan lazy fetch para
+	 * evitar un error de seguridad al devolver el objeto a traves del response RPC
+	 */
+	public void prune()
+	{
+	}
+
+	/**
 	 * @param id
 	 *            the id to set
 	 */
@@ -54,27 +70,11 @@ public abstract class AbstractDomainObject implements Serializable
 	}
 
 	/**
-	 * @return the version
-	 */
-	public Long getVersion()
-	{
-		return version;
-	}
-
-	/**
 	 * @param version
 	 *            the version to set
 	 */
 	public void setVersion(Long version)
 	{
 		this.version = version;
-	}
-
-	/**
-	 * Setea a <tt>null</tt> el valor de todas las variables que sean de tipos de Hibernate y tengan lazy fetch para
-	 * evitar un error de seguridad al devolver el objeto a traves del response RPC
-	 */
-	public void prune()
-	{
 	}
 }

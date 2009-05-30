@@ -17,73 +17,26 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class NewCalificationWidget extends FormWidget
 {
-	private static NewCalificationWidget instance;
-	private List<String> errMsgs;
-	private long projectId;
-
-	public static NewCalificationWidget getInstance(Proyecto project)
+	private enum CalificacionFields implements FormFields
 	{
-		if (instance == null)
-			instance = new NewCalificationWidget();
-		((Label) instance.widgets.get(CalificacionFields.Proyecto)).setText(project.getNombre());
-		// ((Label) instance.widgets.get(CalificacionFields.Usuario)).setText(project.getUsuario().getLogin());
+		Proyecto, /* Usuario("Usuario a calificar"), */Calif("Calificaci&oacute;n"), Comentario;
 
-		instance.projectId = project.getId();
-		return instance;
-	}
+		public String description;
 
-	private NewCalificationWidget()
-	{
-		tituloWidget = "<b>Calificar</b>";
-		anchoWidget = "200px";
-		anchoTabla = "100px";
-		dto = new CalificacionDto();
-		errMsgs = new ArrayList<String>();
-		init();
-	}
+		private CalificacionFields()
+		{
+			description = name();
+		}
 
-	@Override
-	protected IValidator<Dto> getValidator()
-	{
-		return GWT.create(CalificacionDto.class);
-	}
+		private CalificacionFields(String description)
+		{
+			this.description = description;
+		}
 
-	@Override
-	protected void populateWidgets()
-	{
-		widgets.put(CalificacionFields.Proyecto, new Label());
-
-		// widgets.put(CalificacionFields.Usuario, new Label());
-
-		TextBox t = new TextBox();
-		t.setMaxLength(2);
-		t.setWidth("30px");
-		t.setName(CalificacionFields.Calif.toString());
-		widgets.put(CalificacionFields.Calif, t);
-
-		t = new TextBox();
-		t.setHeight("100px");
-		t.setName(CalificacionFields.Comentario.toString());
-		widgets.put(CalificacionFields.Comentario, t);
-	}
-
-	@Override
-	protected FormFields[] values()
-	{
-		return CalificacionFields.values();
-	}
-
-	@Override
-	protected void buildWidget()
-	{
-		super.buildWidget();
-		addSubmitHandler(new CalificacionSubmitHandler());
-	}
-
-	@Override
-	protected void validate(List<String> errMsgs)
-	{
-		errMsgs.addAll(this.errMsgs);
+		public String getDescription()
+		{
+			return description;
+		}
 	}
 
 	private final class CalificacionSubmitHandler implements SubmitHandler
@@ -128,25 +81,74 @@ public class NewCalificationWidget extends FormWidget
 		}
 	}
 
-	private enum CalificacionFields implements FormFields
+	private static NewCalificationWidget instance;
+
+	public static NewCalificationWidget getInstance(Proyecto project)
 	{
-		Proyecto, /* Usuario("Usuario a calificar"), */Calif("Calificaci&oacute;n"), Comentario;
+		if (instance == null)
+			instance = new NewCalificationWidget();
+		((Label) instance.widgets.get(CalificacionFields.Proyecto)).setText(project.getNombre());
+		// ((Label) instance.widgets.get(CalificacionFields.Usuario)).setText(project.getUsuario().getLogin());
 
-		private CalificacionFields(String description)
-		{
-			this.description = description;
-		}
+		instance.projectId = project.getId();
+		return instance;
+	}
 
-		public String description;
+	private List<String> errMsgs;
 
-		private CalificacionFields()
-		{
-			description = name();
-		}
+	private long projectId;
 
-		public String getDescription()
-		{
-			return description;
-		}
+	private NewCalificationWidget()
+	{
+		tituloWidget = "<b>Calificar</b>";
+		anchoWidget = "200px";
+		anchoTabla = "100px";
+		dto = new CalificacionDto();
+		errMsgs = new ArrayList<String>();
+		init();
+	}
+
+	@Override
+	protected void buildWidget()
+	{
+		super.buildWidget();
+		addSubmitHandler(new CalificacionSubmitHandler());
+	}
+
+	@Override
+	protected IValidator<Dto> getValidator()
+	{
+		return GWT.create(CalificacionDto.class);
+	}
+
+	@Override
+	protected void populateWidgets()
+	{
+		widgets.put(CalificacionFields.Proyecto, new Label());
+
+		// widgets.put(CalificacionFields.Usuario, new Label());
+
+		TextBox t = new TextBox();
+		t.setMaxLength(2);
+		t.setWidth("30px");
+		t.setName(CalificacionFields.Calif.toString());
+		widgets.put(CalificacionFields.Calif, t);
+
+		t = new TextBox();
+		t.setHeight("100px");
+		t.setName(CalificacionFields.Comentario.toString());
+		widgets.put(CalificacionFields.Comentario, t);
+	}
+
+	@Override
+	protected void validate(List<String> errMsgs)
+	{
+		errMsgs.addAll(this.errMsgs);
+	}
+
+	@Override
+	protected FormFields[] values()
+	{
+		return CalificacionFields.values();
 	}
 }

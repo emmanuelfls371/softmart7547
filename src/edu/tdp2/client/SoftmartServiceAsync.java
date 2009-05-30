@@ -19,71 +19,71 @@ import edu.tdp2.client.model.Usuario;
 
 public interface SoftmartServiceAsync
 {
-	public void login(String userName, String passwordHash, AsyncCallback<String> callback);
-
-	public void getPaises(AsyncCallback<List<String>> callback);
-
-	public void registrar(UsuarioDto usuario, AsyncCallback<String> callback);
-
-	public void publicar(ProyectoDto proyecto, AsyncCallback<String> callback);
-
-	public void getNiveles(AsyncCallback<List<String>> callback);
-
-	public void getPresupuestos(Float conversion, AsyncCallback<List<String>> callback);
-
-	public void getDificultades(AsyncCallback<List<String>> callback);
-
-	public void getTamanios(AsyncCallback<List<String>> callback);
-
-	public void ofertar(OfertaDto oferta, AsyncCallback<String> asyncCallback);
+	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
 
 	public void calificar(CalificacionDto calif, AsyncCallback<String> asyncCallback);
-
-	public void getUnassignedProjects(String usuario, AsyncCallback<List<Proyecto>> callback);
-
-	public void getQualifiableProjects(String user, AsyncCallback<List<Proyecto>> callback);
-
-	public void getOwnOpenProjects(String user, AsyncCallback<List<Proyecto>> callback);
-
-	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
-
-	public void getOfertaGanadora(Proyecto project, AsyncCallback<Oferta> callback);
-	
-	public void getOfertaGanadora(Long id, AsyncCallback<Oferta> callback);
-
-	public void chooseOffer(long offerId, AsyncCallback<String> callback);
-
-	public void getCalificacionesRecibidas(String user, AsyncCallback<List<ContratoDto>> callback);
-
-	public void getCalificacionesHechas(String user, AsyncCallback<List<ContratoDto>> callback);
 
 	public void cancelarProyecto(Long projectId, AsyncCallback<String> callback);
 
 	public void cancelarProyectoXAdmin(Long projectId, AsyncCallback<String> callback);
 
-	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
+	public void chooseOffer(long offerId, AsyncCallback<String> callback);
 
 	public void filterProject(FiltroDto filtro, AsyncCallback<SearchDto> callback);
 
-	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
+	public void getActiveProjects(AsyncCallback<List<Proyecto>> callback);
+
+	public void getCalificacionesHechas(String user, AsyncCallback<List<ContratoDto>> callback);
+
+	public void getCalificacionesRecibidas(String user, AsyncCallback<List<ContratoDto>> callback);
+
+	public void getDificultades(AsyncCallback<List<String>> callback);
+
+	public void getMyAccountData(String usuario, AsyncCallback<MyAccountDto> callback);
+
+	public void getNiveles(AsyncCallback<List<String>> callback);
 
 	public void getOfertaDeUsuario(Proyecto proyecto, String usuario, AsyncCallback<Oferta> callback);
 
-	public void setProyectoRevisado(Long projectId, Boolean value, AsyncCallback<String> callback);
+	public void getOfertaGanadora(Long id, AsyncCallback<Oferta> callback);
 
-	public void getActiveProjects(AsyncCallback<List<Proyecto>> callback);
+	public void getOfertaGanadora(Proyecto project, AsyncCallback<Oferta> callback);
 
-	public void update(UsuarioDto dto, String usuarioAnterior, AsyncCallback<String> callback);
+	public void getOffers(Proyecto project, AsyncCallback<List<Oferta>> callback);
+
+	public void getOwnOpenProjects(String user, AsyncCallback<List<Proyecto>> callback);
+
+	public void getPaises(AsyncCallback<List<String>> callback);
+
+	public void getPresupuestos(Float conversion, AsyncCallback<List<String>> callback);
+
+	public void getProyectosDestacados(AsyncCallback<List<Proyecto>> callback);
+
+	public void getQualifiableProjects(String user, AsyncCallback<List<Proyecto>> callback);
+
+	public void getTamanios(AsyncCallback<List<String>> callback);
+
+	public void getUnassignedProjects(String usuario, AsyncCallback<List<Proyecto>> callback);
 
 	public void getUsers(AsyncCallback<List<Usuario>> callback);
 
-	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
+	public void getUsuario(String login, AsyncCallback<String> callback);
 
 	public void isUsuarioBloqueado(String name, AsyncCallback<Boolean> callback);
-	
-	public void getUsuario(String login, AsyncCallback<String> callback);
-	
+
+	public void login(String userName, String passwordHash, AsyncCallback<String> callback);
+
+	public void ofertar(OfertaDto oferta, AsyncCallback<String> asyncCallback);
+
+	public void publicar(ProyectoDto proyecto, AsyncCallback<String> callback);
+
+	public void registrar(UsuarioDto usuario, AsyncCallback<String> callback);
+
 	public void setProyectoDestacado(Long projectId, Boolean value, AsyncCallback<String> callback);
-	
-	public void getProyectosDestacados(AsyncCallback<List<Proyecto>> callback);
+
+	public void setProyectoRevisado(Long projectId, Boolean value, AsyncCallback<String> callback);
+
+	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
+
+	public void update(UsuarioDto dto, String usuarioAnterior, AsyncCallback<String> callback);
 }

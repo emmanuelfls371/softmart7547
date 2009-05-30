@@ -61,17 +61,21 @@ public class Encrypter
 
 	}
 
-	private char[] getKey(char[] sourceKey)
+	public synchronized String decrypt(String str)
 	{
-		String definitiveKey = "";
-		int i = 0;
-		for (char aChar : sourceKey)
+		try
 		{
-			i++;
-			if (i % 5 == 0 || (i - 2) % 5 == 0 || (i - 3) % 5 == 0)
-				definitiveKey += aChar;
+			// Decode base64 to get bytes
+			byte[] dec = new EncryptionCodec().decode(str);
+
+			byte[] utf8 = dcipher.doFinal(dec); // Decrypt
+
+			return new String(utf8, "UTF8");
 		}
-		return definitiveKey.toCharArray();
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public synchronized String encrypt(String str)
@@ -91,20 +95,16 @@ public class Encrypter
 		}
 	}
 
-	public synchronized String decrypt(String str)
+	private char[] getKey(char[] sourceKey)
 	{
-		try
+		String definitiveKey = "";
+		int i = 0;
+		for (char aChar : sourceKey)
 		{
-			// Decode base64 to get bytes
-			byte[] dec = new EncryptionCodec().decode(str);
-
-			byte[] utf8 = dcipher.doFinal(dec); // Decrypt
-
-			return new String(utf8, "UTF8");
+			i++;
+			if (i % 5 == 0 || (i - 2) % 5 == 0 || (i - 3) % 5 == 0)
+				definitiveKey += aChar;
 		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
+		return definitiveKey.toCharArray();
 	}
 }

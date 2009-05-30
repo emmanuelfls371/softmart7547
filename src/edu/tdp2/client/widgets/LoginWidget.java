@@ -28,11 +28,11 @@ public class LoginWidget extends SimplePanel
 {
 	private static LoginWidget instance;
 	private static String currentUser;
-	private final TextBox userNameTextBox;
-	private final PasswordTextBox passwordTextBox;
-	private LoginListener loginListener;
-	private SoftmartConstants softmartConstants;
-	private LoginConstants constants;
+
+	public static String getCurrentUser()
+	{
+		return currentUser;
+	}
 
 	public static LoginWidget getInstance()
 	{
@@ -46,10 +46,14 @@ public class LoginWidget extends SimplePanel
 		LoginWidget.currentUser = currentUser;
 	}
 
-	public static String getCurrentUser()
-	{
-		return currentUser;
-	}
+	private final TextBox userNameTextBox;
+	private final PasswordTextBox passwordTextBox;
+
+	private LoginListener loginListener;
+
+	private SoftmartConstants softmartConstants;
+
+	private LoginConstants constants;
 
 	private LoginWidget()
 	{
@@ -60,6 +64,21 @@ public class LoginWidget extends SimplePanel
 		passwordTextBox = new PasswordTextBox();
 		passwordTextBox.setWidth("200px");
 		buildWidget();
+	}
+
+	public TextBox getPasswordTextBox()
+	{
+		return passwordTextBox;
+	}
+
+	public TextBox getUserNameTextBox()
+	{
+		return userNameTextBox;
+	}
+
+	public void setLoginListener(LoginListener loginListener)
+	{
+		this.loginListener = loginListener;
 	}
 
 	private void buildWidget()
@@ -73,21 +92,6 @@ public class LoginWidget extends SimplePanel
 		panel.add(table);
 		add(panel);
 
-	}
-
-	private FlexTable getTable()
-	{
-		FlexTable table = new FlexTable();
-		HTML prompt = new HTML(constants.inicieSesion());
-		prompt.setWidth("150px");
-		table.setWidget(0, 0, prompt);
-		table.setWidget(1, 1, getRegisterLink());
-		table.setWidget(2, 0, new HTML(constants.usuario()));
-		table.setWidget(2, 1, userNameTextBox);
-		table.setWidget(3, 0, new HTML(constants.contrasena()));
-		table.setWidget(3, 1, passwordTextBox);
-		table.setWidget(4, 1, getSubmitPanel());
-		return table;
 	}
 
 	private Widget getRegisterLink()
@@ -147,18 +151,18 @@ public class LoginWidget extends SimplePanel
 		return submitPanel;
 	}
 
-	public TextBox getUserNameTextBox()
+	private FlexTable getTable()
 	{
-		return userNameTextBox;
-	}
-
-	public TextBox getPasswordTextBox()
-	{
-		return passwordTextBox;
-	}
-
-	public void setLoginListener(LoginListener loginListener)
-	{
-		this.loginListener = loginListener;
+		FlexTable table = new FlexTable();
+		HTML prompt = new HTML(constants.inicieSesion());
+		prompt.setWidth("150px");
+		table.setWidget(0, 0, prompt);
+		table.setWidget(1, 1, getRegisterLink());
+		table.setWidget(2, 0, new HTML(constants.usuario()));
+		table.setWidget(2, 1, userNameTextBox);
+		table.setWidget(3, 0, new HTML(constants.contrasena()));
+		table.setWidget(3, 1, passwordTextBox);
+		table.setWidget(4, 1, getSubmitPanel());
+		return table;
 	}
 }

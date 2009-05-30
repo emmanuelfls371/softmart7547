@@ -1,6 +1,5 @@
 package edu.tdp2.client.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +26,27 @@ public class Calificacion extends AbstractDomainObject
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "califAlVendedor")
 	private Contrato contratoVendedor;
 
+	public Calificacion()
+	{
+	}
+
+	public Calificacion(CalificacionDto dto, Contrato c)
+	{
+		setCalificacion(dto.getCalificacion());
+		setComentario(dto.getComentario());
+		setContrato(c);
+	}
+
+	public int getCalificacion()
+	{
+		return calificacion;
+	}
+
+	public String getComentario()
+	{
+		return comentario;
+	}
+
 	public Contrato getContrato()
 	{
 		if (contratoVendedor == null)
@@ -39,35 +59,14 @@ public class Calificacion extends AbstractDomainObject
 		contratoVendedor = contratoComprador = contrato;
 	}
 
-	public Calificacion()
-	{
-	}
-
-	public Calificacion(CalificacionDto dto, Contrato c)
-	{
-		setCalificacion(dto.getCalificacion());
-		setComentario(dto.getComentario());
-		setContrato(c);
-	}
-
-	private void setComentario(String comentario)
-	{
-		this.comentario = comentario;
-	}
-
-	public String getComentario()
-	{
-		return comentario;
-	}
-
 	private void setCalificacion(int calificacion)
 	{
 		this.calificacion = calificacion;
 	}
 
-	public int getCalificacion()
+	private void setComentario(String comentario)
 	{
-		return calificacion;
+		this.comentario = comentario;
 	}
 
 }

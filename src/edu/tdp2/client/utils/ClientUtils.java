@@ -20,12 +20,12 @@ import edu.tdp2.client.model.Proyecto;
 
 public class ClientUtils
 {
-	public static SoftmartServiceAsync getSoftmartService()
+	public static <T> T coalesce(T... ts)
 	{
-		final SoftmartServiceAsync softmartService = (SoftmartServiceAsync) GWT.create(SoftmartService.class);
-		ServiceDefTarget endpoint = (ServiceDefTarget) softmartService;
-		endpoint.setServiceEntryPoint(GWT.getModuleBaseURL() + "softmart");
-		return softmartService;
+		for (T t : ts)
+			if (t != null)
+				return t;
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -60,14 +60,6 @@ public class ClientUtils
 		return back;
 	}
 
-	public static <T> T coalesce(T... ts)
-	{
-		for (T t : ts)
-			if (t != null)
-				return t;
-		return null;
-	}
-
 	public static ClickHandler getHandlerForProjects(final ProjectList projects,
 			final OneParamDelegate<Proyecto> delegate)
 	{
@@ -82,5 +74,13 @@ public class ClientUtils
 					delegate.invoke(proyecto);
 			}
 		};
+	}
+
+	public static SoftmartServiceAsync getSoftmartService()
+	{
+		final SoftmartServiceAsync softmartService = (SoftmartServiceAsync) GWT.create(SoftmartService.class);
+		ServiceDefTarget endpoint = (ServiceDefTarget) softmartService;
+		endpoint.setServiceEntryPoint(GWT.getModuleBaseURL() + "softmart");
+		return softmartService;
 	}
 }

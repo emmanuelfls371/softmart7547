@@ -24,74 +24,10 @@ public class FiltroDto implements IValidatable, Serializable, Dto
 	private String reputacion;
 	private String usuario;
 
-	public String getPresupuestoDesde()
+	public FiltroDto()
 	{
-		return presupuestoDesde;
-	}
-
-	public void setPresupuestoDesde(String presupuestoDesde)
-	{
-		this.presupuestoDesde = presupuestoDesde;
-	}
-
-	public String getPresupuestoHasta()
-	{
-		return presupuestoHasta;
-	}
-
-	public void setPresupuestoHasta(String presupuestoHasta)
-	{
-		this.presupuestoHasta = presupuestoHasta;
-	}
-
-	public Date getFechaDesde()
-	{
-		return fechaDesde;
-	}
-
-	public void setFechaDesde(Date fechaDesde)
-	{
-		this.fechaDesde = fechaDesde;
-	}
-
-	public Date getFechaHasta()
-	{
-		return fechaHasta;
-	}
-
-	public void setFechaHasta(Date fechaHasta)
-	{
-		this.fechaHasta = fechaHasta;
-	}
-
-	public String getMoneda()
-	{
-		return moneda;
-	}
-
-	public void setMoneda(String moneda)
-	{
-		this.moneda = moneda;
-	}
-
-	public List<String> getTamanio()
-	{
-		return tamanio;
-	}
-
-	public void addTamanio(String tamanio)
-	{
-		this.tamanio.add(tamanio);
-	}
-
-	public String getReputacion()
-	{
-		return reputacion;
-	}
-
-	public void setReputacion(String reputacion)
-	{
-		this.reputacion = reputacion;
+		complejidad = new ArrayList<String>();
+		tamanio = new ArrayList<String>();
 	}
 
 	public void addComplejidad(String complejidad)
@@ -99,14 +35,49 @@ public class FiltroDto implements IValidatable, Serializable, Dto
 		this.complejidad.add(complejidad);
 	}
 
+	public void addTamanio(String tamanio)
+	{
+		this.tamanio.add(tamanio);
+	}
+
 	public List<String> getComplejidad()
 	{
 		return complejidad;
 	}
 
-	public void setUsuario(String usuario)
+	public Date getFechaDesde()
 	{
-		this.usuario = usuario;
+		return fechaDesde;
+	}
+
+	public Date getFechaHasta()
+	{
+		return fechaHasta;
+	}
+
+	public String getMoneda()
+	{
+		return moneda;
+	}
+
+	public String getPresupuestoDesde()
+	{
+		return presupuestoDesde;
+	}
+
+	public String getPresupuestoHasta()
+	{
+		return presupuestoHasta;
+	}
+
+	public String getReputacion()
+	{
+		return reputacion;
+	}
+
+	public List<String> getTamanio()
+	{
+		return tamanio;
 	}
 
 	public String getUsuario()
@@ -114,10 +85,39 @@ public class FiltroDto implements IValidatable, Serializable, Dto
 		return usuario;
 	}
 
-	public FiltroDto()
+	public void setFechaDesde(Date fechaDesde)
 	{
-		complejidad = new ArrayList<String>();
-		tamanio = new ArrayList<String>();
+		this.fechaDesde = fechaDesde;
+	}
+
+	public void setFechaHasta(Date fechaHasta)
+	{
+		this.fechaHasta = fechaHasta;
+	}
+
+	public void setMoneda(String moneda)
+	{
+		this.moneda = moneda;
+	}
+
+	public void setPresupuestoDesde(String presupuestoDesde)
+	{
+		this.presupuestoDesde = presupuestoDesde;
+	}
+
+	public void setPresupuestoHasta(String presupuestoHasta)
+	{
+		this.presupuestoHasta = presupuestoHasta;
+	}
+
+	public void setReputacion(String reputacion)
+	{
+		this.reputacion = reputacion;
+	}
+
+	public void setUsuario(String usuario)
+	{
+		this.usuario = usuario;
 	}
 
 }

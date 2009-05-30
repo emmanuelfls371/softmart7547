@@ -28,7 +28,7 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 	@NotEmpty(message = "Debe ingresar el nombre de usuario")
 	@NotNull
 	private String usuario;
-	
+
 	@NotEmpty(message = "Debe ingresar la clave")
 	// En realidad solo se guarda el hash de la clave, no la clave
 	private String clave;
@@ -49,54 +49,9 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 
 	private String logo;
 
-	public String getNombre()
-	{
-		return nombre;
-	}
-
-	public void setNombre(String nombre)
-	{
-		this.nombre = nombre;
-	}
-
 	public String getApellido()
 	{
 		return apellido;
-	}
-
-	public void setApellido(String apellido)
-	{
-		this.apellido = apellido;
-	}
-
-	public String getUsuario()
-	{
-		return usuario;
-	}
-
-	public void setUsuario(String usuario)
-	{
-		this.usuario = usuario;
-	}
-
-	public String getClave()
-	{
-		return clave;
-	}
-
-	public void setClave(String clave)
-	{
-		this.clave = clave.isEmpty() ? "" : MD5.md5(clave);
-	}
-
-	public Serializable getPais()
-	{
-		return pais;
-	}
-
-	public void setPais(Serializable pais)
-	{
-		this.pais = pais;
 	}
 
 	public String getCiudad()
@@ -104,9 +59,9 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 		return ciudad;
 	}
 
-	public void setCiudad(String ciudad)
+	public String getClave()
 	{
-		this.ciudad = ciudad;
+		return clave;
 	}
 
 	public String getCodPostal()
@@ -114,19 +69,14 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 		return codPostal;
 	}
 
-	public void setCodPostal(String codigoPostal)
-	{
-		codPostal = codigoPostal;
-	}
-
 	public String getDescripPerfil()
 	{
 		return descripPerfil;
 	}
 
-	public void setDescripPerfil(String descripPerfil)
+	public String getEmail()
 	{
-		this.descripPerfil = descripPerfil;
+		return email;
 	}
 
 	public String getLogo()
@@ -134,9 +84,44 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 		return logo;
 	}
 
-	public void setLogo(String logo)
+	public String getNombre()
 	{
-		this.logo = logo;
+		return nombre;
+	}
+
+	public Serializable getPais()
+	{
+		return pais;
+	}
+
+	public String getUsuario()
+	{
+		return usuario;
+	}
+
+	public void setApellido(String apellido)
+	{
+		this.apellido = apellido;
+	}
+
+	public void setCiudad(String ciudad)
+	{
+		this.ciudad = ciudad;
+	}
+
+	public void setClave(String clave)
+	{
+		this.clave = clave.isEmpty() ? "" : MD5.md5(clave);
+	}
+
+	public void setCodPostal(String codigoPostal)
+	{
+		codPostal = codigoPostal;
+	}
+
+	public void setDescripPerfil(String descripPerfil)
+	{
+		this.descripPerfil = descripPerfil;
 	}
 
 	public void setEmail(String email)
@@ -144,8 +129,23 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 		this.email = email;
 	}
 
-	public String getEmail()
+	public void setLogo(String logo)
 	{
-		return email;
+		this.logo = logo;
+	}
+
+	public void setNombre(String nombre)
+	{
+		this.nombre = nombre;
+	}
+
+	public void setPais(Serializable pais)
+	{
+		this.pais = pais;
+	}
+
+	public void setUsuario(String usuario)
+	{
+		this.usuario = usuario;
 	}
 }

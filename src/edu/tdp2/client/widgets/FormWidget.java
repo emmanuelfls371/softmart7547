@@ -33,10 +33,6 @@ public abstract class FormWidget extends FormPanel
 	protected Dto dto;
 	protected Map<FormFields, Widget> widgets = new HashMap<FormFields, Widget>();
 
-	protected native void reload() /*-{
-	  $wnd.location.reload();
-	  }-*/;
-
 	protected void buildWidget()
 	{
 		VerticalPanel panel = new VerticalPanel();
@@ -46,7 +42,77 @@ public abstract class FormWidget extends FormPanel
 		add(panel);
 	}
 
+	protected abstract IValidator<Dto> getValidator();
+
+	protected void init()
+	{
+		setMethod(METHOD_POST);
+		setEncoding(FormPanel.ENCODING_MULTIPART);
+		setAction(GWT.getModuleBaseURL() + url);
+		populateWidgets();
+		buildWidget();
+	}
+
+	protected abstract void populateWidgets();
+
+	protected native void reload() /*-{
+	  $wnd.location.reload();
+	  }-*/;
+
+	protected final boolean validate()
+	{
+		List<String> errMsgs = createErrorMessage();
+		validate(errMsgs);
+		return buildErrorMessage(errMsgs);
+	}
+
+	protected abstract void validate(List<String> errMsgs);
+
 	protected abstract FormFields[] values();
+
+	private boolean buildErrorMessage(List<String> errMsgs)
+	{
+		if (errMsgs.size() > 0)
+		{
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < errMsgs.size(); i++)
+			{
+				if (i > 0)
+					sb.append('\n');
+				sb.append(errMsgs.get(i));
+			}
+			Window.alert(sb.toString());
+			return false;
+		}
+		return true;
+	}
+
+	private List<String> createErrorMessage()
+	{
+		List<String> errMsgs = new ArrayList<String>();
+		errMsgs.clear();
+
+		IValidator<Dto> validator = getValidator();
+		for (InvalidConstraint<Dto> error : validator.validate(dto))
+			errMsgs.add(error.getMessage());
+		return errMsgs;
+	}
+
+	private HorizontalPanel getSubmitPanel()
+	{
+		HorizontalPanel submitPanel = new HorizontalPanel();
+		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		submitPanel.setWidth("100%");
+		Button submit = new Button("Entrar", new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				submit();
+			}
+		});
+		submitPanel.add(submit);
+		return submitPanel;
+	}
 
 	private FlexTable getTable()
 	{
@@ -67,70 +133,4 @@ public abstract class FormWidget extends FormPanel
 		table.setWidth(anchoTabla);
 		return table;
 	}
-
-	protected void init()
-	{
-		setMethod(METHOD_POST);
-		setEncoding(FormPanel.ENCODING_MULTIPART);
-		setAction(GWT.getModuleBaseURL() + url);
-		populateWidgets();
-		buildWidget();
-	}
-
-	protected abstract void populateWidgets();
-
-	private HorizontalPanel getSubmitPanel()
-	{
-		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-		submitPanel.setWidth("100%");
-		Button submit = new Button("Entrar", new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				submit();
-			}
-		});
-		submitPanel.add(submit);
-		return submitPanel;
-	}
-
-	private List<String> createErrorMessage()
-	{
-		List<String> errMsgs = new ArrayList<String>();
-		errMsgs.clear();
-
-		IValidator<Dto> validator = getValidator();
-		for (InvalidConstraint<Dto> error : validator.validate(dto))
-			errMsgs.add(error.getMessage());
-		return errMsgs;
-	}
-
-	protected abstract IValidator<Dto> getValidator();
-
-	private boolean buildErrorMessage(List<String> errMsgs)
-	{
-		if (errMsgs.size() > 0)
-		{
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < errMsgs.size(); i++)
-			{
-				if (i > 0)
-					sb.append('\n');
-				sb.append(errMsgs.get(i));
-			}
-			Window.alert(sb.toString());
-			return false;
-		}
-		return true;
-	}
-
-	protected final boolean validate()
-	{
-		List<String> errMsgs = createErrorMessage();
-		validate(errMsgs);
-		return buildErrorMessage(errMsgs);
-	}
-
-	protected abstract void validate(List<String> errMsgs);
 }

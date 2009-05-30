@@ -5,16 +5,16 @@ public enum TipoCalificacion
 
 	Recibida("De"), Hecha("A");
 
-	private TipoCalificacion(String description)
-	{
-		this.description = description;
-	}
-
 	private String description;
 
 	private TipoCalificacion()
 	{
 		description = name();
+	}
+
+	private TipoCalificacion(String description)
+	{
+		this.description = description;
 	}
 
 	public String getDescription()

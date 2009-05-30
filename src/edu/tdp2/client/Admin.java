@@ -14,7 +14,6 @@ import edu.tdp2.client.widgets.AdminWidget;
 public class Admin implements EntryPoint
 {
 	private DecoratedTabPanel centerPanel;
-	
 
 	public void onModuleLoad()
 	{
@@ -23,26 +22,25 @@ public class Admin implements EntryPoint
 		DockPanel dPanel = new DockPanel();
 		centerPanel = new DecoratedTabPanel();
 		centerPanel.setSize("100%", "450px");
-		
+
 		dPanel.add(centerPanel, DockPanel.CENTER);
 		centerPanel.setAnimationEnabled(true);
-		
-		
+
 		HorizontalPanel hPanel = new HorizontalPanel();
 		hPanel.add(dPanel);
 		hPanel.setWidth("100%");
 		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
-		
+
 		RootPanel.get().add(hPanel);
 
 		AdminWidget w = AdminProjectsWidget.getInstance();
 		w.setContainer(centerPanel);
 		w.load();
-		
+
 		AdminWidget w2 = AdminUsersWidget.getInstance();
 		w2.setContainer(centerPanel);
 		w2.load();
-		
+
 		centerPanel.selectTab(0);
 
 	}

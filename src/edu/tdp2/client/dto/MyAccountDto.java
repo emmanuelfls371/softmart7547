@@ -22,34 +22,9 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 	private MyVendedorAccount datosVendedor = new MyVendedorAccount();
 	private MyCompradorAccount datosComprador = new MyCompradorAccount();
 
-	public NivelReputacion getNivel()
+	public String getApellido()
 	{
-		return nivel;
-	}
-
-	public void setNivel(NivelReputacion nivel)
-	{
-		this.nivel = nivel;
-	}
-
-	public String getNombre()
-	{
-		return nombre;
-	}
-
-	public void setNombre(String nombre)
-	{
-		this.nombre = nombre;
-	}
-
-	public String getPais()
-	{
-		return pais;
-	}
-
-	public void setPais(String pais)
-	{
-		this.pais = pais;
+		return apellido;
 	}
 
 	public String getCiudad()
@@ -57,34 +32,9 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 		return ciudad;
 	}
 
-	public void setCiudad(String ciudad)
+	public String getCodigoPostal()
 	{
-		this.ciudad = ciudad;
-	}
-
-	public String getEmail()
-	{
-		return email;
-	}
-
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
-	public String getUsuario()
-	{
-		return usuario;
-	}
-
-	public void setUsuario(String usuario)
-	{
-		this.usuario = usuario;
-	}
-
-	public MyVendedorAccount getDatosVendedor()
-	{
-		return datosVendedor;
+		return codigoPostal;
 	}
 
 	public MyCompradorAccount getDatosComprador()
@@ -92,29 +42,9 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 		return datosComprador;
 	}
 
-	public void setDatosVendedor(MyVendedorAccount datosVendedor)
+	public MyVendedorAccount getDatosVendedor()
 	{
-		this.datosVendedor = datosVendedor;
-	}
-
-	public void setDatosComprador(MyCompradorAccount datosComprador)
-	{
-		this.datosComprador = datosComprador;
-	}
-
-	public void setApellido(String apellido)
-	{
-		this.apellido = apellido;
-	}
-
-	public String getApellido()
-	{
-		return apellido;
-	}
-
-	public void setDescripcion(String descripcion)
-	{
-		this.descripcion = descripcion;
+		return datosVendedor;
 	}
 
 	public String getDescripcion()
@@ -122,13 +52,83 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 		return descripcion;
 	}
 
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public NivelReputacion getNivel()
+	{
+		return nivel;
+	}
+
+	public String getNombre()
+	{
+		return nombre;
+	}
+
+	public String getPais()
+	{
+		return pais;
+	}
+
+	public String getUsuario()
+	{
+		return usuario;
+	}
+
+	public void setApellido(String apellido)
+	{
+		this.apellido = apellido;
+	}
+
+	public void setCiudad(String ciudad)
+	{
+		this.ciudad = ciudad;
+	}
+
 	public void setCodigoPostal(String codigoPostal)
 	{
 		this.codigoPostal = codigoPostal;
 	}
 
-	public String getCodigoPostal()
+	public void setDatosComprador(MyCompradorAccount datosComprador)
 	{
-		return codigoPostal;
+		this.datosComprador = datosComprador;
+	}
+
+	public void setDatosVendedor(MyVendedorAccount datosVendedor)
+	{
+		this.datosVendedor = datosVendedor;
+	}
+
+	public void setDescripcion(String descripcion)
+	{
+		this.descripcion = descripcion;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+
+	public void setNivel(NivelReputacion nivel)
+	{
+		this.nivel = nivel;
+	}
+
+	public void setNombre(String nombre)
+	{
+		this.nombre = nombre;
+	}
+
+	public void setPais(String pais)
+	{
+		this.pais = pais;
+	}
+
+	public void setUsuario(String usuario)
+	{
+		this.usuario = usuario;
 	}
 }

@@ -9,14 +9,14 @@ public class SoftmartServerException extends RuntimeException
 		super();
 	}
 
-	public SoftmartServerException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
 	public SoftmartServerException(String message)
 	{
 		super(message);
+	}
+
+	public SoftmartServerException(String message, Throwable cause)
+	{
+		super(message, cause);
 	}
 
 	public SoftmartServerException(Throwable cause)

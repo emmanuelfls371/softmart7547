@@ -69,6 +69,38 @@ public class FileUploadServlet extends HttpServlet
 		out.close();
 	}
 
+	private int getMaxLen(String fieldName)
+	{
+		int maxLen;
+		if (fieldName.equals(LOGO_FIELD_NAME))
+			maxLen = MAX_LEN_LOGO;
+		else if (fieldName.equals(PROJECT_FILE_FIELD_NAME))
+			maxLen = MAX_LEN_PROJECT_FILE;
+		else
+			throw new IllegalArgumentException("Nombre inesperado para el campo que contiene el archivo subido: "
+					+ fieldName);
+		return maxLen;
+	}
+
+	private String getMD5(InputStream is) throws NoSuchAlgorithmException
+	{
+		MessageDigest digest = MessageDigest.getInstance("MD5");
+		byte[] buffer = new byte[8192];
+		int read = 0;
+		try
+		{
+			while ((read = is.read(buffer)) > 0)
+				digest.update(buffer, 0, read);
+			byte[] md5sum = digest.digest();
+			BigInteger bigInt = new BigInteger(1, md5sum);
+			return bigInt.toString(16);
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("No pude extraer el MD5 del archivo", e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private String tryUploadFile(HttpServletRequest req) throws Exception
 	{
@@ -102,37 +134,5 @@ public class FileUploadServlet extends HttpServlet
 			break; // No voy a subir mas de un archivo
 		}
 		return fileName;
-	}
-
-	private int getMaxLen(String fieldName)
-	{
-		int maxLen;
-		if (fieldName.equals(LOGO_FIELD_NAME))
-			maxLen = MAX_LEN_LOGO;
-		else if (fieldName.equals(PROJECT_FILE_FIELD_NAME))
-			maxLen = MAX_LEN_PROJECT_FILE;
-		else
-			throw new IllegalArgumentException("Nombre inesperado para el campo que contiene el archivo subido: "
-					+ fieldName);
-		return maxLen;
-	}
-
-	private String getMD5(InputStream is) throws NoSuchAlgorithmException
-	{
-		MessageDigest digest = MessageDigest.getInstance("MD5");
-		byte[] buffer = new byte[8192];
-		int read = 0;
-		try
-		{
-			while ((read = is.read(buffer)) > 0)
-				digest.update(buffer, 0, read);
-			byte[] md5sum = digest.digest();
-			BigInteger bigInt = new BigInteger(1, md5sum);
-			return bigInt.toString(16);
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("No pude extraer el MD5 del archivo", e);
-		}
 	}
 }

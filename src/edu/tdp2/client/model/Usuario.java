@@ -61,54 +61,6 @@ public class Usuario extends AbstractDomainObject
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
 	private List<Oferta> ofertas;
 
-	public boolean existe(Oferta of)
-	{
-		if (of != null)
-		{
-			for (Oferta oferta : ofertas)
-				if (oferta.equals(of))
-					return true;
-			return false;
-		}
-		else
-			return false;
-	}
-
-	public boolean addOferta(Oferta of)
-	{
-		if (of != null && !existe(of))
-		{
-			ofertas.add(of);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	public boolean existe(Proyecto proy)
-	{
-		if (proy != null)
-		{
-			for (Proyecto proyecto : proyectos)
-				if (proyecto.getNombre().equals(proy.getNombre()))
-					return true;
-			return false;
-		}
-		else
-			return false;
-	}
-
-	public boolean addProyecto(Proyecto proy)
-	{
-		if (proy != null && !existe(proy))
-		{
-			proyectos.add(proy);
-			return true;
-		}
-		else
-			return false;
-	}
-
 	public Usuario()
 	{
 	}
@@ -128,34 +80,57 @@ public class Usuario extends AbstractDomainObject
 		nivel = "Normal";
 	}
 
+	public boolean addOferta(Oferta of)
+	{
+		if (of != null && !existe(of))
+		{
+			ofertas.add(of);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public boolean addProyecto(Proyecto proy)
+	{
+		if (proy != null && !existe(proy))
+		{
+			proyectos.add(proy);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public boolean existe(Oferta of)
+	{
+		if (of != null)
+		{
+			for (Oferta oferta : ofertas)
+				if (oferta.equals(of))
+					return true;
+			return false;
+		}
+		else
+			return false;
+	}
+
+	public boolean existe(Proyecto proy)
+	{
+		if (proy != null)
+		{
+			for (Proyecto proyecto : proyectos)
+				if (proyecto.getNombre().equals(proy.getNombre()))
+					return true;
+			return false;
+		}
+		else
+			return false;
+	}
+
 	public String getApellido()
 	{
 		return apellido;
-	}
-
-	public void setApellido(String apellido)
-	{
-		this.apellido = apellido;
-	}
-
-	public String getEmail()
-	{
-		return email;
-	}
-
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
-	public String getLogin()
-	{
-		return login;
-	}
-
-	public void setLogin(String login)
-	{
-		this.login = login;
 	}
 
 	public String getCiudad()
@@ -163,54 +138,9 @@ public class Usuario extends AbstractDomainObject
 		return ciudad;
 	}
 
-	public void setCiudad(String ciudad)
-	{
-		this.ciudad = ciudad;
-	}
-
-	public String getNombre()
-	{
-		return nombre;
-	}
-
-	public void setNombre(String nombre)
-	{
-		this.nombre = nombre;
-	}
-
-	public void setPasswordHash(String passwordHash)
-	{
-		this.passwordHash = passwordHash;
-	}
-
-	public String getPasswordHash()
-	{
-		return passwordHash;
-	}
-
-	public void setPais(Pais pais)
-	{
-		this.pais = pais;
-	}
-
-	public Pais getPais()
-	{
-		return pais;
-	}
-
-	public void setCodPostal(String codPostal)
-	{
-		this.codPostal = codPostal;
-	}
-
 	public String getCodPostal()
 	{
 		return codPostal;
-	}
-
-	public void setDescripPerfil(String descripPerfil)
-	{
-		this.descripPerfil = descripPerfil;
 	}
 
 	public String getDescripPerfil()
@@ -218,14 +148,14 @@ public class Usuario extends AbstractDomainObject
 		return descripPerfil;
 	}
 
-	public void setPathLogo(String pathLogo)
+	public String getEmail()
 	{
-		this.pathLogo = pathLogo;
+		return email;
 	}
 
-	public String getPathLogo()
+	public String getLogin()
 	{
-		return pathLogo;
+		return login;
 	}
 
 	public String getNivel()
@@ -233,14 +163,24 @@ public class Usuario extends AbstractDomainObject
 		return nivel;
 	}
 
-	public void setNivel(String nivel)
+	public String getNombre()
 	{
-		this.nivel = nivel;
+		return nombre;
 	}
 
-	public void setBloqueado(boolean bloqueado)
+	public Pais getPais()
 	{
-		this.bloqueado = bloqueado;
+		return pais;
+	}
+
+	public String getPasswordHash()
+	{
+		return passwordHash;
+	}
+
+	public String getPathLogo()
+	{
+		return pathLogo;
 	}
 
 	public boolean isBloqueado()
@@ -254,5 +194,65 @@ public class Usuario extends AbstractDomainObject
 		proyectos = null;
 		pais = null;
 		ofertas = null;
+	}
+
+	public void setApellido(String apellido)
+	{
+		this.apellido = apellido;
+	}
+
+	public void setBloqueado(boolean bloqueado)
+	{
+		this.bloqueado = bloqueado;
+	}
+
+	public void setCiudad(String ciudad)
+	{
+		this.ciudad = ciudad;
+	}
+
+	public void setCodPostal(String codPostal)
+	{
+		this.codPostal = codPostal;
+	}
+
+	public void setDescripPerfil(String descripPerfil)
+	{
+		this.descripPerfil = descripPerfil;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+
+	public void setLogin(String login)
+	{
+		this.login = login;
+	}
+
+	public void setNivel(String nivel)
+	{
+		this.nivel = nivel;
+	}
+
+	public void setNombre(String nombre)
+	{
+		this.nombre = nombre;
+	}
+
+	public void setPais(Pais pais)
+	{
+		this.pais = pais;
+	}
+
+	public void setPasswordHash(String passwordHash)
+	{
+		this.passwordHash = passwordHash;
+	}
+
+	public void setPathLogo(String pathLogo)
+	{
+		this.pathLogo = pathLogo;
 	}
 }
