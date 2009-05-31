@@ -39,9 +39,9 @@ public class SearchWidget extends NavigablePanel
 {
 	private enum SearchFields implements FormFields
 	{
-		Presupuesto(constants.presupuestoDesdeHasta()), FechaDesde(constants.fechaDesdeCierre()), FechaHasta(  
-				constants.fechaHastaCierre()), Nivel(constants.reputacion()), Dificultad(constants.dificultad()), Tamanio(   
-				constants.tamano()); 
+		Presupuesto(constants.presupuestoDesdeHasta()), FechaDesde(constants.fechaDesdeCierre()), FechaHasta(constants
+				.fechaHastaCierre()), Nivel(constants.reputacion()), Dificultad(constants.dificultad()), Tamanio(
+				constants.tamano());
 
 		public String description;
 
@@ -74,9 +74,9 @@ public class SearchWidget extends NavigablePanel
 	public SearchWidget()
 	{
 		softmartConstants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
-		tituloWidget = constants.busquedaFiltros(); 
-		anchoWidget = "200px"; 
-		anchoTabla = "200px"; 
+		tituloWidget = constants.busquedaFiltros();
+		anchoWidget = "200px";
+		anchoTabla = "200px";
 		dto = new FiltroDto();
 		init();
 	}
@@ -90,7 +90,7 @@ public class SearchWidget extends NavigablePanel
 		t.setName(SearchFields.Presupuesto.toString());
 		horiz.add(t);
 
-		horiz.add(new HTML(" - ")); 
+		horiz.add(new HTML(" - "));
 
 		TextBox t2 = new TextBox();
 		t2.setMaxLength(10);
@@ -103,7 +103,7 @@ public class SearchWidget extends NavigablePanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert(constants.failGetMonedas()); 
+				Window.alert(constants.failGetMonedas());
 			}
 
 			public void onSuccess(List<Moneda> monedas)
@@ -111,7 +111,7 @@ public class SearchWidget extends NavigablePanel
 				lisMonedas.setName(SearchFields.Presupuesto.toString());
 
 				lisMonedas.clear();
-				lisMonedas.addItem(constants.elijaMoneda(), "");  
+				lisMonedas.addItem(constants.elijaMoneda(), "");
 				for (Moneda moneda : monedas)
 					lisMonedas.addItem(moneda.getDescription(), moneda.getDescription());
 				horiz.add(lisMonedas);
@@ -137,13 +137,13 @@ public class SearchWidget extends NavigablePanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert(constants.failGetNiveles()); 
+				Window.alert(constants.failGetNiveles());
 			}
 
 			public void onSuccess(List<String> niveles)
 			{
 				lisNivel.clear();
-				lisNivel.addItem(softmartConstants.elijaReputacion(), ""); 
+				lisNivel.addItem(softmartConstants.elijaReputacion(), "");
 				for (String n : niveles)
 					lisNivel.addItem(n, n);
 			}
@@ -158,7 +158,7 @@ public class SearchWidget extends NavigablePanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert(constants.failGetDificultades()); 
+				Window.alert(constants.failGetDificultades());
 			}
 
 			public void onSuccess(List<String> dificultades)
@@ -178,7 +178,7 @@ public class SearchWidget extends NavigablePanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert(constants.failGetTamanos()); 
+				Window.alert(constants.failGetTamanos());
 			}
 
 			public void onSuccess(List<String> tamanios)
@@ -209,9 +209,9 @@ public class SearchWidget extends NavigablePanel
 	{
 		HorizontalPanel submitPanel = new HorizontalPanel();
 		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-		submitPanel.setWidth("100%"); 
+		submitPanel.setWidth("100%");
 		final SearchWidget instance = this;
-		Button submit = new Button(constants.buscar(), new ClickHandler() 
+		Button submit = new Button(constants.buscar(), new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
@@ -272,15 +272,15 @@ public class SearchWidget extends NavigablePanel
 				}
 				catch (NumberFormatException e)
 				{
-					Window.alert(constants.errorFormatoMonto()); 
+					Window.alert(constants.errorFormatoMonto());
 				}
 
 				if (!(filtroDto.getPresupuestoDesde() == null || filtroDto.getPresupuestoDesde().isEmpty())
 						&& (filtroDto.getMoneda() == null || filtroDto.getMoneda().isEmpty()))
-					Window.alert(constants.debeIngresarMoneda()); 
+					Window.alert(constants.debeIngresarMoneda());
 				else if (!(filtroDto.getPresupuestoHasta() == null || filtroDto.getPresupuestoHasta().isEmpty())
 						&& (filtroDto.getMoneda() == null || filtroDto.getMoneda().isEmpty()))
-					Window.alert(constants.debeIngresarMoneda()); 
+					Window.alert(constants.debeIngresarMoneda());
 				else
 				{
 					final FiltroDto filtro = dto;
@@ -288,13 +288,13 @@ public class SearchWidget extends NavigablePanel
 					{
 						public void onFailure(Throwable caught)
 						{
-							Window.alert(constants.failSearch()); 
+							Window.alert(constants.failSearch());
 						}
 
 						public void onSuccess(SearchDto searchDto)
 						{
 							if (searchDto == null)
-								Window.alert(constants.failSearch()); 
+								Window.alert(constants.failSearch());
 							else
 							{
 								if (resultsWidget != null)
@@ -308,21 +308,21 @@ public class SearchWidget extends NavigablePanel
 						{
 
 							final VerticalPanel p = new VerticalPanel();
-							p.add(new HTML(constants.resultados())); 
+							p.add(new HTML(constants.resultados()));
 
 							FlexTable table = new FlexTable();
 
-							table.addStyleName("table"); 
+							table.addStyleName("table");
 
 							for (int i = 0; i < 6; i++)
-								table.getCellFormatter().addStyleName(0, i, "firstRow"); 
+								table.getCellFormatter().addStyleName(0, i, "firstRow");
 
-							table.setWidget(0, 0, new HTML(constants.nombre())); 
-							table.setWidget(0, 1, new HTML(constants.presupuesto())); 
-							table.setWidget(0, 2, new HTML(constants.moneda())); 
-							table.setWidget(0, 3, new HTML(constants.tamano())); 
-							table.setWidget(0, 4, new HTML(constants.complejidad())); 
-							table.setWidget(0, 5, new HTML(constants.fechaCierre())); 
+							table.setWidget(0, 0, new HTML(constants.nombre()));
+							table.setWidget(0, 1, new HTML(constants.presupuesto()));
+							table.setWidget(0, 2, new HTML(constants.moneda()));
+							table.setWidget(0, 3, new HTML(constants.tamano()));
+							table.setWidget(0, 4, new HTML(constants.complejidad()));
+							table.setWidget(0, 5, new HTML(constants.fechaCierre()));
 
 							int row = 1;
 							for (final Proyecto proyecto : listaProy)
@@ -343,11 +343,11 @@ public class SearchWidget extends NavigablePanel
 								table.setWidget(row, 2, new HTML(proyecto.getMoneda().getDescription()));
 								table.setWidget(row, 3, new HTML(proyecto.getTamanio()));
 								table.setWidget(row, 4, new HTML(proyecto.getDificultad()));
-								DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy"); 
+								DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 								table.setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
 
 								for (int i = 0; i < 6; i++)
-									table.getCellFormatter().addStyleName(row, i, "column"); 
+									table.getCellFormatter().addStyleName(row, i, "column");
 
 								row++;
 							}
@@ -372,7 +372,7 @@ public class SearchWidget extends NavigablePanel
 		int row = 1;
 		for (FormFields field : values())
 		{
-			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));  
+			table.setWidget(row, 0, new HTML("<b>" + field.getDescription() + "</b>"));
 			table.setWidget(row, 1, widgets.get(field));
 			row++;
 		}

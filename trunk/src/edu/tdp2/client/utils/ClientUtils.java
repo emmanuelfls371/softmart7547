@@ -14,12 +14,15 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Anchor;
 
 import edu.tdp2.client.ProjectList;
+import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.SoftmartService;
 import edu.tdp2.client.SoftmartServiceAsync;
 import edu.tdp2.client.model.Proyecto;
 
 public class ClientUtils
 {
+	private static SoftmartConstants constants = GWT.create(SoftmartConstants.class);
+
 	public static <T> T coalesce(T... ts)
 	{
 		for (T t : ts)
@@ -49,7 +52,7 @@ public class ClientUtils
 
 	public static Anchor getBackAnchor()
 	{
-		Anchor back = new Anchor("Volver");
+		Anchor back = new Anchor(constants.back());
 		back.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
