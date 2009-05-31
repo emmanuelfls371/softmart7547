@@ -772,6 +772,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			{
 				final Oferta nueva = new Oferta(ofertaDto, proy, us, buscarMoneda(ofertaDto.getMoneda()));
 				if (proy.addOferta(nueva) && us.addOferta(nueva))
+				{
 					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
 					{
 						public void execute()
@@ -780,6 +781,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							sess.save(proy);
 						}
 					});
+					MailMgr.enviar(nueva);
+				}
 			}
 			return null;
 		}
