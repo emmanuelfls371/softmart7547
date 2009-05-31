@@ -19,15 +19,11 @@ public class PersonalModificationWidget extends FormWidget
 {
 	private enum ModificationFields implements FormFields
 	{
-		Nombre, Apellido, Email, Contrasenia("Clave"), ConfirmeContrasenia("Repita la clave"), Pais("Pa&iacute;s"), Ciudad, CodigoPostal(
-				"C&oacutedigo Postal"), Descripcion("Descripci&oacuten");
+		Nombre(constants.nombre()), Apellido(constants.apellido()), Email(constants.email()), Contrasenia(constants
+				.clave()), ConfirmeContrasenia(constants.confirmaClave()), Pais(constants.pais()), Ciudad(constants
+				.ciudad()), CodigoPostal(constants.codPostal()), Descripcion(constants.descripPerfil());
 
 		public String description;
-
-		private ModificationFields()
-		{
-			description = name();
-		}
 
 		private ModificationFields(String description)
 		{
@@ -55,7 +51,7 @@ public class PersonalModificationWidget extends FormWidget
 						{
 							public void onFailure(Throwable caught)
 							{
-								Window.alert("Error inesperado, no se pudo registrar el usuario");
+								Window.alert(constants.failRegistrar());
 							}
 
 							public void onSuccess(String errMsg)
@@ -136,9 +132,11 @@ public class PersonalModificationWidget extends FormWidget
 
 	private boolean errorC;
 
+	private static PersonalModificationConstants constants;
+
 	public PersonalModificationWidget(MyAccountDto dto)
 	{
-		tituloWidget = "<b>Modificación de datos personales</b>";
+		tituloWidget = constants.modifDatosPersonales();
 		anchoWidget = "100px";
 		anchoTabla = "100px";
 		url = "modification";
@@ -198,13 +196,13 @@ public class PersonalModificationWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los paises");
+				Window.alert(constants.failGetPaises());
 			}
 
 			public void onSuccess(List<String> paises)
 			{
 				lisPaises.clear();
-				lisPaises.addItem("---- Elija un pais ----", "");
+				lisPaises.addItem(constants.elijaPais(), "");
 				int pos = 1;
 				int selectedItem = 1;
 				for (String pais : paises)
@@ -243,13 +241,13 @@ public class PersonalModificationWidget extends FormWidget
 	protected void validate(List<String> errMsgs)
 	{
 		if (errorClave)
-			errMsgs.add("Debe ingresar la clave original");
+			errMsgs.add(constants.errorClaveOrig());
 
 		if (errorClaveRep)
-			errMsgs.add("Debe ingresar la clave repetida");
+			errMsgs.add(constants.errorClaveRep());
 
 		if (errorC)
-			errMsgs.add("Las claves no son iguales");
+			errMsgs.add(constants.errorClavesDistintas());
 	}
 
 	@Override

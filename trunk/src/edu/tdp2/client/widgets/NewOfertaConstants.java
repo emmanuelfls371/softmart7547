@@ -5,30 +5,30 @@ import com.google.gwt.i18n.client.Constants;
 public interface NewOfertaConstants extends Constants
 {
 
-	String proyecto();
-
 	String comprador();
-
-	String presupuesto();
-
-	String dias();
 
 	String descripcion();
 
-	String mailNotification();
-
-	String failOfertar();
+	String dias();
 
 	String errorFormatoDiasMonto();
 
-	String verifiqueDias();
-
 	String failGetMonedas();
+
+	String failOfertar();
+
+	String mailNotification();
+
+	String no();
 
 	String nuevaOferta();
 
+	String presupuesto();
+
+	String proyecto();
+
 	String si();
 
-	String no();
+	String verifiqueDias();
 
 }

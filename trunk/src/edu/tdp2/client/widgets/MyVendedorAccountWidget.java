@@ -255,10 +255,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
 		for (Moneda ganancia : datos.getGananciaAcumulada().keySet())
-			underPanel.add(new HTML(constants.miReputacionVendedor() + String.valueOf(datos.getReputacion())
-					+ " </p>" + constants.gananciaAcumulada()
-					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + constants.preposicionEn() + ganancia.getDescription()
-					+ " </p> "));
+			underPanel.add(new HTML(constants.miReputacionVendedor() + String.valueOf(datos.getReputacion()) + " </p>"
+					+ constants.gananciaAcumulada() + String.valueOf(datos.getGananciaAcumulada().get(ganancia))
+					+ constants.preposicionEn() + ganancia.getDescription() + " </p> "));
 		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;
 	}

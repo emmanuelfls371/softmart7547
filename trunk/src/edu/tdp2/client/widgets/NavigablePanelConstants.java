@@ -5,8 +5,8 @@ import com.google.gwt.i18n.client.Constants;
 public interface NavigablePanelConstants extends Constants
 {
 
-	String verProyecto();
-
 	String verOfertaGanadora();
+
+	String verProyecto();
 
 }

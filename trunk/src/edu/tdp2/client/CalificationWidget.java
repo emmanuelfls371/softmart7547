@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import edu.tdp2.client.TipoCalificacionWrapper.TipoCalificacion;
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.utils.ClientUtils;
 
