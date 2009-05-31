@@ -124,7 +124,7 @@ public class AccountWidget extends DockPanel
 							break;
 						}
 					if (c == null)
-						//califHecha.setEnabled(false);
+						// califHecha.setEnabled(false);
 						califHecha.addStyleName("a-disabled");
 					else
 					{
@@ -175,7 +175,7 @@ public class AccountWidget extends DockPanel
 							break;
 						}
 					if (c == null)
-						//califRecibida.setEnabled(false);
+						// califRecibida.setEnabled(false);
 						califRecibida.addStyleName("a-disabled");
 					// Window.alert("El proyecto no ha recibido calificación");
 					else

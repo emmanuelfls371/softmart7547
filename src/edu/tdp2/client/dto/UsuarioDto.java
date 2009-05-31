@@ -14,7 +14,7 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 	private static final long serialVersionUID = 3538926217892037317L;
 
 	public static String INVALIDO = "0000";
-	
+
 	@NotEmpty(message = "Debe ingresar el nombre")
 	@NotNull
 	private String nombre;

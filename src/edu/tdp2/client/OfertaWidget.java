@@ -104,7 +104,7 @@ public class OfertaWidget extends VerticalPanel
 
 		setSpacing(7);
 
-		add(new HTML("<h3>"+constants.ofertaParaProyecto() + " "+ proyecto + "</h3>"));
+		add(new HTML("<h3>" + constants.ofertaParaProyecto() + " " + proyecto + "</h3>"));
 		table.clear();
 		add(table);
 		table.setWidget(0, 2, new HTML(constants.monto()));

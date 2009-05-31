@@ -93,7 +93,6 @@ public class DetailSearchWidget extends VerticalPanel
 			{
 				ofertaG = oferta;
 
-
 				Anchor menuLink = new Anchor("Ofertar");
 				if (ofertaG == null && !proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser())
 						&& proy.getFecha().after(new Date()) && !proy.isCancelado() && proy.isRevisado()
@@ -133,17 +132,15 @@ public class DetailSearchWidget extends VerticalPanel
 							}
 						}
 					});
-				else{
-					//VERIFICAR CADA CONDICION Y PONER UN CARTEL
-					//menuLink.setEnabled(false);
+				else
+					// VERIFICAR CADA CONDICION Y PONER UN CARTEL
+					// menuLink.setEnabled(false);
 					menuLink.addStyleName("a-disabled");
-				}
 
 				add(menuLink);
 				buildTableOfertas();
 				add(panel);
-				
-				
+
 			}
 		};
 		ClientUtils.getSoftmartService().getOfertaGanadora(proy.getId(), callback);

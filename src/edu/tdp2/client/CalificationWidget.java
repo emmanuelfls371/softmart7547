@@ -65,20 +65,20 @@ public class CalificationWidget extends VerticalPanel
 		lineHoriz.addStyleName("hl2");
 		lineHoriz.setWidth("250px");
 		add(lineHoriz);
-		
+
 		table.clear();
 		add(table);
-		
+
 		table.addStyleName("tableProjectWidget");
 
 		table.setCellPadding(5);
-		
+
 		table.getCellFormatter().addStyleName(0, 0, "c0ProjectWidget");
 		table.getCellFormatter().addStyleName(1, 0, "c0ProjectWidget");
-		
+
 		table.getCellFormatter().addStyleName(0, 1, "c1y2ProjectWidget");
 		table.getCellFormatter().addStyleName(1, 1, "c1y2ProjectWidget");
-		
+
 		table.setWidget(0, 0, new HTML(constants.calificacion()));
 		table.setWidget(0, 1, new HTML(constants.comentario()));
 		table.setWidget(0, 2, new HTML(tipo));

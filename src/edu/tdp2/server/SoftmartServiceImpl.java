@@ -35,7 +35,6 @@ import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.TamanioProyecto;
 import edu.tdp2.client.model.Usuario;
-
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.SoftmartServerException;
@@ -394,18 +393,22 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					"SELECT DISTINCT y FROM Proyecto y JOIN FETCH y.ofertas "
 							+ "WHERE y.usuario = ? AND y.contrato.califAlComprador IS NULL AND y.revisado = true "
 							+ "AND y.canceladoXAdmin = false ").setParameter(0, usuario).list());
-			comprador.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
-					"SELECT DISTINCT proy FROM Proyecto AS proy WHERE usuario = ? AND contrato.califAlVendedor IS NULL AND revisado = true "
-							+ "AND canceladoXAdmin = false ").setParameter(0, usuario).list());
+			comprador
+					.setProyectosSinCalificar((List<Proyecto>) sess
+							.createQuery(
+									"SELECT DISTINCT proy FROM Proyecto AS proy WHERE usuario = ? AND contrato.califAlVendedor IS NULL AND revisado = true "
+											+ "AND canceladoXAdmin = false ").setParameter(0, usuario).list());
 			comprador
 					.setProyectosCerrados((List<Proyecto>) sess
 							.createQuery(
 									"SELECT DISTINCT proy FROM Proyecto AS proy JOIN FETCH proy.ofertas WHERE proy.usuario = ? AND proy IN "
 											+ "(SELECT proyecto FROM Contrato) AND proy.cancelado = false AND proy.canceladoXAdmin = false")
 							.setParameter(0, usuario).list());
-			comprador.setProyectosCancelados((List<Proyecto>) sess.createQuery(
-					"SELECT DISTINCT proy FROM Proyecto AS proy WHERE usuario = ? AND (cancelado = true OR canceladoXAdmin = true)").setParameter(0,
-					usuario).list());
+			comprador
+					.setProyectosCancelados((List<Proyecto>) sess
+							.createQuery(
+									"SELECT DISTINCT proy FROM Proyecto AS proy WHERE usuario = ? AND (cancelado = true OR canceladoXAdmin = true)")
+							.setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT proy FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
 							+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
@@ -925,7 +928,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			us.setDescripPerfil(dto.getDescripPerfil());
 			us.setNombre(dto.getNombre());
 
-			if (dto.getClave() != null &&!dto.getClave().equals(UsuarioDto.INVALIDO))
+			if (dto.getClave() != null && !dto.getClave().equals(UsuarioDto.INVALIDO))
 				us.setPasswordHash(dto.getClave());
 
 			TransactionWrapper.save(sess, us);
