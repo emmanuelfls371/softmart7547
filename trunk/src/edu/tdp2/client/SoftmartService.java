@@ -25,7 +25,7 @@ public interface SoftmartService extends RemoteService
 
 	public String cancelarProyecto(Long projectId);
 
-	public String cancelarProyectoXAdmin(Long projectId);
+	public String cancelarProyectoXAdmin(String adminUserName, Long projectId);
 
 	public String chooseOffer(long offerId);
 
@@ -81,11 +81,13 @@ public interface SoftmartService extends RemoteService
 
 	public String setProyectoDestacado(Long projectId, Boolean value);
 
-	public String setProyectoRevisado(Long projectId, Boolean value);
+	public String setProyectoRevisado(String adminUserName, Long projectId, Boolean value);
 
-	public String setUsuarioBloqueado(Long id, Boolean value);
+	public String setUsuarioBloqueado(String adminUserName, Long id, Boolean value);
 
 	public String update(UsuarioDto dto, String usuarioAnterior);
 
 	public String adminLogin(String userName, String passwordHash);
+
+	public String adminLogout(String userName);
 }

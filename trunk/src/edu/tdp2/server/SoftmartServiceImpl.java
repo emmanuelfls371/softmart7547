@@ -35,6 +35,7 @@ import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
 import edu.tdp2.client.model.TamanioProyecto;
 import edu.tdp2.client.model.Usuario;
+import edu.tdp2.server.AdminLogMgr.Accion;
 import edu.tdp2.server.db.HibernateUtil;
 import edu.tdp2.server.db.TransactionWrapper;
 import edu.tdp2.server.exceptions.SoftmartServerException;
@@ -43,6 +44,48 @@ import edu.tdp2.server.utils.Encrypter;
 public class SoftmartServiceImpl extends RemoteServiceServlet implements SoftmartService
 {
 	private static final long serialVersionUID = 7772479472218006401L;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String adminLogin(String userName, String passwordHash)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			List<Administrador> result = sess.createQuery("FROM Administrador WHERE login = ? AND passwordHash = ?")
+					.setString(0, userName).setString(1, passwordHash).list();
+			if (result.size() > 0)
+			{
+				AdminLogMgr.log(result.get(0), Accion.Login);
+				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
+			}
+			else
+				return "@Login incorrecto";
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@Override
+	public String adminLogout(String userName)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Administrador admin = (Administrador) sess.createQuery("FROM Administrador WHERE login = ?").setString(0,
+					userName).uniqueResult();
+			AdminLogMgr.log(admin, Accion.Logout);
+			return null;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Moneda> buscarMonedas()
@@ -134,7 +177,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	public String cancelarProyectoXAdmin(Long projectId)
+	public String cancelarProyectoXAdmin(String adminUserName, Long projectId)
 	{
 		Session sess = HibernateUtil.getSession();
 
@@ -149,6 +192,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			project.setRevisado(false);
 			project.setDestacado(false);
 			TransactionWrapper.save(sess, project);
+			AdminLogMgr.log(adminUserName, Accion.CancelacionProyecto, "IdProyecto", projectId.toString());
 			return null;
 		}
 		catch (Exception e)
@@ -872,7 +916,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	public String setProyectoRevisado(Long projectId, Boolean revisado)
+	public String setProyectoRevisado(String adminUserName, Long projectId, Boolean revisado)
 	{
 		Session sess = HibernateUtil.getSession();
 
@@ -883,6 +927,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				return "El proyecto con id " + projectId + " no existe";
 			p.setRevisado(revisado);
 			TransactionWrapper.save(sess, p);
+			AdminLogMgr.log(adminUserName, Accion.RevisionProyecto, "IdProyecto", projectId.toString());
 			return null;
 		}
 		finally
@@ -891,7 +936,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	public String setUsuarioBloqueado(Long userId, Boolean bloqueado)
+	public String setUsuarioBloqueado(String adminUserName, Long userId, Boolean bloqueado)
 	{
 		Session sess = HibernateUtil.getSession();
 
@@ -902,6 +947,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 				return "El usuario con id " + userId + " no existe";
 			u.setBloqueado(bloqueado);
 			TransactionWrapper.save(sess, u);
+			AdminLogMgr.log(adminUserName, bloqueado ? Accion.BloqueoCuenta : Accion.ActivacionCuenta, "IdCuenta",
+					userId.toString());
 			return null;
 		}
 		finally
@@ -1147,27 +1194,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.update(us);
 		}
 
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public String adminLogin(String userName, String passwordHash)
-	{
-		Session sess = HibernateUtil.getSession();
-
-		try
-		{
-			List<Administrador> result = sess.createQuery("FROM Administrador WHERE login = ? AND passwordHash = ?")
-					.setString(0, userName).setString(1, passwordHash).list();
-			if (result.size() > 0)
-				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
-			else
-				return "@Login incorrecto";
-		}
-		finally
-		{
-			sess.close();
-		}
 	}
 
 }
