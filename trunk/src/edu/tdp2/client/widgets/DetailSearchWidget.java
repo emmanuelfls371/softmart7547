@@ -103,7 +103,7 @@ public class DetailSearchWidget extends VerticalPanel
 						{
 							final Proyecto proyecto = proy;
 							if (proyecto == null)
-								Window.alert("Debe seleccionar un proyecto para ofertar");
+								Window.alert(constants.debeSelecProy());
 							else
 							{
 

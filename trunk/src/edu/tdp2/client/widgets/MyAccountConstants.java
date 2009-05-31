@@ -34,4 +34,6 @@ public interface MyAccountConstants extends Constants
 	String pais();
 
 	String usuario();
+
+	String imagen();
 }

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -117,6 +118,8 @@ public class MyAccountWidget extends NavigablePanel
 		addRowDatos(new HTML(constants.codPostal()), new HTML(dto.getCodigoPostal().toString()));
 		addRowDatos(new HTML(constants.descripPerfil()), new HTML(dto.getDescripcion().toString()));
 		addRowDatos(new HTML(constants.categoria()), new HTML(dto.getNivel().toString()));
+		addRowDatos(new HTML(constants.imagen()), dto.getPathLogo() == null ? null : new Image("download?fileName="
+				+ dto.getPathLogo()));
 
 		tabPanel.add(tableDatos, constants.datosPersonales());
 		tabPanel.add(new MyCompradorAccountWidget(dto.getDatosComprador()), constants.datosComprador());

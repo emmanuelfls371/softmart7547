@@ -20,6 +20,8 @@
       <servlet path="/registration" class="edu.tdp2.server.FileUploadServlet" />
       <servlet path="/newproject" class="edu.tdp2.server.FileUploadServlet" />
       <servlet path="/newoferta" class="edu.tdp2.server.FileUploadServlet" />
+      <servlet path="/modification" class="edu.tdp2.server.FileUploadServlet"/>
+      <servlet path="/download" class="edu.tdp2.server.FileDownloadServlet"/>
       
       <!-- Specify the app entry point class.                         -->
       <entry-point class='edu.tdp2.client.Admin'/>
@@ -27,7 +29,6 @@
     
       <!-- Specify the application specific style sheet.              -->
       <stylesheet src='Softmart.css' />
-      <servlet path="/modification" class="edu.tdp2.server.FileUploadServlet"/>
 
       <!-- Locales: spanish, english -->
       <extend-property name="locale" values="es"/>

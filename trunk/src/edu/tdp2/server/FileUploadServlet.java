@@ -116,7 +116,13 @@ public class FileUploadServlet extends HttpServlet
 			if (item.getInputStream().available() > 0)
 			{
 				String fieldName = item.getFieldName();
-				File f = new File(baseDir + File.separator + fieldName + getMD5(item.getInputStream()));
+
+				String extension = "";
+				String itemName = item.getName();
+				if (itemName.lastIndexOf(".") > itemName.lastIndexOf(File.pathSeparator))
+					extension = itemName.substring(itemName.lastIndexOf("."));
+
+				File f = new File(baseDir + File.separator + fieldName + getMD5(item.getInputStream()) + extension);
 				fileName = f.getName();
 				if (!f.exists()) // Si ya existe, no hace falta crearlo
 					item.write(f);
