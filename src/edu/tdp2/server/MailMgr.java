@@ -20,6 +20,11 @@ public class MailMgr
 {
 	private static Properties mailServerConfig = new Properties();
 
+	static
+	{
+		fetchConfig();
+	}
+
 	/**
 	 * Envia los mails necesarios a aquellos usuarios que tengan ofertas mayores que la nueva, y hayan configurado el
 	 * alerta
@@ -28,11 +33,33 @@ public class MailMgr
 	{
 		Proyecto proy = nueva.getProyecto();
 		for (Oferta existente : proy.getOfertas())
-		{
 			if (nueva.getMonto() < existente.getMonto() && nueva.getUsuario().getId() != existente.getUsuario().getId()
 					&& existente.getNotificacion().equals("Si"))
-			{
 				sendEmail(nueva, existente);
+	}
+
+	private static void fetchConfig()
+	{
+		InputStream input = null;
+		try
+		{
+			input = MailMgr.class.getClassLoader().getResource("edu/tdp2/server/mail.properties").openStream();
+			mailServerConfig.load(input);
+		}
+		catch (IOException ex)
+		{
+			System.err.println("Cannot open and load mail server properties file.");
+		}
+		finally
+		{
+			try
+			{
+				if (input != null)
+					input.close();
+			}
+			catch (IOException ex)
+			{
+				System.err.println("Cannot close mail server properties file.");
 			}
 		}
 	}
@@ -65,37 +92,6 @@ public class MailMgr
 		catch (MessagingException ex)
 		{
 			throw new RuntimeException(ex);
-		}
-	}
-
-	static
-	{
-		fetchConfig();
-	}
-
-	private static void fetchConfig()
-	{
-		InputStream input = null;
-		try
-		{
-			input = MailMgr.class.getClassLoader().getResource("edu/tdp2/server/mail.properties").openStream();
-			mailServerConfig.load(input);
-		}
-		catch (IOException ex)
-		{
-			System.err.println("Cannot open and load mail server properties file.");
-		}
-		finally
-		{
-			try
-			{
-				if (input != null)
-					input.close();
-			}
-			catch (IOException ex)
-			{
-				System.err.println("Cannot close mail server properties file.");
-			}
 		}
 	}
 }

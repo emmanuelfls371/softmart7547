@@ -8,11 +8,11 @@ public interface LoginConstants extends Constants
 
 	String contrasena();
 
+	String entrar();
+
 	String inicieSesion();
 
 	String registrese();
 
 	String usuario();
-
-	String entrar();
 }

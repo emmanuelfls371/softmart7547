@@ -8,7 +8,7 @@ public enum TipoCalificacion
 
 	private TipoCalificacion()
 	{
-		this.description = name();
+		description = name();
 	}
 
 	public String getDescription()
