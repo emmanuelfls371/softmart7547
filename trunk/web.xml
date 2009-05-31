@@ -46,6 +46,9 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
  
  <servlet><servlet-name>modification</servlet-name><servlet-class>edu.tdp2.server.FileUploadServlet</servlet-class></servlet><servlet-mapping><servlet-name>modification</servlet-name><url-pattern>/modification</url-pattern></servlet-mapping> 
  
- 
+<servlet>
+ 	<servlet-name>download</servlet-name>
+ 	<servlet-class>edu.tdp2.server.FileDownloadServlet</servlet-class>
+ </servlet> 
  
 </web-app>
