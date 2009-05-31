@@ -24,15 +24,10 @@ public class NewOfertaWidget extends FormWidget
 {
 	private enum OfertaFields implements FormFields
 	{
-		Proyecto, Usuario("Comprador"), Presupuesto, Dias("D&iacute;as"), Descripcion("Descripci&oacute;n"), MailNotification(
-				"Desea ser notificado de una oferta menor?");
+		Proyecto(constants.proyecto()), Usuario(constants.comprador()), Presupuesto(constants.presupuesto()), Dias(
+				constants.dias()), Descripcion(constants.descripcion()), MailNotification(constants.mailNotification());
 
 		public String description;
-
-		private OfertaFields()
-		{
-			description = name();
-		}
 
 		private OfertaFields(String description)
 		{
@@ -80,7 +75,7 @@ public class NewOfertaWidget extends FormWidget
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("Error inesperado, no se pudo ofertar");
+						Window.alert(constants.failOfertar());
 					}
 
 					public void onSuccess(String errMsg)
@@ -94,14 +89,14 @@ public class NewOfertaWidget extends FormWidget
 			}
 			catch (NumberFormatException e)
 			{
-				errMsgs.add("El formato de dias y/o monto no es valido."
-						+ " Verifique está ingresando los días cómo números enteros y el monto como un número real");
+				errMsgs.add(constants.errorFormatoDiasMonto() + constants.verifiqueDias());
 				validate();
 			}
 		}
 	}
 
 	private static NewOfertaWidget instance;
+	private static NewOfertaConstants constants = GWT.create(NewOfertaConstants.class);
 
 	public static NewOfertaWidget getInstance(Proyecto project)
 	{
@@ -118,7 +113,7 @@ public class NewOfertaWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar las monedas");
+				Window.alert(constants.failGetMonedas());
 			}
 
 			public void onSuccess(List<Moneda> monedas)
@@ -146,7 +141,7 @@ public class NewOfertaWidget extends FormWidget
 
 	private NewOfertaWidget(Proyecto project)
 	{
-		tituloWidget = "<b>Nueva oferta</b>";
+		tituloWidget = constants.nuevaOferta();
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		dto = new OfertaDto();
@@ -194,8 +189,8 @@ public class NewOfertaWidget extends FormWidget
 
 		FlowPanel panel = new FlowPanel();
 		panel.setStyleName(OfertaFields.MailNotification.toString());
-		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), "Si"));
-		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), "No"));
+		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), constants.si()));
+		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), constants.no()));
 		widgets.put(OfertaFields.MailNotification, panel);
 
 		t = new TextBox();

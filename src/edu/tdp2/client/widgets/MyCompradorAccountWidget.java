@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -43,16 +44,16 @@ public class MyCompradorAccountWidget extends AccountWidget
 			for (int i = 0; i < 6; i++)
 				getCellFormatter().addStyleName(0, i, "firstRow");
 
-			setWidget(0, 0, new HTML("Nombre"));
-			setWidget(0, 1, new HTML("Presupuesto"));
-			setWidget(0, 2, new HTML("Moneda"));
-			setWidget(0, 3, new HTML("Tama&ntilde;o"));
-			setWidget(0, 4, new HTML("Complejidad"));
-			setWidget(0, 5, new HTML("Fecha cierre"));
+			setWidget(0, 0, new HTML(constants.nombre()));
+			setWidget(0, 1, new HTML(constants.presupuesto()));
+			setWidget(0, 2, new HTML(constants.moneda()));
+			setWidget(0, 3, new HTML(constants.tamano()));
+			setWidget(0, 4, new HTML(constants.complejidad()));
+			setWidget(0, 5, new HTML(constants.fechaCierra()));
 
 			if (accion)
 			{
-				setWidget(0, 6, new HTML("Acción"));
+				setWidget(0, 6, new HTML(constants.accion()));
 				getCellFormatter().addStyleName(0, 6, "firstRow");
 			}
 
@@ -85,7 +86,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 					}
 					else
 					{
-						setWidget(row, 6, new HTML("Pendiente de aprobación por el administrador"));
+						setWidget(row, 6, new HTML(constants.pendienteAprob()));
 						getCellFormatter().addStyleName(row, 6, "column");
 					}
 				for (int i = 0; i < 6; i++)
@@ -96,10 +97,12 @@ public class MyCompradorAccountWidget extends AccountWidget
 	}
 
 	private final MyCompradorAccount datos;
+	private MyCompradorAccountConstants constants;
 
 	public MyCompradorAccountWidget(MyCompradorAccount datos)
 	{
 		this.datos = datos;
+		constants = GWT.create(MyCompradorAccountConstants.class);
 		add(getWestPanel(), WEST);
 		underPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -122,9 +125,9 @@ public class MyCompradorAccountWidget extends AccountWidget
 		VerticalPanel panel = new VerticalPanel();
 		panel.setSpacing(10);
 
-		panel.add(new HTML("<big><b>Mis proyectos</b></big>"));
+		panel.add(new HTML(constants.misProyectos()));
 
-		Anchor abiertos = new Anchor("Abiertos");
+		Anchor abiertos = new Anchor(constants.abiertos());
 
 		abiertos.addClickHandler(new ClickHandler()
 		{
@@ -135,33 +138,33 @@ public class MyCompradorAccountWidget extends AccountWidget
 				proySelected = null;
 				accion = true;
 				proyCerrados = false;
-				Anchor menuLink = new Anchor("Ver ofertas");
+				Anchor menuLink = new Anchor(constants.verOfertas());
 				menuLink.addClickHandler(new ClickHandler()
 				{
 					public void onClick(ClickEvent event)
 					{
 						Proyecto proyecto = proySelected;
 						if (proyecto == null)
-							Window.alert("Debe seleccionar un proyecto");
+							Window.alert(constants.debeSelecProyecto());
 						else
 							onShowOffers(proyecto);
 					}
 				});
 
-				Anchor menuLink2 = new Anchor("Cancelar Proyecto");
+				Anchor menuLink2 = new Anchor(constants.cancelarProy());
 				menuLink2.addClickHandler(new ClickHandler()
 				{
 					public void onClick(ClickEvent event)
 					{
 						if (proySelected == null)
-							Window.alert("Debe seleccionar un proyecto para cancelar");
-						else if (Window.confirm("Â¿Seguro de que desea cancelar el proyecto?"))
+							Window.alert(constants.debeSelecProyectoCancel());
+						else if (Window.confirm(constants.confirmaCancelar()))
 						{
 							AsyncCallback<String> projectCallback = new AsyncCallback<String>()
 							{
 								public void onFailure(Throwable caught)
 								{
-									Window.alert("No se pudo cancelar el proyecto");
+									Window.alert(constants.failCancelProject());
 								}
 
 								public void onSuccess(String errMsg)
@@ -171,7 +174,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 									else
 									{
 										datos.getProyectosAbiertos().remove(proySelected);
-										Window.alert("Proyecto cancelado");
+										Window.alert(constants.proyCancelado());
 									}
 								}
 							};
@@ -195,7 +198,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 		panel.add(abiertos);
 
-		Anchor cerrados = new Anchor("Cerrados");
+		Anchor cerrados = new Anchor(constants.cerrados());
 		cerrados.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -209,14 +212,14 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 				vCerr.add(new ProjectTable(datos.getProyectosCerrados()));
 
-				Anchor ofertaG = new Anchor("Ver Oferta Ganadora");
+				Anchor ofertaG = new Anchor(constants.verOfertaGanadora());
 				ofertaG.addClickHandler(new ClickHandler()
 				{
 					public void onClick(ClickEvent event)
 					{
 						Proyecto proyecto = proySelected;
 						if (proyecto == null)
-							Window.alert("Debe seleccionar un proyecto para ver su oferta");
+							Window.alert(constants.debeSelecProyectoVerOferta());
 						else
 							onShowOferta(proyecto);
 					}
@@ -232,7 +235,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 		});
 		panel.add(cerrados);
 
-		Anchor cancelados = new Anchor("Cancelados");
+		Anchor cancelados = new Anchor(constants.cancelados());
 		cancelados.addClickHandler(new ClickHandler()
 		{
 
@@ -249,7 +252,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 		});
 		panel.add(cancelados);
 
-		Anchor sinCalificar = new Anchor("Pendientes a calificar");
+		Anchor sinCalificar = new Anchor(constants.pendientesCalificar());
 		sinCalificar.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -270,7 +273,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 		});
 		panel.add(sinCalificar);
 
-		Anchor sinRecibirCalif = new Anchor("Pendientes de recibir calificaci&oacute;n", true);
+		Anchor sinRecibirCalif = new Anchor(constants.pendientesRecibirCalif(), true);
 		sinRecibirCalif.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -290,7 +293,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
-		HTML rep = new HTML("<p> Mi reputación como comprador es: " + String.valueOf(datos.getReputacion()) + " </p>");
+		HTML rep = new HTML(constants.miReputacionComprador() + String.valueOf(datos.getReputacion()) + " </p>");
 		underPanel.add(rep);
 		return panel;
 	}
