@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.ComentarioWidget;
@@ -54,52 +53,7 @@ public class DetailSearchWidget extends VerticalPanel
 				{
 					ofertas = of;
 					add(new ProjectWidget(proy));
-
-					Anchor menuLink = new Anchor("Ofertar");
-					if (ofertaG == null && !proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser())
-							&& proy.getFecha().after(new Date()) && !proy.isCancelado() && proy.isRevisado()
-							&& !proy.isCanceladoXAdmin() && !proy.getUsuario().isBloqueado())
-						menuLink.addClickHandler(new ClickHandler()
-						{
-							public void onClick(ClickEvent event)
-							{
-								final Proyecto proyecto = proy;
-								if (proyecto == null)
-									Window.alert("Debe seleccionar un proyecto para ofertar");
-								else
-								{
-
-									AsyncCallback<String> callback = new AsyncCallback<String>()
-									{
-										public void onFailure(Throwable caught)
-										{
-											Window.alert("No se pudo recuperar el usuario");
-										}
-
-										public void onSuccess(String nivel)
-										{
-											if (nivel == null)
-												Window.alert("No se pudo recuperar el usuario");
-											else if (proyecto.getNivel().equals(NivelReputacion.Premium.name())
-													&& nivel.equals(NivelReputacion.Premium.name()))
-												onShowNewOferta(proyecto);
-											else if (proyecto.getNivel().equals(NivelReputacion.Normal.name()))
-												onShowNewOferta(proyecto);
-											else
-												Window.alert("El proyecto requiere ofertantes Premium");
-										}
-									};
-									ClientUtils.getSoftmartService().getUsuario(LoginWidget.getCurrentUser(), callback);
-
-								}
-							}
-						});
-					else
-						menuLink.setEnabled(false);
-
-					add(menuLink);
-					buildTableOfertas();
-					add(panel);
+					getOfertaGanadora();
 				}
 			}
 		};
@@ -117,7 +71,8 @@ public class DetailSearchWidget extends VerticalPanel
 	{
 		panel = new VerticalPanel();
 		initialize();
-		getOfertaGanadora();
+		for (final Oferta of : ofertas)
+			load(of);
 
 	}
 
@@ -135,8 +90,57 @@ public class DetailSearchWidget extends VerticalPanel
 			{
 				ofertaG = oferta;
 
-				for (final Oferta of : ofertas)
-					load(of);
+
+				Anchor menuLink = new Anchor("Ofertar");
+				if (ofertaG == null && !proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser())
+						&& proy.getFecha().after(new Date()) && !proy.isCancelado() && proy.isRevisado()
+						&& !proy.isCanceladoXAdmin() && !proy.getUsuario().isBloqueado())
+					menuLink.addClickHandler(new ClickHandler()
+					{
+						public void onClick(ClickEvent event)
+						{
+							final Proyecto proyecto = proy;
+							if (proyecto == null)
+								Window.alert("Debe seleccionar un proyecto para ofertar");
+							else
+							{
+
+								AsyncCallback<String> callback = new AsyncCallback<String>()
+								{
+									public void onFailure(Throwable caught)
+									{
+										Window.alert("No se pudo recuperar el usuario");
+									}
+
+									public void onSuccess(String nivel)
+									{
+										if (nivel == null)
+											Window.alert("No se pudo recuperar el usuario");
+										else if (proyecto.getNivel().equals(NivelReputacion.Premium.name())
+												&& nivel.equals(NivelReputacion.Premium.name()))
+											onShowNewOferta(proyecto);
+										else if (proyecto.getNivel().equals(NivelReputacion.Normal.name()))
+											onShowNewOferta(proyecto);
+										else
+											Window.alert("El proyecto requiere ofertantes Premium");
+									}
+								};
+								ClientUtils.getSoftmartService().getUsuario(LoginWidget.getCurrentUser(), callback);
+
+							}
+						}
+					});
+				else{
+					//VERIFICAR CADA CONDICION Y PONER UN CARTEL
+					//menuLink.setEnabled(false);
+					menuLink.addStyleName("a-disabled");
+				}
+
+				add(menuLink);
+				buildTableOfertas();
+				add(panel);
+				
+				
 			}
 		};
 		ClientUtils.getSoftmartService().getOfertaGanadora(proy.getId(), callback);
@@ -144,7 +148,7 @@ public class DetailSearchWidget extends VerticalPanel
 
 	private void initialize()
 	{
-		add(new Label("Ofertas para el proyecto " + proy.getNombre()));
+		add(new HTML("<h3> Ofertas para el proyecto " + proy.getNombre() + "</h3>"));
 	}
 
 	private void load(final Oferta oferta)

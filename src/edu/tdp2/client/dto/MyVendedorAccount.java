@@ -42,6 +42,6 @@ public class MyVendedorAccount extends MySpecificAccount implements Serializable
 
 	public void setProyectosPerdidos(List<Proyecto> proyectosPerdidos)
 	{
-		this.proyectosPerdidos = proyectosPerdidos;
+		this.proyectosPerdidos = prune(proyectosPerdidos);
 	}
 }
