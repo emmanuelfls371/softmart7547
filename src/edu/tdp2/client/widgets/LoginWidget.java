@@ -112,7 +112,7 @@ public class LoginWidget extends SimplePanel
 		HorizontalPanel submitPanel = new HorizontalPanel();
 		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
-		Button submit = new Button("Entrar", new ClickHandler()
+		Button submit = new Button(constants.entrar(), new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
