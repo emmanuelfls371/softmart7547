@@ -93,7 +93,7 @@ public class DetailSearchWidget extends VerticalPanel
 			{
 				ofertaG = oferta;
 
-				Anchor menuLink = new Anchor("Ofertar");
+				Anchor menuLink = new Anchor(constants.ofertar());
 				if (ofertaG == null && !proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser())
 						&& proy.getFecha().after(new Date()) && !proy.isCancelado() && proy.isRevisado()
 						&& !proy.isCanceladoXAdmin() && !proy.getUsuario().isBloqueado())
@@ -111,20 +111,20 @@ public class DetailSearchWidget extends VerticalPanel
 								{
 									public void onFailure(Throwable caught)
 									{
-										Window.alert("No se pudo recuperar el usuario");
+										Window.alert(constants.failGetUsuario());
 									}
 
 									public void onSuccess(String nivel)
 									{
 										if (nivel == null)
-											Window.alert("No se pudo recuperar el usuario");
+											Window.alert(constants.failGetUsuario());
 										else if (proyecto.getNivel().equals(NivelReputacion.Premium.name())
 												&& nivel.equals(NivelReputacion.Premium.name()))
 											onShowNewOferta(proyecto);
 										else if (proyecto.getNivel().equals(NivelReputacion.Normal.name()))
 											onShowNewOferta(proyecto);
 										else
-											Window.alert("El proyecto requiere ofertantes Premium");
+											Window.alert(constants.requiereOfertantes());
 									}
 								};
 								ClientUtils.getSoftmartService().getUsuario(LoginWidget.getCurrentUser(), callback);

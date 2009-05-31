@@ -13,4 +13,6 @@ public interface LoginConstants extends Constants
 	String registrese();
 
 	String usuario();
+
+	String entrar();
 }
