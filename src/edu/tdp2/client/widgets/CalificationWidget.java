@@ -19,14 +19,10 @@ public class CalificationWidget extends FormWidget
 {
 	private enum CalificacionFields implements FormFields
 	{
-		Proyecto, Usuario("Usuario a calificar"), Calif("Calificaci&oacute;n"), Comentario;
+		Proyecto(constants.proyecto()), Usuario(constants.usuario()), Calif(constants.calificacion()), Comentario(
+				constants.comentario());
 
 		public String description;
-
-		private CalificacionFields()
-		{
-			description = name();
-		}
 
 		private CalificacionFields(String description)
 		{
@@ -61,7 +57,7 @@ public class CalificationWidget extends FormWidget
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("Error inesperado, no se pudo calificar");
+						Window.alert(constants.failCalificar());
 					}
 
 					public void onSuccess(String errMsg)
@@ -75,13 +71,14 @@ public class CalificationWidget extends FormWidget
 			}
 			catch (NumberFormatException e)
 			{
-				errMsgs.add("El formato de la calificacion no es valido");
+				errMsgs.add(constants.invalidCalificacion());
 				validate();
 			}
 		}
 	}
 
 	private static CalificationWidget instance;
+	private static CalificationConstants constants;
 
 	public static CalificationWidget getInstance(Proyecto project)
 	{
@@ -99,7 +96,8 @@ public class CalificationWidget extends FormWidget
 
 	private CalificationWidget()
 	{
-		tituloWidget = "<b>Calificar</b>";
+		constants = GWT.create(CalificationConstants.class);
+		tituloWidget = constants.calificar();
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		dto = new CalificacionDto();

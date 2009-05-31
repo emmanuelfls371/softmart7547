@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -30,12 +31,19 @@ public class AdminProjectsWidget extends AdminWidget
 		return instance;
 	}
 
+	private AdminProjectsConstants constants;
+
 	private VerticalPanel vPanel = new VerticalPanel();
+
+	private AdminProjectsWidget()
+	{
+		constants = GWT.create(AdminProjectsConstants.class);
+	}
 
 	@Override
 	public void load()
 	{
-		container.add(vPanel, "Proyectos");
+		container.add(vPanel, constants.proyectos());
 		statusMessage = new HTML();
 		loadPanel();
 	}
@@ -55,27 +63,28 @@ public class AdminProjectsWidget extends AdminWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los proyectos");
+				Window.alert(constants.failGetProjects());
 			}
 
 			public void onSuccess(List<Proyecto> proyectos)
 			{
-				table.setWidget(0, 0, new HTML("Usuario"));
-				table.setWidget(0, 1, new HTML("Nombre"));
-				table.setWidget(0, 2, new HTML("Presupuesto"));
-				table.setWidget(0, 3, new HTML("Moneda"));
-				table.setWidget(0, 4, new HTML("Tama&ntilde;o"));
-				table.setWidget(0, 5, new HTML("Complejidad"));
-				table.setWidget(0, 6, new HTML("Fecha cierre"));
-				table.setWidget(0, 7, new HTML("Revisado"));
-				table.setWidget(0, 9, new HTML("Destacado"));
+				table.setWidget(0, 0, new HTML(constants.usuario()));
+				table.setWidget(0, 1, new HTML(constants.nombre()));
+				table.setWidget(0, 2, new HTML(constants.presupuesto()));
+				table.setWidget(0, 3, new HTML(constants.moneda()));
+				table.setWidget(0, 4, new HTML(constants.tamano()));
+				table.setWidget(0, 5, new HTML(constants.complejidad()));
+				table.setWidget(0, 6, new HTML(constants.fechaCierre()));
+				table.setWidget(0, 7, new HTML(constants.revisado()));
+				table.setWidget(0, 9, new HTML(constants.destacado()));
 				int row = 1;
 				for (Proyecto p : proyectos)
 				{
 					table.setWidget(row, 0, new HTML(p.getUsuario().getLogin()));
 					table.setWidget(row, 1, new HTML(p.getNombre()));
 					int ps = p.getMaxPresupuesto();
-					table.setWidget(row, 2, new HTML(p.getMinPresupuesto() + " a " + (ps == -1 ? "m&aacute;s" : ps)));
+					table.setWidget(row, 2, new HTML(p.getMinPresupuesto() + constants.preposicionA()
+							+ (ps == -1 ? constants.mas() : ps)));
 					table.setWidget(row, 3, new HTML(p.getMoneda().getDescription()));
 					table.setWidget(row, 4, new HTML(p.getTamanio()));
 					table.setWidget(row, 5, new HTML(p.getDificultad()));
@@ -96,7 +105,7 @@ public class AdminProjectsWidget extends AdminWidget
 
 	private Anchor getAnchorCancelarProyecto(final Proyecto p)
 	{
-		Anchor a = new Anchor("Cancelar proyecto");
+		Anchor a = new Anchor(constants.cancelarProyecto());
 		if (p.isRevisado()){
 			//a.setEnabled(false);
 			a.addStyleName("a-disabled");
@@ -106,27 +115,27 @@ public class AdminProjectsWidget extends AdminWidget
 		{
 			public void onClick(ClickEvent event)
 			{
-				if (!Window.confirm("Confirme que desea cancelar el proyecto"))
+				if (!Window.confirm(constants.confirmaCancelarProy()))
 					return;
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("No se pudo cancelar el proyecto");
+						Window.alert(constants.failCancelProject());
 					}
 
 					public void onSuccess(String result)
 					{
 						if (result == null)
 						{
-							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" ha sido cancelado");
+							statusMessage.setHTML(constants.elProyecto() + p.getNombre() + constants.haSidoCancelado());
 
 							loadPanel();
 						}
 						else
 						{
 							Window.alert(result);
-							statusMessage.setHTML("Error al intentar cancelar el proyecto");
+							statusMessage.setHTML(constants.errorCancelProject());
 						}
 					}
 				};
@@ -158,25 +167,25 @@ public class AdminProjectsWidget extends AdminWidget
 
 						public void onFailure(Throwable caught)
 						{
-							Window.alert("No se pudo marcar el proyecto como destacado");
+							Window.alert(constants.failDestacar());
 						}
 
 						public void onSuccess(String result)
 						{
 							if (result == null)
-								statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
-										+ (value ? "" : "no ") + "destacado");
+								statusMessage.setHTML(constants.elProyecto() + p.getNombre() + constants.seMarcoComo()
+										+ (value ? "" : constants.no()) + constants.destacadoMinusc());
 							else
 							{
 								Window.alert(result);
-								statusMessage.setHTML("Error al intentar marcar el proyecto como destacado");
+								statusMessage.setHTML(constants.errorDestacar());
 							}
 						}
 					};
 					ClientUtils.getSoftmartService().setProyectoDestacado(p.getId(), event.getValue(), callback);
 				}
 				else
-					Window.alert("No se pudo marcar el proyecto. El proyecto aún no fue revisado o ha sido cancelado");
+					Window.alert(constants.errorDestacarRevOCancel());
 			}
 		});
 		return c;
@@ -196,25 +205,24 @@ public class AdminProjectsWidget extends AdminWidget
 				final boolean value = event.getValue();
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{
-
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("No se pudo marcar el proyecto como revisado");
+						Window.alert(constants.failRevisar());
 					}
 
 					public void onSuccess(String result)
 					{
 						if (result == null)
 						{
-							statusMessage.setHTML("El proyecto \"" + p.getNombre() + "\" se marc&oacute; como "
-									+ (value ? "" : "no ") + "revisado");
+							statusMessage.setHTML(constants.elProyecto() + p.getNombre() + constants.seMarcoComo()
+									+ (value ? "" : constants.no()) + constants.revisadoMinusc());
 
 							loadPanel();
 						}
 						else
 						{
 							Window.alert(result);
-							statusMessage.setHTML("Error al intentar marcar el proyecto como revisado");
+							statusMessage.setHTML(constants.errorRevisar());
 						}
 					}
 				};

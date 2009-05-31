@@ -8,15 +8,17 @@ public interface SoftmartConstants extends Constants
 
 	String elijaReputacion();
 
+	String idioma();
+
 	String login();
 
 	String loginCookieName();
 
 	String logout();
 
-	String welcomeUser();
+	String submit();
 
 	String toSoftmart();
 
-	String idioma();
+	String welcomeUser();
 }

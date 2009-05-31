@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -20,9 +21,11 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class DestacadosWidget extends SimplePanel
 {
+	private DestacadosConstants constants;
 
 	public DestacadosWidget()
 	{
+		constants = GWT.create(DestacadosConstants.class);
 		load();
 	}
 
@@ -33,14 +36,14 @@ public class DestacadosWidget extends SimplePanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar el proyecto destacado");
+				Window.alert(constants.failGetProyDestacado());
 			}
 
 			public void onSuccess(List<Proyecto> proyectos)
 			{
 				VerticalPanel panel = new VerticalPanel();
 				panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-				panel.add(new HTML("<big>Proyectos Destacados</big> <p></p>"));
+				panel.add(new HTML(constants.proyectosDestacados()));
 
 				FlexTable table = new FlexTable();
 				table.addStyleName("table");
@@ -52,12 +55,12 @@ public class DestacadosWidget extends SimplePanel
 				table.getCellFormatter().addStyleName(0, 4, "firstRow");
 				table.getCellFormatter().addStyleName(0, 5, "firstRow");
 
-				table.setWidget(0, 0, new HTML("Nombre"));
-				table.setWidget(0, 1, new HTML("Presupuesto"));
-				table.setWidget(0, 2, new HTML("Moneda"));
-				table.setWidget(0, 3, new HTML("Tama&ntilde;o"));
-				table.setWidget(0, 4, new HTML("Complejidad"));
-				table.setWidget(0, 5, new HTML("Fecha cierre"));
+				table.setWidget(0, 0, new HTML(constants.nombre()));
+				table.setWidget(0, 1, new HTML(constants.presupuesto()));
+				table.setWidget(0, 2, new HTML(constants.moneda()));
+				table.setWidget(0, 3, new HTML(constants.tamano()));
+				table.setWidget(0, 4, new HTML(constants.complejidad()));
+				table.setWidget(0, 5, new HTML(constants.fechaCierre()));
 
 				int row = 1;
 				for (final Proyecto proyecto : proyectos)

@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
@@ -26,10 +27,12 @@ public class AdminUsersWidget extends AdminWidget
 		return instance;
 	}
 
+	private AdminUsersConstants constants;
+
 	@Override
 	public void load()
 	{
-
+		constants = GWT.create(AdminUsersConstants.class);
 		History.newItem("AdminUsers");
 
 		VerticalPanel vPanel = new VerticalPanel();
@@ -38,21 +41,21 @@ public class AdminUsersWidget extends AdminWidget
 		statusMessage = new HTML();
 		vPanel.add(statusMessage);
 		vPanel.add(table);
-		container.add(vPanel, "Usuarios");
+		container.add(vPanel, constants.usuarios());
 
 		AsyncCallback<List<Usuario>> callback = new AsyncCallback<List<Usuario>>()
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los proyectos");
+				Window.alert(constants.failGetProjects());
 			}
 
 			public void onSuccess(List<Usuario> usuarios)
 			{
-				table.setWidget(0, 0, new HTML("Usuario"));
-				table.setWidget(0, 1, new HTML("Nombre"));
-				table.setWidget(0, 2, new HTML("Email"));
-				table.setWidget(0, 3, new HTML("Bloqueado"));
+				table.setWidget(0, 0, new HTML(constants.usuario()));
+				table.setWidget(0, 1, new HTML(constants.nombre()));
+				table.setWidget(0, 2, new HTML(constants.email()));
+				table.setWidget(0, 3, new HTML(constants.bloqueado()));
 				int row = 1;
 				for (Usuario u : usuarios)
 				{
@@ -76,23 +79,23 @@ public class AdminUsersWidget extends AdminWidget
 			public void onValueChange(ValueChangeEvent<Boolean> event)
 			{
 				final boolean value = event.getValue();
-				final String prefix = value ? "" : "des";
+				final String prefix = value ? "" : constants.prefijoDes();
 				AsyncCallback<String> callback = new AsyncCallback<String>()
 				{
 
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("No se pudo " + prefix + "bloquear al usuario");
+						Window.alert(constants.noSePudo() + prefix + constants.bloquearUsuario());
 					}
 
 					public void onSuccess(String result)
 					{
 						if (result == null)
-							statusMessage.setHTML("El usuario fue " + prefix + "bloqueado");
+							statusMessage.setHTML(constants.usuarioFue() + prefix + constants.bloqueadoMinusc());
 						else
 						{
 							Window.alert(result);
-							statusMessage.setHTML("Error al intentar " + prefix + "bloquear al usuario");
+							statusMessage.setHTML(constants.errorIntentar() + prefix + constants.bloquearUsuario());
 						}
 					}
 				};

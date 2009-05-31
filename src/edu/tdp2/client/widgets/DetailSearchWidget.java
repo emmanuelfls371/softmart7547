@@ -3,6 +3,7 @@ package edu.tdp2.client.widgets;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -11,6 +12,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.ComentarioWidget;
@@ -22,7 +24,7 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class DetailSearchWidget extends VerticalPanel
 {
-
+	private DetailSearchConstants constants;
 	private Proyecto proy;
 	private VerticalPanel panel;
 	private List<Oferta> ofertas;
@@ -31,6 +33,7 @@ public class DetailSearchWidget extends VerticalPanel
 	public DetailSearchWidget(Proyecto proy)
 	{
 		this.proy = proy;
+		constants = GWT.create(DetailSearchConstants.class);
 		load();
 	}
 
@@ -42,13 +45,13 @@ public class DetailSearchWidget extends VerticalPanel
 
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar las ofertas");
+				Window.alert(constants.failGetOfertas());
 			}
 
 			public void onSuccess(List<Oferta> of)
 			{
 				if (of == null)
-					Window.alert("No se pudo recuperar las ofertas");
+					Window.alert(constants.failGetOfertas());
 				else
 				{
 					ofertas = of;
@@ -83,7 +86,7 @@ public class DetailSearchWidget extends VerticalPanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar la oferta");
+				Window.alert(constants.failGetOferta());
 			}
 
 			public void onSuccess(Oferta oferta)
@@ -148,7 +151,7 @@ public class DetailSearchWidget extends VerticalPanel
 
 	private void initialize()
 	{
-		add(new HTML("<h3> Ofertas para el proyecto " + proy.getNombre() + "</h3>"));
+		add(new Label(constants.ofertasProy() + proy.getNombre()));
 	}
 
 	private void load(final Oferta oferta)
@@ -158,11 +161,11 @@ public class DetailSearchWidget extends VerticalPanel
 
 		table.clear();
 		add(table);
-		table.setWidget(0, 2, new HTML("Monto:"));
-		table.setWidget(1, 2, new HTML("D&iacute;as:"));
+		table.setWidget(0, 2, new HTML(constants.monto()));
+		table.setWidget(1, 2, new HTML(constants.dias()));
 
-		table.setWidget(0, 0, new HTML("Vendedor:"));
-		table.setWidget(1, 0, new HTML("Nivel de reputaci&oacute;n de usuario:"));
+		table.setWidget(0, 0, new HTML(constants.vendedor()));
+		table.setWidget(1, 0, new HTML(constants.reputacion()));
 
 		final HTML h = new HTML(oferta.getUsuario().getLogin());
 
@@ -174,7 +177,7 @@ public class DetailSearchWidget extends VerticalPanel
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar el usuario");
+				Window.alert(constants.failGetUsuario());
 			}
 
 			public void onSuccess(Boolean isBloqueado)
@@ -183,7 +186,7 @@ public class DetailSearchWidget extends VerticalPanel
 				{
 					h.addStyleName("blocked");
 					h.setStyleName("blocked");
-					HTML h2 = new HTML("*Usuario Bloqueado");
+					HTML h2 = new HTML(constants.usuarioBloqueado());
 					h2.setStyleName("blocked");
 					h2.addStyleName("c1y2ProjectWidget");
 					h2.setWidth("200px");
@@ -214,11 +217,11 @@ public class DetailSearchWidget extends VerticalPanel
 
 		table.setWidget(0, 1, h);
 		table.setWidget(1, 1, new HTML(oferta.getUsuario().getNivel()));
-		table.setWidget(0, 3,
-				new HTML(Float.toString(oferta.getMonto()) + " en " + oferta.getMoneda().getDescription()));
+		table.setWidget(0, 3, new HTML(Float.toString(oferta.getMonto()) + constants.preposicionEn()
+				+ oferta.getMoneda().getDescription()));
 		table.setWidget(1, 3, new HTML(Integer.toString(oferta.getDias())));
 
-		Anchor menuLink = new Anchor("Ver Comentario");
+		Anchor menuLink = new Anchor(constants.verComentario());
 		menuLink.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -234,7 +237,7 @@ public class DetailSearchWidget extends VerticalPanel
 
 		if (ofertaG != null && ofertaG.compare(oferta))
 		{
-			table.setWidget(2, 0, new HTML("Oferta ganadora"));
+			table.setWidget(2, 0, new HTML(constants.ofertaGanadora()));
 			table.getCellFormatter().addStyleName(2, 0, "row0ProjectWidget");
 			table.getCellFormatter().addStyleName(2, 1, "row0ProjectWidget");
 			table.getCellFormatter().addStyleName(2, 0, "styleOfganadora");
