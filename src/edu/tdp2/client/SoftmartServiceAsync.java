@@ -25,7 +25,7 @@ public interface SoftmartServiceAsync
 
 	public void cancelarProyecto(Long projectId, AsyncCallback<String> callback);
 
-	public void cancelarProyectoXAdmin(Long projectId, AsyncCallback<String> callback);
+	public void cancelarProyectoXAdmin(String adminUserName, Long projectId, AsyncCallback<String> callback);
 
 	public void chooseOffer(long offerId, AsyncCallback<String> callback);
 
@@ -81,11 +81,13 @@ public interface SoftmartServiceAsync
 
 	public void setProyectoDestacado(Long projectId, Boolean value, AsyncCallback<String> callback);
 
-	public void setProyectoRevisado(Long projectId, Boolean value, AsyncCallback<String> callback);
+	public void setProyectoRevisado(String adminUserName, Long projectId, Boolean value, AsyncCallback<String> callback);
 
-	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
+	public void setUsuarioBloqueado(String adminUserName, Long id, Boolean value, AsyncCallback<String> callback);
 
 	public void update(UsuarioDto dto, String usuarioAnterior, AsyncCallback<String> callback);
 
 	public void adminLogin(String userName, String passwordHash, AsyncCallback<String> callback);
+
+	public void adminLogout(String userName, AsyncCallback<String> callback);
 }

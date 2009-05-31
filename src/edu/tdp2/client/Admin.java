@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.widgets.AdminLoginWidget;
 import edu.tdp2.client.widgets.AdminProjectsWidget;
 import edu.tdp2.client.widgets.AdminUsersWidget;
@@ -34,7 +36,7 @@ public class Admin implements EntryPoint, LoginListener
 	{
 		centerPanel.clear();
 		northPanel.clear();
-		
+
 		Anchor logout = new Anchor(constants.logout());
 		logout.addClickHandler(new ClickHandler()
 		{
@@ -65,9 +67,21 @@ public class Admin implements EntryPoint, LoginListener
 	public void onLogout()
 	{
 		Cookies.setCookie(constants.adminLoginCookieName(), "");
-		AdminLoginWidget.setCurrentUser(null);
-		northPanel.clear();
-		showWelcome();
+
+		ClientUtils.getSoftmartService().adminLogout(AdminLoginWidget.getCurrentUser(), new AsyncCallback<String>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert(caught.getMessage());
+			}
+
+			public void onSuccess(String result)
+			{
+				AdminLoginWidget.setCurrentUser(null);
+				northPanel.clear();
+				showWelcome();
+			}
+		});
 	}
 
 	public void onModuleLoad()
@@ -90,10 +104,15 @@ public class Admin implements EntryPoint, LoginListener
 		dPanel.add(centerPanel, DockPanel.CENTER);
 		dPanel.add(getSouthPanel(), DockPanel.SOUTH);
 		dPanel.add(getNorthPanel(), DockPanel.NORTH);
-		
+
 		RootPanel.get().add(hPanel);
 
 		showWelcome();
+	}
+
+	public void onShowRegistration()
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	private Widget getNorthPanel()
@@ -102,11 +121,6 @@ public class Admin implements EntryPoint, LoginListener
 		northPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		northPanel.setWidth("100%");
 		return northPanel;
-	}
-
-	public void onShowRegistration()
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	private Widget getSouthPanel()

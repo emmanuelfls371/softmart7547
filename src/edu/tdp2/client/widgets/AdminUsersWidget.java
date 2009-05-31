@@ -99,7 +99,7 @@ public class AdminUsersWidget extends AdminWidget
 						}
 					}
 				};
-				ClientUtils.getSoftmartService().setUsuarioBloqueado(u.getId(), event.getValue(), callback);
+				ClientUtils.getSoftmartService().setUsuarioBloqueado(AdminLoginWidget.getCurrentUser(), u.getId(), event.getValue(), callback);
 			}
 		});
 		return c;

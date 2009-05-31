@@ -21,6 +21,11 @@ public class AdminLoginWidget extends LoginWidget
 		return currentUser;
 	}
 
+	public static void setCurrentUser(String currentUser)
+	{
+		AdminLoginWidget.currentUser = currentUser;
+	}
+
 	public static AdminLoginWidget getInstance()
 	{
 		if (instance == null)

@@ -141,7 +141,8 @@ public class AdminProjectsWidget extends AdminWidget
 							}
 						}
 					};
-					ClientUtils.getSoftmartService().cancelarProyectoXAdmin(p.getId(), callback);
+					ClientUtils.getSoftmartService().cancelarProyectoXAdmin(AdminLoginWidget.getCurrentUser(),
+							p.getId(), callback);
 				}
 			});
 		}
@@ -228,7 +229,8 @@ public class AdminProjectsWidget extends AdminWidget
 						}
 					}
 				};
-				ClientUtils.getSoftmartService().setProyectoRevisado(p.getId(), event.getValue(), callback);
+				ClientUtils.getSoftmartService().setProyectoRevisado(AdminLoginWidget.getCurrentUser(), p.getId(),
+						event.getValue(), callback);
 			}
 		});
 		return c;
