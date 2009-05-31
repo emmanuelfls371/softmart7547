@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 
 public class TipoCalificacionWrapper
 {
+	private static TipoCalificacionConstants constants = GWT.create(TipoCalificacionConstants.class);
+
 	public enum TipoCalificacion
 	{
 		Recibida(constants.de()), Hecha(constants.a());
@@ -19,8 +21,5 @@ public class TipoCalificacionWrapper
 		{
 			return description;
 		}
-
 	}
-
-	private static TipoCalificacionConstants constants = GWT.create(TipoCalificacionConstants.class);
 }

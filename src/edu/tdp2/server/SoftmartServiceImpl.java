@@ -13,7 +13,6 @@ import org.hibernate.Session;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.tdp2.client.SoftmartService;
-import edu.tdp2.client.TipoCalificacionWrapper.TipoCalificacion;
 import edu.tdp2.client.dto.CalificacionDto;
 import edu.tdp2.client.dto.ContratoDto;
 import edu.tdp2.client.dto.FiltroDto;
@@ -382,6 +381,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			dto.setNivel(NivelReputacion.valueOf(usuario.getNivel()));
 			dto.setCodigoPostal(usuario.getCodPostal());
 			dto.setDescripcion(usuario.getDescripPerfil());
+			dto.setPathLogo(usuario.getPathLogo());
 
 			MySpecificAccount comprador = dto.getDatosComprador();
 			Double reputacionComp = (Double) sess.createQuery(

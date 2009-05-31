@@ -22,6 +22,8 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 	private MyVendedorAccount datosVendedor = new MyVendedorAccount();
 	private MyCompradorAccount datosComprador = new MyCompradorAccount();
 
+	private String pathLogo;
+
 	public String getApellido()
 	{
 		return apellido;
@@ -70,6 +72,11 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 	public String getPais()
 	{
 		return pais;
+	}
+
+	public String getPathLogo()
+	{
+		return pathLogo;
 	}
 
 	public String getUsuario()
@@ -125,6 +132,11 @@ public class MyAccountDto implements Serializable, Dto, IValidatable
 	public void setPais(String pais)
 	{
 		this.pais = pais;
+	}
+
+	public void setPathLogo(String pathLogo)
+	{
+		this.pathLogo = pathLogo;
 	}
 
 	public void setUsuario(String usuario)

@@ -1,12 +1,15 @@
 package edu.tdp2.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.model.Presupuesto;
 import edu.tdp2.client.model.Proyecto;
@@ -156,7 +159,7 @@ public class ProjectWidget extends VerticalPanel
 		else
 			table.setWidget(4, col, new HTML(constants.noHayDescripcion()));
 		if (project.getPathArchivo() != null && !project.getPathArchivo().isEmpty())
-			table.setWidget(5, 2, new Anchor(constants.bajar()));
+			table.setWidget(5, 2, getAnchorBajar(project.getPathArchivo()));
 		else
 			table.setWidget(5, 2, new HTML(constants.noHayArchivo()));
 
@@ -164,4 +167,16 @@ public class ProjectWidget extends VerticalPanel
 
 	}
 
+	private Widget getAnchorBajar(final String pathArchivo)
+	{
+		Anchor a = new Anchor(constants.bajar());
+		a.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Window.open("download?fileName=" + pathArchivo, "", "");
+			}
+		});
+		return a;
+	}
 }
