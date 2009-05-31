@@ -20,11 +20,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.InvalidConstraint;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
+import edu.tdp2.client.SoftmartConstants;
 import edu.tdp2.client.dto.Dto;
 import edu.tdp2.client.utils.ClientUtils;
 
 public abstract class FormWidget extends FormPanel
 {
+	private SoftmartConstants constants;
 	protected String tituloWidget;
 	protected String anchoWidget;
 	protected String anchoTabla;
@@ -32,6 +34,11 @@ public abstract class FormWidget extends FormPanel
 
 	protected Dto dto;
 	protected Map<FormFields, Widget> widgets = new HashMap<FormFields, Widget>();
+
+	protected FormWidget()
+	{
+		constants = GWT.create(SoftmartConstants.class);
+	}
 
 	protected void buildWidget()
 	{
@@ -103,7 +110,7 @@ public abstract class FormWidget extends FormPanel
 		HorizontalPanel submitPanel = new HorizontalPanel();
 		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		submitPanel.setWidth("100%");
-		Button submit = new Button("Entrar", new ClickHandler()
+		Button submit = new Button(constants.submit(), new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
