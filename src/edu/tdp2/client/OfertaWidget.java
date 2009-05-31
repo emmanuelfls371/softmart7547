@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.dto.OfertaDto;
@@ -31,6 +30,7 @@ public class OfertaWidget extends VerticalPanel
 	{
 		this.oferta = OfertaDto.fromOferta(oferta);
 		this.proyecto = proyecto;
+		constants = GWT.create(OfertaConstants.class);
 		usOferta = oferta.getUsuario();
 		initialize();
 		load();
@@ -71,6 +71,7 @@ public class OfertaWidget extends VerticalPanel
 	{
 		this.proyecto = proyecto.getNombre();
 		final OfertaWidget ow = this;
+		constants = GWT.create(OfertaConstants.class);
 		AsyncCallback<Oferta> callback = new AsyncCallback<Oferta>()
 		{
 			public void onFailure(Throwable caught)
@@ -103,7 +104,7 @@ public class OfertaWidget extends VerticalPanel
 
 		setSpacing(7);
 
-		add(new Label(constants.ofertaParaProyecto() + proyecto));
+		add(new HTML("<h3>"+constants.ofertaParaProyecto() + " "+ proyecto + "</h3>"));
 		table.clear();
 		add(table);
 		table.setWidget(0, 2, new HTML(constants.monto()));
@@ -165,7 +166,8 @@ public class OfertaWidget extends VerticalPanel
 
 		table.setWidget(0, 1, h);
 		table.setWidget(1, 1, new HTML(usOferta.getNivel()));
-		table.setWidget(0, 3, new HTML(Float.toString(oferta.getMonto()) + constants.en() + oferta.getMoneda()));
+		table.setWidget(0, 3, new HTML(Float.toString(oferta.getMonto()) + " " + constants.en() + " "
+				+ oferta.getMoneda()));
 		table.setWidget(1, 3, new HTML(Integer.toString(oferta.getDias())));
 
 		Anchor menuLink = new Anchor(constants.verComentario());
