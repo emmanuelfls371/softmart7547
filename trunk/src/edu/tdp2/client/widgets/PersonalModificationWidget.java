@@ -136,6 +136,7 @@ public class PersonalModificationWidget extends FormWidget
 
 	public PersonalModificationWidget(MyAccountDto dto)
 	{
+		constants = GWT.create(PersonalModificationConstants.class);
 		tituloWidget = constants.modifDatosPersonales();
 		anchoWidget = "100px";
 		anchoTabla = "100px";
