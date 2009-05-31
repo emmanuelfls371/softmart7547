@@ -102,7 +102,8 @@ public class PersonalModificationWidget extends FormWidget
 
 			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
 				((UsuarioDto) dto).setClave(claveRepetida);
-			else if (!clave.isEmpty() || !claveRepetida.isEmpty()){
+			else if (!clave.isEmpty() || !claveRepetida.isEmpty())
+			{
 				if (claveRepetida.isEmpty())
 				{
 					errorClaveRep = true;
@@ -118,9 +119,9 @@ public class PersonalModificationWidget extends FormWidget
 					errorC = true;
 					((UsuarioDto) dto).setClave(claveRepetida);
 				}
-			}else{
-				((UsuarioDto) dto).setClave(UsuarioDto.INVALIDO);
 			}
+			else
+				((UsuarioDto) dto).setClave(UsuarioDto.INVALIDO);
 
 			if (!validate())
 				event.cancel();
@@ -134,8 +135,6 @@ public class PersonalModificationWidget extends FormWidget
 	private boolean errorClaveRep;
 
 	private boolean errorC;
-
-
 
 	public PersonalModificationWidget(MyAccountDto dto)
 	{

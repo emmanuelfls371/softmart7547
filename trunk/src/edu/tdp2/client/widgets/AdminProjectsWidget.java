@@ -106,42 +106,44 @@ public class AdminProjectsWidget extends AdminWidget
 	private Anchor getAnchorCancelarProyecto(final Proyecto p)
 	{
 		Anchor a = new Anchor(constants.cancelarProyecto());
-		if (p.isRevisado()){
-			//a.setEnabled(false);
+		if (p.isRevisado())
+			// a.setEnabled(false);
 			a.addStyleName("a-disabled");
-		}else{
-			a.setEnabled(true);
-		a.addClickHandler(new ClickHandler()
+		else
 		{
-			public void onClick(ClickEvent event)
+			a.setEnabled(true);
+			a.addClickHandler(new ClickHandler()
 			{
-				if (!Window.confirm(constants.confirmaCancelarProy()))
-					return;
-				AsyncCallback<String> callback = new AsyncCallback<String>()
+				public void onClick(ClickEvent event)
 				{
-					public void onFailure(Throwable caught)
+					if (!Window.confirm(constants.confirmaCancelarProy()))
+						return;
+					AsyncCallback<String> callback = new AsyncCallback<String>()
 					{
-						Window.alert(constants.failCancelProject());
-					}
-
-					public void onSuccess(String result)
-					{
-						if (result == null)
+						public void onFailure(Throwable caught)
 						{
-							statusMessage.setHTML(constants.elProyecto() + p.getNombre() + constants.haSidoCancelado());
+							Window.alert(constants.failCancelProject());
+						}
 
-							loadPanel();
-						}
-						else
+						public void onSuccess(String result)
 						{
-							Window.alert(result);
-							statusMessage.setHTML(constants.errorCancelProject());
+							if (result == null)
+							{
+								statusMessage.setHTML(constants.elProyecto() + p.getNombre()
+										+ constants.haSidoCancelado());
+
+								loadPanel();
+							}
+							else
+							{
+								Window.alert(result);
+								statusMessage.setHTML(constants.errorCancelProject());
+							}
 						}
-					}
-				};
-				ClientUtils.getSoftmartService().cancelarProyectoXAdmin(p.getId(), callback);
-			}
-		});
+					};
+					ClientUtils.getSoftmartService().cancelarProyectoXAdmin(p.getId(), callback);
+				}
+			});
 		}
 		return a;
 	}
