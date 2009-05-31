@@ -165,8 +165,7 @@ public class OfertaWidget extends VerticalPanel
 
 		table.setWidget(0, 1, h);
 		table.setWidget(1, 1, new HTML(usOferta.getNivel()));
-		table.setWidget(0, 3, new HTML(Float.toString(oferta.getMonto()) + " " + constants.en() + " "
-				+ oferta.getMoneda()));
+		table.setWidget(0, 3, new HTML(Float.toString(oferta.getMonto()) + constants.en() + oferta.getMoneda()));
 		table.setWidget(1, 3, new HTML(Integer.toString(oferta.getDias())));
 
 		Anchor menuLink = new Anchor(constants.verComentario());

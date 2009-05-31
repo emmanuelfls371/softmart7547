@@ -143,7 +143,7 @@ public class ProjectWidget extends VerticalPanel
 
 		table.setWidget(0, col, new HTML(Presupuesto.armarRango(project.getMinPresupuesto(), project
 				.getMaxPresupuesto())
-				+ " " + constants.preposicionEn() + " " + project.getMoneda().getDescription()));
+				+ constants.preposicionEn() + project.getMoneda().getDescription()));
 
 		table.setWidget(1, col, new HTML(String.valueOf(project.getFecha().getDate()) + "/"
 				+ String.valueOf(project.getFecha().getMonth() + 1) + "/"

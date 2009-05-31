@@ -15,4 +15,8 @@ public interface SoftmartConstants extends Constants
 	String logout();
 
 	String welcomeUser();
+
+	String toSoftmart();
+
+	String idioma();
 }
