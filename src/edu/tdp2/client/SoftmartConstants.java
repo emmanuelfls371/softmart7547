@@ -23,4 +23,6 @@ public interface SoftmartConstants extends Constants
 	String toSoftmart();
 
 	String welcomeUser();
+
+	String adminLoginCookieName();
 }

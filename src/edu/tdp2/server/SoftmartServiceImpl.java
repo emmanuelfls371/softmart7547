@@ -23,6 +23,7 @@ import edu.tdp2.client.dto.OfertaDto;
 import edu.tdp2.client.dto.ProyectoDto;
 import edu.tdp2.client.dto.SearchDto;
 import edu.tdp2.client.dto.UsuarioDto;
+import edu.tdp2.client.model.Administrador;
 import edu.tdp2.client.model.Calificacion;
 import edu.tdp2.client.model.Contrato;
 import edu.tdp2.client.model.DificultadProyecto;
@@ -1146,6 +1147,27 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.update(us);
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String adminLogin(String userName, String passwordHash)
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			List<Administrador> result = sess.createQuery("FROM Administrador WHERE login = ? AND passwordHash = ?")
+					.setString(0, userName).setString(1, passwordHash).list();
+			if (result.size() > 0)
+				return crearTicket(userName, result.get(0).getId());// Este array es 1-based
+			else
+				return "@Login incorrecto";
+		}
+		finally
+		{
+			sess.close();
+		}
 	}
 
 }

@@ -46,16 +46,13 @@ public class LoginWidget extends SimplePanel
 		LoginWidget.currentUser = currentUser;
 	}
 
-	private final TextBox userNameTextBox;
-	private final PasswordTextBox passwordTextBox;
+	protected final TextBox userNameTextBox;
+	protected final PasswordTextBox passwordTextBox;
+	protected LoginListener loginListener;
+	protected SoftmartConstants softmartConstants;
+	protected LoginConstants constants;
 
-	private LoginListener loginListener;
-
-	private SoftmartConstants softmartConstants;
-
-	private LoginConstants constants;
-
-	private LoginWidget()
+	protected LoginWidget()
 	{
 		softmartConstants = GWT.create(SoftmartConstants.class);
 		constants = GWT.create(LoginConstants.class);
@@ -81,20 +78,12 @@ public class LoginWidget extends SimplePanel
 		this.loginListener = loginListener;
 	}
 
-	private void buildWidget()
+	protected String getHash(String text)
 	{
-		VerticalPanel panel = new VerticalPanel();
-		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		SimplePanel simplePanel = new SimplePanel();
-		simplePanel.setHeight("50px");
-		panel.add(simplePanel);
-		FlexTable table = getTable();
-		panel.add(table);
-		add(panel);
-
+		return MD5.md5(text);
 	}
 
-	private Widget getRegisterLink()
+	protected Widget getRegisterLink()
 	{
 		Anchor link = new Anchor(constants.registrese(), true);
 		link.addClickHandler(new ClickHandler()
@@ -107,12 +96,9 @@ public class LoginWidget extends SimplePanel
 		return link;
 	}
 
-	private HorizontalPanel getSubmitPanel()
+	protected ClickHandler getSubmitHandler()
 	{
-		HorizontalPanel submitPanel = new HorizontalPanel();
-		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-		submitPanel.setWidth("100%");
-		Button submit = new Button(constants.entrar(), new ClickHandler()
+		return new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
 			{
@@ -141,12 +127,28 @@ public class LoginWidget extends SimplePanel
 				ClientUtils.getSoftmartService().login(userNameTextBox.getText(), getHash(passwordTextBox.getText()),
 						callback);
 			}
+		};
+	}
 
-			private String getHash(String text)
-			{
-				return MD5.md5(text);
-			}
-		});
+	private void buildWidget()
+	{
+		VerticalPanel panel = new VerticalPanel();
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		SimplePanel simplePanel = new SimplePanel();
+		simplePanel.setHeight("50px");
+		panel.add(simplePanel);
+		FlexTable table = getTable();
+		panel.add(table);
+		add(panel);
+
+	}
+
+	private HorizontalPanel getSubmitPanel()
+	{
+		HorizontalPanel submitPanel = new HorizontalPanel();
+		submitPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		submitPanel.setWidth("100%");
+		Button submit = new Button(constants.entrar(), getSubmitHandler());
 		submitPanel.add(submit);
 		return submitPanel;
 	}
