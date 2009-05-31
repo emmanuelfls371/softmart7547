@@ -1,4 +1,4 @@
-#Sun May 31 01:41:46 ART 2009
+#Sun May 31 01:56:43 ART 2009
 eclipse.preferences.version=1
 encoding//src/edu/tdp2/client/CalificacionConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/ComentarioConstants.properties=UTF-8
@@ -8,6 +8,7 @@ encoding//src/edu/tdp2/client/ProjectConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/ProjectListConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/Softmart.java=UTF-8
 encoding//src/edu/tdp2/client/SoftmartConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/TipoCalificacionConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/widgets/AdminProjectsConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/widgets/AdminUsersConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/widgets/CalificationConstants.properties=UTF-8

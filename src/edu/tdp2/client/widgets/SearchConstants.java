@@ -5,48 +5,48 @@ import com.google.gwt.i18n.client.Constants;
 public interface SearchConstants extends Constants
 {
 
-	String presupuestoDesdeHasta();
-
-	String fechaHastaCierre();
-
-	String tamano();
-
-	String fechaDesdeCierre();
-
-	String reputacion();
-
-	String dificultad();
+	String buscar();
 
 	String busquedaFiltros();
 
-	String failGetMonedas();
-
-	String elijaMoneda();
-
-	String failGetNiveles();
-
-	String failGetDificultades();
-
-	String failGetTamanos();
-
-	String buscar();
-
-	String errorFormatoMonto();
+	String complejidad();
 
 	String debeIngresarMoneda();
 
+	String dificultad();
+
+	String elijaMoneda();
+
+	String errorFormatoMonto();
+
+	String failGetDificultades();
+
+	String failGetMonedas();
+
+	String failGetNiveles();
+
+	String failGetTamanos();
+
 	String failSearch();
 
-	String resultados();
+	String fechaCierre();
+
+	String fechaDesdeCierre();
+
+	String fechaHastaCierre();
+
+	String moneda();
 
 	String nombre();
 
 	String presupuesto();
 
-	String moneda();
+	String presupuestoDesdeHasta();
 
-	String complejidad();
+	String reputacion();
 
-	String fechaCierre();
+	String resultados();
+
+	String tamano();
 
 }
