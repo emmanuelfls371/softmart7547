@@ -55,6 +55,7 @@
 .tableProjectWidget {
 	border-spacing: 0px;
 	border-collapse: collapse;
+	border: 2px ridge;
 }
 
 .c1ProjectWidget{
@@ -118,6 +119,12 @@
 .dock{
 	background-color: #DCDCDC;
 }
+
+.a-disabled{
+	cursor:default;
+	text-decoration:none;
+	color: #cccccc
+} 
 
 .gwt-DecoratedTabBar {
 }

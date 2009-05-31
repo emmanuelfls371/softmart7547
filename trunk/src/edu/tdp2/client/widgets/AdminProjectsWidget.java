@@ -97,9 +97,10 @@ public class AdminProjectsWidget extends AdminWidget
 	private Anchor getAnchorCancelarProyecto(final Proyecto p)
 	{
 		Anchor a = new Anchor("Cancelar proyecto");
-		if (p.isRevisado())
-			a.setEnabled(false);
-		else
+		if (p.isRevisado()){
+			//a.setEnabled(false);
+			a.addStyleName("a-disabled");
+		}else{
 			a.setEnabled(true);
 		a.addClickHandler(new ClickHandler()
 		{
@@ -132,6 +133,7 @@ public class AdminProjectsWidget extends AdminWidget
 				ClientUtils.getSoftmartService().cancelarProyectoXAdmin(p.getId(), callback);
 			}
 		});
+		}
 		return a;
 	}
 
@@ -140,7 +142,7 @@ public class AdminProjectsWidget extends AdminWidget
 
 		CheckBox c = new CheckBox();
 		if (p.isRevisado())
-			c.setEnabled(true);
+			c.addStyleName("a-disabled");
 		else
 			c.setEnabled(false);
 		c.setValue(p.isDestacado());

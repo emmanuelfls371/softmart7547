@@ -98,11 +98,11 @@ public class PersonalModificationWidget extends FormWidget
 			((UsuarioDto) dto).setCodPostal(((TextBox) widgets.get(ModificationFields.CodigoPostal)).getText());
 			((UsuarioDto) dto).setDescripPerfil(((TextBox) widgets.get(ModificationFields.Descripcion)).getText());
 
-			((UsuarioDto) dto).setUsuario(INVALIDO);
+			((UsuarioDto) dto).setUsuario(UsuarioDto.INVALIDO);
 
 			if (!clave.isEmpty() && !claveRepetida.isEmpty() && clave.equals(claveRepetida))
 				((UsuarioDto) dto).setClave(claveRepetida);
-			else if (!clave.isEmpty() || !claveRepetida.isEmpty())
+			else if (!clave.isEmpty() || !claveRepetida.isEmpty()){
 				if (claveRepetida.isEmpty())
 				{
 					errorClaveRep = true;
@@ -118,6 +118,9 @@ public class PersonalModificationWidget extends FormWidget
 					errorC = true;
 					((UsuarioDto) dto).setClave(claveRepetida);
 				}
+			}else{
+				((UsuarioDto) dto).setClave(UsuarioDto.INVALIDO);
+			}
 
 			if (!validate())
 				event.cancel();
@@ -132,7 +135,7 @@ public class PersonalModificationWidget extends FormWidget
 
 	private boolean errorC;
 
-	private static String INVALIDO = "0000";
+
 
 	public PersonalModificationWidget(MyAccountDto dto)
 	{

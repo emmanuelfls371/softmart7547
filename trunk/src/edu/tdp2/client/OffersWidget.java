@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
@@ -96,8 +97,14 @@ public class OffersWidget extends VerticalPanel
 
 			public void onSuccess(List<Oferta> ofertas)
 			{
-				table.clear();
+				table.clear();	
+				addStyleName("table");
+
+				for (int i = 0; i < 5; i++)
+					table.getCellFormatter().addStyleName(0, i, "firstRow");
+				
 				add(table);
+				
 				table.setWidget(0, 0, new HTML(constants.usuario()));
 				table.setWidget(0, 1, new HTML(constants.monto()));
 				table.setWidget(0, 2, new HTML(constants.dias()));
@@ -118,9 +125,9 @@ public class OffersWidget extends VerticalPanel
 					{
 						public void onClick(ClickEvent event)
 						{
-							History.newItem("");
-							clear();
-							add(new ComentarioWidget(oferta));
+							final DialogBox dialogBox = new ComentarioWidget(oferta);
+							dialogBox.setAnimationEnabled(true);
+							dialogBox.show();
 						}
 					});
 
@@ -128,11 +135,14 @@ public class OffersWidget extends VerticalPanel
 
 					table.setWidget(row, COL_RADIO, new RadioButton("chooseOffer"));
 					table.setWidget(row, COL_HIDDEN, new Hidden("id" + row, oferta.getId().toString()));
+					
+					for (int j = 0; j < 4; j++)
+						table.getCellFormatter().addStyleName(i, j, "column");
+					
 				}
 
-				table.setWidget(table.getRowCount(), 2, ClientUtils.getBackAnchor());
-
 				table.setWidget(table.getRowCount() - 1, 4, getSubmitButton());
+				
 			}
 		};
 		ClientUtils.getSoftmartService().getOffers(project, callback);

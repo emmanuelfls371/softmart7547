@@ -63,6 +63,8 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 					if (of.getUsuario().getLogin().equals(LoginWidget.getCurrentUser()))
 						ofertaPropia = of;
+					else
+						ofertaPropia=null;
 
 					if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
 						menorOferta = of;
