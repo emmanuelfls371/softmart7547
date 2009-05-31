@@ -50,5 +50,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
  	<servlet-name>download</servlet-name>
  	<servlet-class>edu.tdp2.server.FileDownloadServlet</servlet-class>
  </servlet> 
- 
+<servlet-mapping>
+ 	<servlet-name>download</servlet-name>
+ 	<url-pattern>/download</url-pattern>
+ </servlet-mapping> 
 </web-app>
