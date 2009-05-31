@@ -27,6 +27,8 @@ public interface MyAccountConstants extends Constants
 
 	String failGetMyAccount();
 
+	String imagen();
+
 	String modificar();
 
 	String nombre();
@@ -34,6 +36,4 @@ public interface MyAccountConstants extends Constants
 	String pais();
 
 	String usuario();
-
-	String imagen();
 }

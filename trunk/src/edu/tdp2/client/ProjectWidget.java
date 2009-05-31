@@ -32,6 +32,19 @@ public class ProjectWidget extends VerticalPanel
 	   $wnd.location.reload();
 	  }-*/;
 
+	private Widget getAnchorBajar(final String pathArchivo)
+	{
+		Anchor a = new Anchor(constants.bajar());
+		a.addClickHandler(new ClickHandler()
+		{
+			public void onClick(ClickEvent event)
+			{
+				Window.open("download?fileName=" + pathArchivo, "", "");
+			}
+		});
+		return a;
+	}
+
 	@SuppressWarnings("deprecation")
 	private void load()
 	{
@@ -165,18 +178,5 @@ public class ProjectWidget extends VerticalPanel
 
 		add(table);
 
-	}
-
-	private Widget getAnchorBajar(final String pathArchivo)
-	{
-		Anchor a = new Anchor(constants.bajar());
-		a.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Window.open("download?fileName=" + pathArchivo, "", "");
-			}
-		});
-		return a;
 	}
 }
