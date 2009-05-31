@@ -32,8 +32,6 @@ public class MyAccountWidget extends NavigablePanel
 	}
 
 	private FlexTable tableDatos = new FlexTable();
-	private FlexTable tableComp = new FlexTable();
-	private FlexTable tableVend = new FlexTable();
 	private MyAccountConstants constants;
 
 	public MyAccountWidget(String usuario)
@@ -107,8 +105,6 @@ public class MyAccountWidget extends NavigablePanel
 		tabPanel.getDeckPanel().addStyleName("dock");
 
 		tableDatos.setCellPadding(10);
-		tableComp.setCellPadding(10);
-		tableVend.setCellPadding(10);
 
 		addRowDatos(getModificationAnchor(dto));
 

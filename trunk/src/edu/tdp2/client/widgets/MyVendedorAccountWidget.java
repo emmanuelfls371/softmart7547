@@ -2,6 +2,7 @@ package edu.tdp2.client.widgets;
 
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -41,15 +42,15 @@ public class MyVendedorAccountWidget extends AccountWidget
 			for (int i = 0; i < 6; i++)
 				getCellFormatter().addStyleName(0, i, "firstRow");
 
-			setWidget(0, 0, new HTML("Proyecto"));
-			setWidget(0, 1, new HTML("Mi oferta"));
-			setWidget(0, 2, new HTML("Moneda"));
-			setWidget(0, 3, new HTML("D&iacute;as"));
-			setWidget(0, 4, new HTML("Es la menor"));
-			setWidget(0, 5, new HTML("Fecha cierre proy."));
+			setWidget(0, 0, new HTML(constants.proyecto()));
+			setWidget(0, 1, new HTML(constants.miOferta()));
+			setWidget(0, 2, new HTML(constants.moneda()));
+			setWidget(0, 3, new HTML(constants.dias()));
+			setWidget(0, 4, new HTML(constants.esLaMenor()));
+			setWidget(0, 5, new HTML(constants.fechaCierre()));
 			if (accion)
 			{
-				setWidget(0, 6, new HTML("Acción"));
+				setWidget(0, 6, new HTML(constants.accion()));
 				getCellFormatter().addStyleName(0, 6, "firstRow");
 			}
 
@@ -99,7 +100,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 						setWidget(row, 2, new HTML(ofertaPropia.getMoneda().getDescription()));
 						setWidget(row, 3, new HTML("" + ofertaPropia.getDias()));
-						setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? "SI" : "NO"));
+						setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? constants.si() : constants.no()));
 
 						DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 						setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
@@ -120,10 +121,12 @@ public class MyVendedorAccountWidget extends AccountWidget
 	}
 
 	private final MyVendedorAccount datos;
+	private MyVendedorAccountConstants constants;
 
 	public MyVendedorAccountWidget(MyVendedorAccount datos)
 	{
 		this.datos = datos;
+		constants = GWT.create(MyVendedorAccountConstants.class);
 		add(getWestPanel(), WEST);
 		underPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		centerPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -141,9 +144,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 		VerticalPanel panel = new VerticalPanel();
 		panel.setSpacing(10);
 
-		panel.add(new HTML("<big><b>Proyectos ofertados</b></big>"));
+		panel.add(new HTML(constants.proyectosOfertados()));
 
-		Anchor abiertos = new Anchor("Abiertos");
+		Anchor abiertos = new Anchor(constants.abiertos());
 		abiertos.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -159,7 +162,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		});
 		panel.add(abiertos);
 
-		Anchor adjudicados = new Anchor("Adjudicados");
+		Anchor adjudicados = new Anchor(constants.adjudicados());
 		adjudicados.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -180,7 +183,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		});
 		panel.add(adjudicados);
 
-		Anchor perdidos = new Anchor("Perdidos");
+		Anchor perdidos = new Anchor(constants.perdidos());
 		perdidos.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -196,7 +199,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		});
 		panel.add(perdidos);
 
-		Anchor cancelados = new Anchor("Cancelados");
+		Anchor cancelados = new Anchor(constants.cancelados());
 		cancelados.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -212,7 +215,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		});
 		panel.add(cancelados);
 
-		Anchor sinCalificar = new Anchor("Pendientes a calificar");
+		Anchor sinCalificar = new Anchor(constants.pendientesCalif());
 		sinCalificar.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -233,7 +236,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 		});
 		panel.add(sinCalificar);
 
-		Anchor sinRecibirCalif = new Anchor("Pendientes de recibir calificaci&oacute;n", true);
+		Anchor sinRecibirCalif = new Anchor(constants.pendientesRecibirCalif(), true);
 		sinRecibirCalif.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
@@ -252,9 +255,9 @@ public class MyVendedorAccountWidget extends AccountWidget
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
 		for (Moneda ganancia : datos.getGananciaAcumulada().keySet())
-			underPanel.add(new HTML("<p> Mi reputación como vendedor es: " + String.valueOf(datos.getReputacion())
-					+ " </p>" + "<p> Mi ganancia acumulada es: "
-					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + " en " + ganancia.getDescription()
+			underPanel.add(new HTML(constants.miReputacionVendedor() + String.valueOf(datos.getReputacion())
+					+ " </p>" + constants.gananciaAcumulada()
+					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + constants.preposicionEn() + ganancia.getDescription()
 					+ " </p> "));
 		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;

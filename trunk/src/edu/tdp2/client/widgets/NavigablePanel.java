@@ -1,5 +1,6 @@
 package edu.tdp2.client.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
@@ -15,7 +16,7 @@ import edu.tdp2.client.utils.OneParamDelegate;
 
 public class NavigablePanel extends VerticalPanel
 {
-
+	private NavigablePanelConstants constants = GWT.create(NavigablePanelConstants.class);
 	// protected Proyecto proyectoActual;
 	// protected ProjectList projs;
 
@@ -38,14 +39,14 @@ public class NavigablePanel extends VerticalPanel
 
 	protected Anchor getAnchorForProjects(final ProjectList projects)
 	{
-		Anchor anchor = new Anchor("Ver proyecto");
+		Anchor anchor = new Anchor(constants.verProyecto());
 		anchor.addClickHandler(getHandlerFormProjectList(projects));
 		return anchor;
 	}
 
 	protected Anchor getOfferAnchorForProjects(final ProjectList projects)
 	{
-		Anchor anchor = new Anchor("Ver oferta ganadora");
+		Anchor anchor = new Anchor(constants.verOfertaGanadora());
 		anchor.addClickHandler(getOfferHandlerFormProjectList(projects));
 		return anchor;
 	}
