@@ -2,6 +2,8 @@ package edu.tdp2.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -84,11 +87,9 @@ public class Softmart implements EntryPoint, LoginListener
 	}
 
 	private SoftmartConstants constants;
-
+	private I18nConstants i18nConstants;
 	private VerticalPanel centerPanel;
-
 	private AbsolutePanel northPanel;
-
 	private Images images;
 
 	public void onLogin()
@@ -100,7 +101,8 @@ public class Softmart implements EntryPoint, LoginListener
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
 		String currentUser = loginCookie.split(";")[0];
 		LoginWidget.setCurrentUser(currentUser);
-		northPanel.add(new HTML(constants.welcomeUser()));
+		northPanel.add(new HTML(constants.welcomeUser() + (currentUser == null ? "" : currentUser)
+				+ constants.toSoftmart()));
 
 		FocusPanel logout = new FocusPanel();
 		logout.setSize("30px", "10px");
@@ -181,7 +183,8 @@ public class Softmart implements EntryPoint, LoginListener
 		if (RootPanel.get("SoftmartIdentifierDiv") == null)
 			return;
 
-		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
+		constants = GWT.create(SoftmartConstants.class);
+		i18nConstants = GWT.create(I18nConstants.class);
 		images = (Images) GWT.create(Images.class);
 		History.addValueChangeHandler(new SoftmartHistoryHandler());
 
@@ -221,45 +224,36 @@ public class Softmart implements EntryPoint, LoginListener
 
 	private Widget getFooterPanel()
 	{
-		SimplePanel panel = new SimplePanel();
+		AbsolutePanel panel = new AbsolutePanel();
+		SimplePanel bannerPanel = new SimplePanel();
 		Image header = images.footer().createImage();
-		panel.add(header);
+		bannerPanel.add(header);
+		panel.add(bannerPanel);
+
+		final ListBox lisIdiomas = new ListBox();
+		for (int i = 0; i < i18nConstants.idiomas().length; i++)
+		{
+			lisIdiomas.addItem(i18nConstants.idiomas()[i], i18nConstants.locales()[i]);
+			if (constants.idioma().equals(i18nConstants.idiomas()[i]))
+				lisIdiomas.setSelectedIndex(i);
+		}
+		lisIdiomas.addChangeHandler(new ChangeHandler()
+		{
+			public void onChange(ChangeEvent event)
+			{
+				Window.open("Softmart.html" + lisIdiomas.getValue(lisIdiomas.getSelectedIndex()), "_self", "");
+			}
+		});
+		panel.add(lisIdiomas, 0, 0);
+
 		return panel;
 	}
 
 	private Panel getHeaderPanel()
 	{
-		AbsolutePanel panel = new AbsolutePanel();
-
-		SimplePanel bannerPanel = new SimplePanel();
+		SimplePanel panel = new SimplePanel();
 		Image header = images.header().createImage();
-		bannerPanel.add(header);
-		panel.add(bannerPanel);
-
-		FocusPanel localeEs = new FocusPanel();
-		localeEs.setSize("54px", "15px");
-		localeEs.addStyleName("cursorPointer");
-		localeEs.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Window.open("Softmart.html", "_self", "");
-			}
-		});
-		panel.add(localeEs, 11, 72);
-
-		FocusPanel localeEn = new FocusPanel();
-		localeEn.setSize("54px", "15px");
-		localeEn.addStyleName("cursorPointer");
-		localeEn.addClickHandler(new ClickHandler()
-		{
-			public void onClick(ClickEvent event)
-			{
-				Window.open("Softmart.html?locale=en", "_self", "");
-			}
-		});
-		panel.add(localeEn, 73, 72);
-
+		panel.add(header);
 		return panel;
 	}
 
