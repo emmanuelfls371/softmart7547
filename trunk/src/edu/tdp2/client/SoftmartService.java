@@ -86,4 +86,6 @@ public interface SoftmartService extends RemoteService
 	public String setUsuarioBloqueado(Long id, Boolean value);
 
 	public String update(UsuarioDto dto, String usuarioAnterior);
+
+	public String adminLogin(String userName, String passwordHash);
 }

@@ -86,4 +86,6 @@ public interface SoftmartServiceAsync
 	public void setUsuarioBloqueado(Long id, Boolean value, AsyncCallback<String> callback);
 
 	public void update(UsuarioDto dto, String usuarioAnterior, AsyncCallback<String> callback);
+
+	public void adminLogin(String userName, String passwordHash, AsyncCallback<String> callback);
 }
