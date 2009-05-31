@@ -1,8 +1,30 @@
-#Sat May 30 22:11:57 ART 2009
+#Sun May 31 01:41:46 ART 2009
 eclipse.preferences.version=1
+encoding//src/edu/tdp2/client/CalificacionConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/ComentarioConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/I18nConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/OfertaConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/ProjectConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/ProjectListConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/Softmart.java=UTF-8
 encoding//src/edu/tdp2/client/SoftmartConstants.properties=UTF-8
 encoding//src/edu/tdp2/client/widgets/AdminProjectsConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/AdminUsersConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/CalificationConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/DestacadosConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/DetailSearchConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/LoginConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/MyAccountConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/MyCompradorAccountConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/MyVendedorAccountConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/NavigablePanelConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/NewCalificationConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/NewOfertaConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/NewProjectConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/PersonalModificationConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/RegistrationConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/RegistrationConstants_en.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/SearchConstants.properties=UTF-8
+encoding//src/edu/tdp2/client/widgets/SearchConstants_en.properties=UTF-8
 encoding//src/edu/tdp2/server/server.properties=UTF-8
 encoding/src=UTF-8
