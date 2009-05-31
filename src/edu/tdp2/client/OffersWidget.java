@@ -12,8 +12,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.Label;
+
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -86,7 +87,7 @@ public class OffersWidget extends VerticalPanel
 
 	private void load()
 	{
-		add(new Label(constants.ofertasParaProyecto() + project.getNombre()));
+		add(new HTML("<big>" +constants.ofertasParaProyecto() + project.getNombre()+ "</big>"));
 		AsyncCallback<List<Oferta>> callback = new AsyncCallback<List<Oferta>>()
 		{
 			public void onFailure(Throwable caught)
@@ -97,7 +98,7 @@ public class OffersWidget extends VerticalPanel
 			public void onSuccess(List<Oferta> ofertas)
 			{
 				table.clear();
-				addStyleName("table");
+				table.addStyleName("table");
 
 				for (int i = 0; i < 5; i++)
 					table.getCellFormatter().addStyleName(0, i, "firstRow");
@@ -136,11 +137,11 @@ public class OffersWidget extends VerticalPanel
 					table.setWidget(row, COL_HIDDEN, new Hidden("id" + row, oferta.getId().toString()));
 
 					for (int j = 0; j < 4; j++)
-						table.getCellFormatter().addStyleName(i, j, "column");
+						table.getCellFormatter().addStyleName(row, j, "column");
 
 				}
-
-				table.setWidget(table.getRowCount() - 1, 4, getSubmitButton());
+				setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+				add(getSubmitButton());
 
 			}
 		};

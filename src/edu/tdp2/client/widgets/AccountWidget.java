@@ -206,6 +206,7 @@ public class AccountWidget extends DockPanel
 	protected void putAlone(Widget widget)
 	{
 		centerPanel.clear();
+		eastPanel.clear();
 		centerPanel.add(widget);
 	}
 
