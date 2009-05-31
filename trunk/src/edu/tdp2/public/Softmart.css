@@ -58,6 +58,11 @@
 	border: 2px ridge;
 }
 
+.tableEmpty{
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
 .c1ProjectWidget{
 	border-right: 2px ridge;
 }
