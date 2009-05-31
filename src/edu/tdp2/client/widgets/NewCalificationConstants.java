@@ -5,9 +5,9 @@ import com.google.gwt.i18n.client.Constants;
 public interface NewCalificationConstants extends Constants
 {
 
-	String proyecto();
-
 	String calificacion();
+
+	String calificar();
 
 	String comentario();
 
@@ -15,6 +15,6 @@ public interface NewCalificationConstants extends Constants
 
 	String formatoCalifInvalido();
 
-	String calificar();
+	String proyecto();
 
 }

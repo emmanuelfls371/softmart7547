@@ -30,15 +30,11 @@ public class NewProjectWidget extends FormWidget
 {
 	private enum ProjectFields implements FormFields
 	{
-		Nombre, Presupuesto, Fecha("Fecha de cierre de la oferta"), Nivel("Nivel de reputaci&oacute;n"), Dificultad, Tamanio(
-				"Tama&ntilde;o"), Descripcion("Descripci&oacute;n"), Archivo("Archivo (opcional - m&aacute;ximo 5MB)");
+		Nombre(constants.nombre()), Presupuesto(constants.presupuesto()), Fecha(constants.fechaCierre()), Nivel(
+				constants.reputacion()), Dificultad(constants.dificultad()), Tamanio(constants.tamano()), Descripcion(
+				constants.descripcion()), Archivo(constants.archivo());
 
 		public String description;
-
-		private ProjectFields()
-		{
-			description = name();
-		}
 
 		private ProjectFields(String description)
 		{
@@ -64,7 +60,7 @@ public class NewProjectWidget extends FormWidget
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("Error inesperado, no se pudo publicar el proyecto");
+						Window.alert(constants.failPublicar());
 					}
 
 					public void onSuccess(String errMsg)
@@ -73,8 +69,7 @@ public class NewProjectWidget extends FormWidget
 							Window.alert(errMsg);
 						else
 						{
-							Window
-									.alert("Proyecto dado de alta, aparecerá en sus proyectos abiertos una vez revisado por el administrador del sistema");
+							Window.alert(constants.proyectoAltaOk());
 							reload();
 						}
 					}
@@ -138,6 +133,7 @@ public class NewProjectWidget extends FormWidget
 	}
 
 	private static NewProjectWidget instance;
+	private static NewProjectConstants constants = GWT.create(NewProjectConstants.class);
 
 	private static final Format DATE_FORMAT = new DateFormat();
 
@@ -148,7 +144,7 @@ public class NewProjectWidget extends FormWidget
 		return instance;
 	}
 
-	private SoftmartConstants constants;
+	private SoftmartConstants softmartConstants;
 
 	private boolean hayRangos = false;
 
@@ -156,8 +152,8 @@ public class NewProjectWidget extends FormWidget
 
 	private NewProjectWidget()
 	{
-		constants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
-		tituloWidget = "<b>Nuevo proyecto</b>";
+		softmartConstants = (SoftmartConstants) GWT.create(SoftmartConstants.class);
+		tituloWidget = constants.nuevoProyecto();
 		anchoWidget = "200px";
 		anchoTabla = "100px";
 		url = "newproject";
@@ -195,7 +191,7 @@ public class NewProjectWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar las monedas");
+				Window.alert(constants.failGetMonedas());
 			}
 
 			public void onSuccess(List<Moneda> monedas)
@@ -204,7 +200,7 @@ public class NewProjectWidget extends FormWidget
 
 				lisMonedas.clear();
 				mapMonedas.clear();
-				lisMonedas.addItem("----Elija Moneda----", "");
+				lisMonedas.addItem(constants.elijaMoneda(), "");
 				for (Moneda moneda : monedas)
 				{
 					lisMonedas.addItem(moneda.getDescription(), moneda.getDescription());
@@ -230,13 +226,13 @@ public class NewProjectWidget extends FormWidget
 				{
 					public void onFailure(Throwable caught)
 					{
-						Window.alert("No se pudo recuperar los rangos de presupuesto");
+						Window.alert(constants.failGetPresupuestos());
 					}
 
 					public void onSuccess(List<String> presupuestos)
 					{
 						lisRangos.clear();
-						lisRangos.addItem(constants.elijaRango(), "");
+						lisRangos.addItem(softmartConstants.elijaRango(), "");
 						for (String presup : presupuestos)
 							lisRangos.addItem(presup, presup);
 					}
@@ -265,13 +261,13 @@ public class NewProjectWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los niveles");
+				Window.alert(constants.failGetNiveles());
 			}
 
 			public void onSuccess(List<String> niveles)
 			{
 				lisNivel.clear();
-				lisNivel.addItem(constants.elijaReputacion(), "");
+				lisNivel.addItem(softmartConstants.elijaReputacion(), "");
 				for (String n : niveles)
 					lisNivel.addItem(n, n);
 			}
@@ -286,7 +282,7 @@ public class NewProjectWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar las dificultades");
+				Window.alert(constants.failGetDificultades());
 			}
 
 			public void onSuccess(List<String> dificultades)
@@ -306,7 +302,7 @@ public class NewProjectWidget extends FormWidget
 		{
 			public void onFailure(Throwable caught)
 			{
-				Window.alert("No se pudo recuperar los tamanios");
+				Window.alert(constants.failGetTamanios());
 			}
 
 			public void onSuccess(List<String> tamanios)
@@ -333,9 +329,9 @@ public class NewProjectWidget extends FormWidget
 	protected void validate(List<String> errMsgs)
 	{
 		if (((ProyectoDto) dto).getFecha() == null)
-			errMsgs.add("Debe ingresar la fecha de cierre");
+			errMsgs.add(constants.debeIngresarCierre());
 		else if (((ProyectoDto) dto).getFecha().before(new Date()))
-			errMsgs.add("La fecha de cierre es anterior al día de hoy");
+			errMsgs.add(constants.fechaCierreAnteriorHoy());
 	}
 
 	@Override

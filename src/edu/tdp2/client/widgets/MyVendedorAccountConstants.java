@@ -5,11 +5,13 @@ import com.google.gwt.i18n.client.Constants;
 public interface MyVendedorAccountConstants extends Constants
 {
 
-	String proyecto();
+	String abiertos();
 
-	String miOferta();
+	String accion();
 
-	String moneda();
+	String adjudicados();
+
+	String cancelados();
 
 	String dias();
 
@@ -17,30 +19,28 @@ public interface MyVendedorAccountConstants extends Constants
 
 	String fechaCierre();
 
-	String accion();
+	String gananciaAcumulada();
 
-	String si();
-
-	String no();
-
-	String proyectosOfertados();
-
-	String abiertos();
-
-	String adjudicados();
-
-	String perdidos();
-
-	String pendientesCalif();
-
-	String cancelados();
-
-	String pendientesRecibirCalif();
+	String miOferta();
 
 	String miReputacionVendedor();
 
-	String gananciaAcumulada();
+	String moneda();
+
+	String no();
+
+	String pendientesCalif();
+
+	String pendientesRecibirCalif();
+
+	String perdidos();
 
 	String preposicionEn();
+
+	String proyecto();
+
+	String proyectosOfertados();
+
+	String si();
 
 }
