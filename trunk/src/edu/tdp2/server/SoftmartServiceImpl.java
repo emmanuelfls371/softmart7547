@@ -818,6 +818,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	public String ofertar(OfertaDto ofertaDto)
 	{
 		final Session sess = HibernateUtil.getSession();
+		if ("Yes".equals(ofertaDto.getNotificacion()))
+			ofertaDto.setNotificacion("Si");
 		try
 		{
 			final Proyecto proy = getProyecto(sess, ofertaDto.getProyecto());
