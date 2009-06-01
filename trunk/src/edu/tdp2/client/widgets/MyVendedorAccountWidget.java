@@ -36,8 +36,8 @@ public class MyVendedorAccountWidget extends AccountWidget
 		public ProjectTable(List<Proyecto> proyectos, boolean buscoGanadora, boolean buscoPerdida)
 		{
 			this.proyectos = proyectos;
-			this.buscoGanadora=buscoGanadora;
-			this.buscoPerdida=buscoPerdida;
+			this.buscoGanadora = buscoGanadora;
+			this.buscoPerdida = buscoPerdida;
 			buildWidget();
 		}
 
@@ -61,24 +61,24 @@ public class MyVendedorAccountWidget extends AccountWidget
 				getCellFormatter().addStyleName(0, 6, "firstRow");
 			}
 
-			row=1;
+			row = 1;
 			for (final Proyecto proyecto : proyectos)
 			{
-				
-				AsyncCallback<Oferta> callback = new AsyncCallback<Oferta>(){
 
+				AsyncCallback<Oferta> callback = new AsyncCallback<Oferta>()
+				{
 
-					public void onFailure(Throwable caught) {
+					public void onFailure(Throwable caught)
+					{
 						Window.alert("No se pudo recuperar oferta ganadora");
 					}
 
-
-					public void onSuccess(Oferta result) {
-						Oferta ofG =result;
+					public void onSuccess(Oferta result)
+					{
+						Oferta ofG = result;
 						Oferta ofertaPropia = null;
 						Oferta menorOferta = null;
-						
-						
+
 						for (final Oferta of : proyecto.getOfertas())
 						{
 
@@ -89,17 +89,18 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 							if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
 								menorOferta = of;
-							
-							if(ofG!=null){
-								if(ofertaPropia != null && buscoGanadora&&!ofertaPropia.compare(ofG))
+
+							if (ofG != null)
+							{
+								if (ofertaPropia != null && buscoGanadora && !ofertaPropia.compare(ofG))
 									ofertaPropia = null;
-								
-								if(ofertaPropia!=null && buscoPerdida && ofertaPropia.compare(ofG))
+
+								if (ofertaPropia != null && buscoPerdida && ofertaPropia.compare(ofG))
 									ofertaPropia = null;
 							}
 
 							if (ofertaPropia != null)
-							{	
+							{
 								Anchor aProy = new Anchor(proyecto.getNombre());
 								aProy.addClickHandler(new ClickHandler()
 								{
@@ -127,7 +128,8 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 								setWidget(row, 2, new HTML(ofertaPropia.getMoneda().getDescription()));
 								setWidget(row, 3, new HTML("" + ofertaPropia.getDias()));
-								setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? constants.si() : constants.no()));
+								setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? constants.si()
+										: constants.no()));
 
 								DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
 								setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
@@ -144,7 +146,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 							row++;
 						}
 					}
-					
+
 				};
 				ClientUtils.getSoftmartService().getOfertaGanadora(proyecto.getId(), callback);
 			}
@@ -153,6 +155,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 	private final MyVendedorAccount datos;
 	private MyVendedorAccountConstants constants;
+	protected VerticalPanel underPanel = new VerticalPanel();
 
 	public MyVendedorAccountWidget(MyVendedorAccount datos)
 	{
@@ -285,10 +288,11 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
+		underPanel.add(new HTML(constants.miReputacionVendedor() + String.valueOf(datos.getReputacion()) + " </p>"));
 		for (Moneda ganancia : datos.getGananciaAcumulada().keySet())
-			underPanel.add(new HTML(constants.miReputacionVendedor() + String.valueOf(datos.getReputacion()) + " </p>"
-					+ constants.gananciaAcumulada() + String.valueOf(datos.getGananciaAcumulada().get(ganancia))
-					+ constants.preposicionEn() + ganancia.getDescription() + " </p> "));
+			underPanel.add(new HTML(constants.gananciaAcumulada()
+					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + constants.preposicionEn()
+					+ ganancia.getDescription() + " </p> "));
 		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;
 	}

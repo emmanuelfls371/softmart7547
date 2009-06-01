@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -98,6 +99,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 	private final MyCompradorAccount datos;
 	private MyCompradorAccountConstants constants;
+	protected HorizontalPanel underPanel = new HorizontalPanel();
 
 	public MyCompradorAccountWidget(MyCompradorAccount datos)
 	{

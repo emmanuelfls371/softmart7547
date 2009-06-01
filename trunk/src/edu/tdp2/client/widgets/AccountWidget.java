@@ -34,7 +34,6 @@ public class AccountWidget extends DockPanel
 	protected Anchor califRecibida;
 	protected VerticalPanel centerPanel = new VerticalPanel();
 	protected HorizontalPanel eastPanel = new HorizontalPanel();
-	protected HorizontalPanel underPanel = new HorizontalPanel();
 
 	protected boolean accion;
 
