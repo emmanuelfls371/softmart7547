@@ -94,4 +94,6 @@ public interface SoftmartServiceAsync
 	public void setTextoBienvenida(String locale, String text, AsyncCallback<String> callback);
 
 	public void getTextoBienvenida(String locale, AsyncCallback<String> callback);
+
+	public void proyectoExists(String project, AsyncCallback<Boolean> callback);
 }

@@ -138,12 +138,13 @@ public class MyVendedorAccountWidget extends AccountWidget
 									setWidget(row, 6, getActionButton(proyecto));
 									getCellFormatter().addStyleName(row, 6, "column");
 								}
+								
+								for (int i = 0; i < 6; i++)
+									getCellFormatter().addStyleName(row, i, "column");
+								
+								row++;
 							}
-
-							for (int i = 0; i < 6; i++)
-								getCellFormatter().addStyleName(row, i, "column");
-
-							row++;
+							
 						}
 					}
 

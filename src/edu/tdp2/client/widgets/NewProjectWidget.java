@@ -28,6 +28,8 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class NewProjectWidget extends FormWidget
 {
+	private boolean proyectoRepetido;
+	
 	private enum ProjectFields implements FormFields
 	{
 		Nombre(constants.nombre()), Presupuesto(constants.presupuesto()), Fecha(constants.fechaCierre()), Nivel(
@@ -85,50 +87,74 @@ public class NewProjectWidget extends FormWidget
 
 	private final class ProjectSubmitHandler implements SubmitHandler
 	{
-		public void onSubmit(SubmitEvent event)
+		public void onSubmit(final SubmitEvent event)
 		{
 			dto = new ProyectoDto();
-			ProyectoDto proyectoDto = (ProyectoDto) dto;
+			final ProyectoDto proyectoDto = (ProyectoDto) dto;
 			proyectoDto.setNombre(((TextBox) instance.widgets.get(ProjectFields.Nombre)).getText());
 
-			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
+			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>(){
 
-			if (hayRangos)
-			{
-				ListBox lisRangos = (ListBox) panel.getWidget(1);
-				proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
-			}
-			ListBox lisMonedas = (ListBox) panel.getWidget(0);
-			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+				public void onFailure(Throwable caught) {
+					Window.alert(constants.failProyectoExists());
+					
+				}
 
-			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
-			proyectoDto.setFecha(dateFecha.getValue());
+				public void onSuccess(Boolean result) {
+					
+					proyectoRepetido=false;
+					
+					if(result == true){
+						proyectoRepetido=true;
+					}
 
-			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
-			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
+					
+						FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
 
-			FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
-			for (Widget widget : panelDificultad)
-			{
-				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					proyectoDto.setDificultad(b.getHTML());
-			}
+						if (hayRangos)
+						{
+							ListBox lisRangos = (ListBox) panel.getWidget(1);
+							proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
+						}
+						ListBox lisMonedas = (ListBox) panel.getWidget(0);
+						proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
 
-			FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
-			for (Widget widget : panelTamanio)
-			{
-				RadioButton b = (RadioButton) widget;
-				if (b.getValue())
-					proyectoDto.setTamanio(b.getHTML());
-			}
+						DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
+						proyectoDto.setFecha(dateFecha.getValue());
 
-			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
+						ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
+						proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
 
-			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
+						FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
+						for (Widget widget : panelDificultad)
+						{
+							RadioButton b = (RadioButton) widget;
+							if (b.getValue())
+								proyectoDto.setDificultad(b.getHTML());
+						}
 
-			if (!validate())
-				event.cancel();
+						FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
+						for (Widget widget : panelTamanio)
+						{
+							RadioButton b = (RadioButton) widget;
+							if (b.getValue())
+								proyectoDto.setTamanio(b.getHTML());
+						}
+
+						proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
+
+						((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
+
+					
+					
+					if (!validate())
+						event.cancel();
+					
+				}
+			
+				
+			};
+			ClientUtils.getSoftmartService().proyectoExists(((ProyectoDto) dto).getNombre(), callback);			
 		}
 	}
 
@@ -178,6 +204,7 @@ public class NewProjectWidget extends FormWidget
 	@Override
 	protected void populateWidgets()
 	{
+		
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ProjectFields.Nombre.toString());
@@ -332,6 +359,8 @@ public class NewProjectWidget extends FormWidget
 			errMsgs.add(constants.debeIngresarCierre());
 		else if (((ProyectoDto) dto).getFecha().before(new Date()))
 			errMsgs.add(constants.fechaCierreAnteriorHoy());
+		if(proyectoRepetido)
+			errMsgs.add(constants.proyectoRepetido());
 	}
 
 	@Override

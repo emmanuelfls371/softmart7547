@@ -19,6 +19,7 @@ public class ComentarioWidget extends DialogBox
 	public ComentarioWidget(Oferta oferta)
 	{
 		super(true);
+		constants = GWT.create(ComentarioConstants.class);
 		c = oferta.getDescripcion();
 		load();
 		/*
