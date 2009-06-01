@@ -19,7 +19,7 @@ public class NewCalificationWidget extends FormWidget
 {
 	private enum CalificacionFields implements FormFields
 	{
-		Proyecto(constants.proyecto()), /* Usuario("Usuario a calificar"), */Calif(constants.calificacion()), Comentario(
+		Proyecto(constants.proyecto()), Usuario(constants.usuario()), Calif(constants.calificacion()), Comentario(
 				constants.comentario());
 
 		public String description;
@@ -85,7 +85,7 @@ public class NewCalificationWidget extends FormWidget
 		if (instance == null)
 			instance = new NewCalificationWidget();
 		((Label) instance.widgets.get(CalificacionFields.Proyecto)).setText(project.getNombre());
-		// ((Label) instance.widgets.get(CalificacionFields.Usuario)).setText(project.getUsuario().getLogin());
+		((Label) instance.widgets.get(CalificacionFields.Usuario)).setText(project.getUsuario().getLogin());
 
 		instance.projectId = project.getId();
 		return instance;
@@ -123,7 +123,7 @@ public class NewCalificationWidget extends FormWidget
 	{
 		widgets.put(CalificacionFields.Proyecto, new Label());
 
-		// widgets.put(CalificacionFields.Usuario, new Label());
+		widgets.put(CalificacionFields.Usuario, new Label());
 
 		TextBox t = new TextBox();
 		t.setMaxLength(2);

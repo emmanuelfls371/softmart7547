@@ -16,5 +16,7 @@ public interface NewCalificationConstants extends Constants
 	String formatoCalifInvalido();
 
 	String proyecto();
+	
+	String usuario();
 
 }
