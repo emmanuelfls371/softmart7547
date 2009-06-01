@@ -1,4 +1,4 @@
-package edu.tdp2.server;
+﻿package edu.tdp2.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -465,12 +465,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					.setParameter(0, usuario).uniqueResult();
 			if (reputacionVend != null)
 				vendedor.setReputacion(reputacionVend);
-			vendedor.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
+			vendedor.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT y FROM Proyecto y JOIN FETCH y.ofertas "
 							+ "WHERE y.contrato.ofertaGanadora.usuario = ? AND y.contrato.califAlComprador IS NULL "
 							+ "AND y.revisado = true AND y.canceladoXAdmin = false AND y.cancelado = false")
 					.setParameter(0, usuario).list());
-			vendedor.setProyectosSinCalificar((List<Proyecto>) sess.createQuery(
+			vendedor.setProyectosSinRecibirCalif((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT y FROM Proyecto y JOIN FETCH y.ofertas "
 							+ "WHERE y.contrato.ofertaGanadora.usuario = ? AND y.contrato.califAlVendedor IS NULL "
 							+ "AND y.revisado = true AND y.canceladoXAdmin = false AND y.cancelado = false")
@@ -491,7 +491,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 					usuario).list());
 			vendedor.setProyectosPerdidos((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT proy FROM Proyecto proy JOIN FETCH proy.ofertas AS oferta "
-							+ "WHERE oferta.usuario = :u AND proy.contrato.ofertaGanadora.usuario <> :u").setParameter(
+							+ "WHERE oferta.usuario = :u AND (proy.contrato.ofertaGanadora.usuario <> :u OR proy.ofertas.size > 1)").setParameter(
 					"u", usuario).list());
 			vendedor.setProyectosAdjudicados(new ArrayList<Proyecto>());
 			vendedor.getProyectosAdjudicados().addAll(vendedor.getProyectosSinCalificar());

@@ -5,6 +5,20 @@ import com.google.gwt.i18n.client.Constants;
 public interface DetailSearchConstants extends Constants
 {
 
+	String errorOfertaCerrada();
+	
+	String errorUsuarioBloqueado();
+	
+	String errorCancelado();
+	
+	String errorCanceladoXAdmin();
+	
+	String errorNoRevisado();
+	
+	String errorUsuariosNoIguales();
+	
+	String errorFechaCierrePasada();
+	
 	String debeSelecProy();
 
 	String dias();
