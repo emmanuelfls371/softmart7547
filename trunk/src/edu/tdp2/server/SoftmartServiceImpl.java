@@ -229,6 +229,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			contrato.setOfertaGanadora(offer);
 			contrato.setProyecto(offer.getProyecto());
 			TransactionWrapper.save(sess, contrato);
+			
+			/*offer.getProyecto().setDestacado(false);
+			TransactionWrapper.save(sess, offer.getProyecto());*/
+			
 			return null;
 		}
 		catch (Exception e)
@@ -1263,6 +1267,25 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		catch (Exception e)
 		{
 			throw new SoftmartServerException(e.getMessage());
+		}
+	}
+
+	@Override
+	public boolean proyectoExists(String project) {
+
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, project).uniqueResult();
+			if(result == null)
+				return false;
+			else
+				return true;
+		}
+		finally
+		{
+			sess.close();
 		}
 	}
 }

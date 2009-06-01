@@ -43,4 +43,8 @@ public interface NewProjectConstants extends Constants
 
 	String tamano();
 
+	String failProyectoExists();
+
+	String proyectoRepetido();
+
 }

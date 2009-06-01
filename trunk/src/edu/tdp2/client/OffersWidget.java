@@ -127,6 +127,7 @@ public class OffersWidget extends VerticalPanel
 						{
 							final DialogBox dialogBox = new ComentarioWidget(oferta);
 							dialogBox.setAnimationEnabled(true);
+							dialogBox.center();
 							dialogBox.show();
 						}
 					});
