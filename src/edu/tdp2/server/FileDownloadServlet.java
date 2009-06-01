@@ -51,7 +51,7 @@ public class FileDownloadServlet extends HttpServlet
 
 		System.out.println("Intentando abrir el archivo: " + path);
 		File imageFile = new File(path);
-		response.setContentType("image/jpeg");
+		response.setContentType("application/octet-stream");
 		response.setHeader("Content-disposition", "inline;filename=" + imageName);
 		if (imageFile.exists())
 		{
