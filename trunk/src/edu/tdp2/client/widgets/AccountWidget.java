@@ -66,7 +66,6 @@ public class AccountWidget extends DockPanel
 					proySelected = proyecto;
 				if (proyCerrados)
 				{
-
 					onShowOptionCalifRecibida();
 					onShowOptionCalifHecha();
 				}
@@ -125,9 +124,10 @@ public class AccountWidget extends DockPanel
 						}
 					if (c == null)
 						// califHecha.setEnabled(false);
-						califHecha.addStyleName("a-disabled");
+						califHecha.setStyleName("a-disabled");
 					else
 					{
+						califHecha.setStyleName("a-enable");
 						final ContratoDto c2 = c;
 						califHecha.setEnabled(true);
 						califHecha.addClickHandler(new ClickHandler()
@@ -154,7 +154,6 @@ public class AccountWidget extends DockPanel
 
 	protected void onShowOptionCalifRecibida()
 	{
-
 		AsyncCallback<List<ContratoDto>> callback = new AsyncCallback<List<ContratoDto>>()
 		{
 			public void onFailure(Throwable caught)
@@ -176,10 +175,11 @@ public class AccountWidget extends DockPanel
 						}
 					if (c == null)
 						// califRecibida.setEnabled(false);
-						califRecibida.addStyleName("a-disabled");
+						califRecibida.setStyleName("a-disabled");
 					// Window.alert("El proyecto no ha recibido calificación");
 					else
 					{
+						califRecibida.setStyleName("a-enable");
 						final ContratoDto c2 = c;
 						califRecibida.setEnabled(true);
 						califRecibida.addClickHandler(new ClickHandler()
