@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.tdp2.client.WelcomeConstants;
 import edu.tdp2.client.utils.ClientUtils;
 
 public class AdminWelcomeTextWidget extends AdminWidget
@@ -18,7 +17,6 @@ public class AdminWelcomeTextWidget extends AdminWidget
 	private static AdminWelcomeTextWidget instance;
 	private TextArea text = new TextArea();
 	private VerticalPanel vPanel = new VerticalPanel();
-	private WelcomeConstants wConstants = GWT.create(WelcomeConstants.class);
 	private AdminWelcomeTextConstants constants = GWT.create(AdminWelcomeTextConstants.class);
 	private String locale;
 
@@ -41,8 +39,9 @@ public class AdminWelcomeTextWidget extends AdminWidget
 	private void loadPanel()
 	{
 		text.setVisibleLines(20);
-		text.setText(wConstants.text());
+		setWelcomeText(locale, text);
 		text.setWidth("700px");
+		vPanel.add(statusMessage);
 		vPanel.add(text);
 
 		Button guardarTexto = new Button(constants.guardar());
@@ -55,17 +54,35 @@ public class AdminWelcomeTextWidget extends AdminWidget
 					public void onFailure(Throwable caught)
 					{
 						Window.alert(caught.getMessage());
+						statusMessage.setHTML(constants.errorSetTextoBienvenida());
 					}
 
 					public void onSuccess(String result)
 					{
-						statusMessage.setText(constants.textoModificado());
+						statusMessage.setHTML(constants.textoModificado());
 					}
 				};
 				ClientUtils.getSoftmartService().setTextoBienvenida(locale, text.getText(), callback);
 			}
 		});
 		vPanel.add(guardarTexto);
+	}
+
+	private void setWelcomeText(String locale, final TextArea widget)
+	{
+		AsyncCallback<String> callback = new AsyncCallback<String>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert(caught.getMessage());
+			}
+
+			public void onSuccess(String result)
+			{
+				widget.setText(result);
+			}
+		};
+		ClientUtils.getSoftmartService().getTextoBienvenida(locale, callback);
 	}
 
 	public void setLocale(String locale)

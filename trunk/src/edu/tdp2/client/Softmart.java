@@ -11,6 +11,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -28,6 +29,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.widgets.DestacadosWidget;
 import edu.tdp2.client.widgets.LoginListener;
 import edu.tdp2.client.widgets.LoginWidget;
@@ -91,6 +93,7 @@ public class Softmart implements EntryPoint, LoginListener
 	private VerticalPanel centerPanel;
 	private AbsolutePanel northPanel;
 	private Images images;
+	private ListBox lisIdiomas;
 
 	public void onLogin()
 	{
@@ -195,6 +198,9 @@ public class Softmart implements EntryPoint, LoginListener
 		dPanel.add(getCenterPanel(), DockPanel.CENTER);
 		dPanel.add(getHeaderPanel(), DockPanel.NORTH);
 		dPanel.add(getNorthPanel(), DockPanel.NORTH);
+		String loginCookie = Cookies.getCookie(constants.loginCookieName());
+		if (loginCookie != null && !loginCookie.equals(""))
+			LoginWidget.setCurrentUser(loginCookie.split(";")[0]);
 		showWelcome();
 		History.newItem(HistoryToken.Welcome.toString());
 
@@ -230,7 +236,7 @@ public class Softmart implements EntryPoint, LoginListener
 		bannerPanel.add(header);
 		panel.add(bannerPanel);
 
-		final ListBox lisIdiomas = new ListBox();
+		lisIdiomas = new ListBox();
 		for (int i = 0; i < i18nConstants.idiomas().length; i++)
 		{
 			lisIdiomas.addItem(i18nConstants.idiomas()[i], i18nConstants.locales()[i]);
@@ -300,7 +306,10 @@ public class Softmart implements EntryPoint, LoginListener
 			centerPanel.add(loginWidget);
 			HorizontalPanel hPanel = new HorizontalPanel();
 			hPanel.setWidth("739px");
-			hPanel.add(new HTML(((WelcomeConstants) GWT.create(WelcomeConstants.class)).text()));
+			HTML welcomeText = new HTML();
+			hPanel.add(welcomeText);
+			String locale = lisIdiomas.getValue(lisIdiomas.getSelectedIndex());
+			setWelcomeText(locale, welcomeText);
 			hPanel.setSpacing(20);
 			centerPanel.add(hPanel);
 			loginWidget.getUserNameTextBox().setText("");
@@ -309,4 +318,20 @@ public class Softmart implements EntryPoint, LoginListener
 		}
 	}
 
+	private void setWelcomeText(String locale, final HTML widget)
+	{
+		AsyncCallback<String> callback = new AsyncCallback<String>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert(caught.getMessage());
+			}
+
+			public void onSuccess(String result)
+			{
+				widget.setHTML(result);
+			}
+		};
+		ClientUtils.getSoftmartService().getTextoBienvenida(locale, callback);
+	}
 }
