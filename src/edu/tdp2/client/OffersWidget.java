@@ -39,7 +39,7 @@ public class OffersWidget extends VerticalPanel
 
 	protected int findChecked()
 	{
-		for (int row = 1; row < table.getRowCount() - 1; row++)
+		for (int row = 1; row < table.getRowCount(); row++)
 			if (((RadioButton) table.getWidget(row, COL_RADIO)).getValue())
 				return row;
 		return -1;
