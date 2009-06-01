@@ -10,5 +10,7 @@ public interface AdminWelcomeTextConstants extends Constants
 	String guardar();
 
 	String textoModificado();
+
+	String errorSetTextoBienvenida();
 	
 }

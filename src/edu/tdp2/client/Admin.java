@@ -114,6 +114,10 @@ public class Admin implements EntryPoint, LoginListener
 
 		RootPanel.get().add(hPanel);
 
+		String loginCookie = Cookies.getCookie(constants.adminLoginCookieName());
+		if (loginCookie != null && !loginCookie.equals(""))
+			AdminLoginWidget.setCurrentUser(loginCookie.split(";")[0]);
+
 		showWelcome();
 	}
 

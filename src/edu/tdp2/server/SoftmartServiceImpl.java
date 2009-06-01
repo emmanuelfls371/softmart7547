@@ -1,8 +1,11 @@
 ﻿package edu.tdp2.server;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1205,22 +1208,17 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	@Override
 	public String setTextoBienvenida(String locale, String text)
 	{
-		assert locale != null;
-		assert locale.startsWith("?");
-		locale = locale.substring(1);
-		if (!locale.isEmpty())
-		{
-			assert locale.contains("=");
-			locale = locale.split("=", 2)[1];
-		}
+		locale = getFormattedLocale(locale);
 
 		try
 		{
 			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
+			System.out.println("Editando recurso: " + relativePath);
 			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
 			File file = new File(FileUploadServlet.class.getClassLoader().getResource(relativePath).getPath());
+			System.out.println("Editando archivo: " + file.getAbsolutePath());
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-			pw.print("text=" + new String(text.getBytes("UTF-8"), "ISO-8859-1"));
+			pw.print(new String(text.getBytes("UTF-8"), "ISO-8859-1"));
 			pw.close();
 		}
 		catch (Exception e)
@@ -1230,4 +1228,39 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		return null;
 	}
 
+	private String getFormattedLocale(String locale)
+	{
+		assert locale != null;
+		assert locale.startsWith("?");
+		locale = locale.substring(1);
+		if (!locale.isEmpty())
+		{
+			assert locale.contains("=");
+			locale = locale.split("=", 2)[1];
+		}
+		return locale;
+	}
+
+	@Override
+	public String getTextoBienvenida(String locale)
+	{
+		locale = getFormattedLocale(locale);
+		try
+		{
+			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
+			System.out.println("Editando recurso: " + relativePath);
+			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
+			InputStream stream = FileUploadServlet.class.getClassLoader().getResourceAsStream(relativePath);
+			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+			String line = "";
+			StringBuilder text = new StringBuilder();
+			while ((line = r.readLine()) != null)
+				text.append(line + "\n");
+			return new String(text.toString().getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (Exception e)
+		{
+			throw new SoftmartServerException(e.getMessage());
+		}
+	}
 }

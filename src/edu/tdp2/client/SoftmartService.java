@@ -2,7 +2,6 @@ package edu.tdp2.client;
 
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.tdp2.client.dto.CalificacionDto;
@@ -93,4 +92,6 @@ public interface SoftmartService extends RemoteService
 	public String adminLogout(String userName);
 
 	public String setTextoBienvenida(String locale, String text);
+
+	public String getTextoBienvenida(String locale);
 }
