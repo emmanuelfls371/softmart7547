@@ -90,4 +90,6 @@ public interface SoftmartServiceAsync
 	public void adminLogin(String userName, String passwordHash, AsyncCallback<String> callback);
 
 	public void adminLogout(String userName, AsyncCallback<String> callback);
+
+	public void setTextoBienvenida(String locale, String text, AsyncCallback<String> callback);
 }

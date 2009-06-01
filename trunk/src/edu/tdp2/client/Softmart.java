@@ -298,6 +298,11 @@ public class Softmart implements EntryPoint, LoginListener
 			centerPanel.clear();
 			LoginWidget loginWidget = LoginWidget.getInstance();
 			centerPanel.add(loginWidget);
+			HorizontalPanel hPanel = new HorizontalPanel();
+			hPanel.setWidth("739px");
+			hPanel.add(new HTML(((WelcomeConstants) GWT.create(WelcomeConstants.class)).text()));
+			hPanel.setSpacing(20);
+			centerPanel.add(hPanel);
 			loginWidget.getUserNameTextBox().setText("");
 			loginWidget.getPasswordTextBox().setText("");
 			loginWidget.setLoginListener(this);
