@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.tdp2.client.TipoCalificacionWrapper.TipoCalificacion;
@@ -26,6 +27,8 @@ public class CalificationWidget extends VerticalPanel
 		this.proyecto = proyecto;
 		this.tipo = tipo.getDescription();
 		constants = GWT.create(CalificacionConstants.class);
+		setWidth("100%");
+		setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		load();
 	}
 
@@ -62,6 +65,7 @@ public class CalificationWidget extends VerticalPanel
 		};
 		ClientUtils.getSoftmartService().isUsuarioBloqueado(calif.getUsuario(), callback);
 
+		setSpacing(3);
 		HTML lineHoriz = new HTML("<h3>" + constants.califParaProyecto() + proyecto + "</h3>");
 		lineHoriz.addStyleName("hl2");
 		lineHoriz.setWidth("250px");
@@ -76,18 +80,20 @@ public class CalificationWidget extends VerticalPanel
 
 		table.getCellFormatter().addStyleName(0, 0, "c0ProjectWidget");
 		table.getCellFormatter().addStyleName(1, 0, "c0ProjectWidget");
+		table.getCellFormatter().addStyleName(2, 0, "c0ProjectWidget");
 
 		table.getCellFormatter().addStyleName(0, 1, "c1y2ProjectWidget");
 		table.getCellFormatter().addStyleName(1, 1, "c1y2ProjectWidget");
+		table.getCellFormatter().addStyleName(2, 1, "c1y2ProjectWidget");
 
 		table.setWidget(0, 0, new HTML(constants.calificacion()));
-		table.setWidget(0, 1, new HTML(constants.comentario()));
-		table.setWidget(0, 2, new HTML(tipo));
+		table.setWidget(2, 0, new HTML(constants.comentario()));
+		table.setWidget(1, 0, new HTML(tipo));
 
 		int row = 1;
-		table.setWidget(row, 0, new HTML(Integer.toString(calif.getCalificacion())));
-		table.setWidget(row, 1, new HTML(calif.getComentario()));
-		table.setWidget(row, 2, h);
+		table.setWidget(0, row, new HTML(Integer.toString(calif.getCalificacion())));
+		table.setWidget(2, row, new HTML(calif.getComentario()));
+		table.setWidget(1, row, h);
 
 	}
 
