@@ -39,7 +39,7 @@ public class ProjectWidget extends VerticalPanel
 		{
 			public void onClick(ClickEvent event)
 			{
-				Window.open("download?fileName=" + pathArchivo, "", "");
+				Window.open("download?fileName=" + pathArchivo, "_self", "");
 			}
 		});
 		return a;
