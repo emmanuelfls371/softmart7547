@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -34,6 +35,8 @@ public class DetailSearchWidget extends VerticalPanel
 	{
 		this.proy = proy;
 		constants = GWT.create(DetailSearchConstants.class);
+		setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		setSpacing(3);
 		load();
 	}
 
@@ -74,6 +77,8 @@ public class DetailSearchWidget extends VerticalPanel
 	{
 		panel = new VerticalPanel();
 		initialize();
+		panel.setSpacing(5);
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		for (final Oferta of : ofertas)
 			load(of);
 
@@ -132,10 +137,36 @@ public class DetailSearchWidget extends VerticalPanel
 							}
 						}
 					});
-				else
-					// VERIFICAR CADA CONDICION Y PONER UN CARTEL
+				else{
+					String errores=null;
+					if(ofertaG != null){
+						errores=constants.errorOfertaCerrada();
+					}
+					if(proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser())){
+						errores=constants.errorUsuariosNoIguales();
+					}
+					if(!proy.getFecha().after(new Date())){
+						errores=constants.errorFechaCierrePasada();
+					}
+					if(proy.isCancelado()){
+						errores=constants.errorCancelado();
+					}
+					if(proy.isCanceladoXAdmin()){
+						errores=constants.errorCanceladoXAdmin();
+					}
+					if(!proy.isRevisado()){
+						errores=constants.errorNoRevisado();
+					}
+					
+					if(proy.getUsuario().isBloqueado()){
+						errores=constants.errorUsuarioBloqueado();
+					}
+					HTML error = new HTML (errores);
+					error.addStyleName("blocked");
+					add(error);
 					// menuLink.setEnabled(false);
 					menuLink.addStyleName("a-disabled");
+				}
 
 				add(menuLink);
 				buildTableOfertas();

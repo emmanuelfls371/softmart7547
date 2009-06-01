@@ -6,6 +6,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -19,6 +21,7 @@ import edu.tdp2.client.dto.MyVendedorAccount;
 import edu.tdp2.client.model.Moneda;
 import edu.tdp2.client.model.Oferta;
 import edu.tdp2.client.model.Proyecto;
+import edu.tdp2.client.utils.ClientUtils;
 
 public class MyVendedorAccountWidget extends AccountWidget
 {
@@ -26,11 +29,15 @@ public class MyVendedorAccountWidget extends AccountWidget
 	private class ProjectTable extends FlexTable
 	{
 		private final List<Proyecto> proyectos;
+		private boolean buscoGanadora;
+		private boolean buscoPerdida;
+		private int row;
 
-		public ProjectTable(List<Proyecto> proyectos)
+		public ProjectTable(List<Proyecto> proyectos, boolean buscoGanadora, boolean buscoPerdida)
 		{
 			this.proyectos = proyectos;
-			setBorderWidth(1);
+			this.buscoGanadora=buscoGanadora;
+			this.buscoPerdida=buscoPerdida;
 			buildWidget();
 		}
 
@@ -54,68 +61,92 @@ public class MyVendedorAccountWidget extends AccountWidget
 				getCellFormatter().addStyleName(0, 6, "firstRow");
 			}
 
-			int row = 1;
+			row=1;
 			for (final Proyecto proyecto : proyectos)
 			{
-				Oferta ofertaPropia = null;
-				Oferta menorOferta = null;
-				for (final Oferta of : proyecto.getOfertas())
-				{
+				
+				AsyncCallback<Oferta> callback = new AsyncCallback<Oferta>(){
 
-					if (of.getUsuario().getLogin().equals(LoginWidget.getCurrentUser()))
-						ofertaPropia = of;
-					else
-						ofertaPropia = null;
 
-					if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
-						menorOferta = of;
-
-					if (ofertaPropia != null)
-					{
-
-						Anchor aProy = new Anchor(proyecto.getNombre());
-						aProy.addClickHandler(new ClickHandler()
-						{
-							public void onClick(ClickEvent event)
-							{
-								centerPanel.clear();
-								centerPanel.add(new ProjectWidget(proyecto));
-								// centerPanel.add(underPanel);
-							}
-						});
-						setWidget(row, 0, aProy);
-
-						Anchor aOferta = new Anchor("" + ofertaPropia.getMonto());
-						final Oferta finalOferta = ofertaPropia;
-						aOferta.addClickHandler(new ClickHandler()
-						{
-							public void onClick(ClickEvent event)
-							{
-								centerPanel.clear();
-								centerPanel.add(new OfertaWidget(finalOferta, proyecto.getNombre()));
-								// centerPanel.add(underPanel);
-							}
-						});
-						setWidget(row, 1, aOferta);
-
-						setWidget(row, 2, new HTML(ofertaPropia.getMoneda().getDescription()));
-						setWidget(row, 3, new HTML("" + ofertaPropia.getDias()));
-						setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? constants.si() : constants.no()));
-
-						DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
-						setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
-						if (accion)
-						{
-							setWidget(row, 6, getActionButton(proyecto));
-							getCellFormatter().addStyleName(row, 6, "column");
-						}
+					public void onFailure(Throwable caught) {
+						Window.alert("No se pudo recuperar oferta ganadora");
 					}
 
-					for (int i = 0; i < 6; i++)
-						getCellFormatter().addStyleName(row, i, "column");
 
-					row++;
-				}
+					public void onSuccess(Oferta result) {
+						Oferta ofG =result;
+						Oferta ofertaPropia = null;
+						Oferta menorOferta = null;
+						
+						
+						for (final Oferta of : proyecto.getOfertas())
+						{
+
+							if (of.getUsuario().getLogin().equals(LoginWidget.getCurrentUser()))
+								ofertaPropia = of;
+							else
+								ofertaPropia = null;
+
+							if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
+								menorOferta = of;
+							
+							if(ofG!=null){
+								if(ofertaPropia != null && buscoGanadora&&!ofertaPropia.compare(ofG))
+									ofertaPropia = null;
+								
+								if(ofertaPropia!=null && buscoPerdida && ofertaPropia.compare(ofG))
+									ofertaPropia = null;
+							}
+
+							if (ofertaPropia != null)
+							{	
+								Anchor aProy = new Anchor(proyecto.getNombre());
+								aProy.addClickHandler(new ClickHandler()
+								{
+									public void onClick(ClickEvent event)
+									{
+										centerPanel.clear();
+										centerPanel.add(new ProjectWidget(proyecto));
+										// centerPanel.add(underPanel);
+									}
+								});
+								setWidget(row, 0, aProy);
+
+								Anchor aOferta = new Anchor("" + ofertaPropia.getMonto());
+								final Oferta finalOferta = ofertaPropia;
+								aOferta.addClickHandler(new ClickHandler()
+								{
+									public void onClick(ClickEvent event)
+									{
+										centerPanel.clear();
+										centerPanel.add(new OfertaWidget(finalOferta, proyecto.getNombre()));
+										// centerPanel.add(underPanel);
+									}
+								});
+								setWidget(row, 1, aOferta);
+
+								setWidget(row, 2, new HTML(ofertaPropia.getMoneda().getDescription()));
+								setWidget(row, 3, new HTML("" + ofertaPropia.getDias()));
+								setWidget(row, 4, new HTML(ofertaPropia.compare(menorOferta) ? constants.si() : constants.no()));
+
+								DateTimeFormat format = DateTimeFormat.getFormat("dd/MM/yyyy");
+								setWidget(row, 5, new HTML(format.format(proyecto.getFecha())));
+								if (accion)
+								{
+									setWidget(row, 6, getActionButton(proyecto));
+									getCellFormatter().addStyleName(row, 6, "column");
+								}
+							}
+
+							for (int i = 0; i < 6; i++)
+								getCellFormatter().addStyleName(row, i, "column");
+
+							row++;
+						}
+					}
+					
+				};
+				ClientUtils.getSoftmartService().getOfertaGanadora(proyecto.getId(), callback);
 			}
 		}
 	}
@@ -156,7 +187,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 				accion = false;
 				proyCerrados = false;
 				centerPanel.clear();
-				centerPanel.add(new ProjectTable(datos.getProyectosAbiertos()));
+				centerPanel.add(new ProjectTable(datos.getProyectosAbiertos(), false, false));
 				centerPanel.add(underPanel);
 			}
 		});
@@ -173,7 +204,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 				proyCerrados = true;
 				VerticalPanel vCerr = new VerticalPanel();
 				vCerrados = new VerticalPanel();
-				vCerr.add(new ProjectTable(datos.getProyectosCerrados()));
+				vCerr.add(new ProjectTable(datos.getProyectosCerrados(), true, false));
 				setLinkCalificacion();
 				centerPanel.clear();
 				centerPanel.add(vCerr);
@@ -193,7 +224,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 				accion = false;
 				proyCerrados = false;
 				centerPanel.clear();
-				centerPanel.add(new ProjectTable(datos.getProyectosPerdidos()));
+				centerPanel.add(new ProjectTable(datos.getProyectosPerdidos(), false, true));
 				centerPanel.add(underPanel);
 			}
 		});
@@ -209,7 +240,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 				accion = false;
 				proyCerrados = false;
 				centerPanel.clear();
-				centerPanel.add(new ProjectTable(datos.getProyectosCancelados()));
+				centerPanel.add(new ProjectTable(datos.getProyectosCancelados(), false, false));
 				centerPanel.add(underPanel);
 			}
 		});
@@ -225,7 +256,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 				accion = true;
 				proyCerrados = false;
 				VerticalPanel v = new VerticalPanel();
-				v.add(new ProjectTable(datos.getProyectosSinCalificar()));
+				v.add(new ProjectTable(datos.getProyectosSinCalificar(), true, false));
 				eastPanel.add(getCalificarAction());
 				eastPanel.setWidth("100%");
 				centerPanel.clear();
@@ -246,7 +277,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 				accion = false;
 				proyCerrados = false;
 				centerPanel.clear();
-				centerPanel.add(new ProjectTable(datos.getProyectosSinRecibirCalif()));
+				centerPanel.add(new ProjectTable(datos.getProyectosSinRecibirCalif(), true, false));
 				centerPanel.add(underPanel);
 			}
 		});
