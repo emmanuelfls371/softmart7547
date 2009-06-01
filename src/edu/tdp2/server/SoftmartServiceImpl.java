@@ -1,5 +1,9 @@
 ﻿package edu.tdp2.server;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -489,10 +493,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							+ "AND proy.usuario.bloqueado = false AND proy.revisado = true "
 							+ "AND proy.canceladoXAdmin = false " + "AND proy.cancelado = false").setParameter(0,
 					usuario).list());
-			vendedor.setProyectosPerdidos((List<Proyecto>) sess.createQuery(
-					"SELECT DISTINCT proy FROM Proyecto proy JOIN FETCH proy.ofertas AS oferta "
-							+ "WHERE oferta.usuario = :u AND (proy.contrato.ofertaGanadora.usuario <> :u OR proy.ofertas.size > 1)").setParameter(
-					"u", usuario).list());
+			vendedor
+					.setProyectosPerdidos((List<Proyecto>) sess
+							.createQuery(
+									"SELECT DISTINCT proy FROM Proyecto proy JOIN FETCH proy.ofertas AS oferta "
+											+ "WHERE oferta.usuario = :u AND (proy.contrato.ofertaGanadora.usuario <> :u OR proy.ofertas.size > 1)")
+							.setParameter("u", usuario).list());
 			vendedor.setProyectosAdjudicados(new ArrayList<Proyecto>());
 			vendedor.getProyectosAdjudicados().addAll(vendedor.getProyectosSinCalificar());
 			vendedor.getProyectosAdjudicados().addAll(vendedor.getProyectosSinRecibirCalif());
@@ -1194,6 +1200,34 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.update(us);
 		}
 
+	}
+
+	@Override
+	public String setTextoBienvenida(String locale, String text)
+	{
+		assert locale != null;
+		assert locale.startsWith("?");
+		locale = locale.substring(1);
+		if (!locale.isEmpty())
+		{
+			assert locale.contains("=");
+			locale = locale.split("=", 2)[1];
+		}
+
+		try
+		{
+			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
+			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
+			File file = new File(FileUploadServlet.class.getClassLoader().getResource(relativePath).getPath());
+			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			pw.print("text=" + new String(text.getBytes("UTF-8"), "ISO-8859-1"));
+			pw.close();
+		}
+		catch (Exception e)
+		{
+			throw new SoftmartServerException(e.getMessage());
+		}
+		return null;
 	}
 
 }

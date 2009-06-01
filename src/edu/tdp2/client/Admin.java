@@ -22,6 +22,7 @@ import edu.tdp2.client.utils.ClientUtils;
 import edu.tdp2.client.widgets.AdminLoginWidget;
 import edu.tdp2.client.widgets.AdminProjectsWidget;
 import edu.tdp2.client.widgets.AdminUsersWidget;
+import edu.tdp2.client.widgets.AdminWelcomeTextWidget;
 import edu.tdp2.client.widgets.AdminWidget;
 import edu.tdp2.client.widgets.LoginListener;
 
@@ -31,6 +32,7 @@ public class Admin implements EntryPoint, LoginListener
 	private SoftmartConstants constants;
 	private HorizontalPanel centerPanel;
 	private HorizontalPanel northPanel;
+	private ListBox lisIdiomas;
 
 	public void onLogin()
 	{
@@ -60,6 +62,11 @@ public class Admin implements EntryPoint, LoginListener
 		AdminWidget w2 = AdminUsersWidget.getInstance();
 		w2.setContainer(dtPanel);
 		w2.load();
+
+		AdminWelcomeTextWidget w3 = AdminWelcomeTextWidget.getInstance();
+		w3.setContainer(dtPanel);
+		w3.setLocale(lisIdiomas.getValue(lisIdiomas.getSelectedIndex()));
+		w3.load();
 
 		dtPanel.selectTab(0);
 	}
@@ -129,7 +136,7 @@ public class Admin implements EntryPoint, LoginListener
 		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		panel.setWidth("100%");
 
-		final ListBox lisIdiomas = new ListBox();
+		lisIdiomas = new ListBox();
 		for (int i = 0; i < i18nConstants.idiomas().length; i++)
 		{
 			lisIdiomas.addItem(i18nConstants.idiomas()[i], i18nConstants.locales()[i]);
