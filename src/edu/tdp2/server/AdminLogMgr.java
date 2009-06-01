@@ -67,7 +67,8 @@ public class AdminLogMgr
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		String line = "FECHA: " + dateFormat.format(new Date()) + ", ACCION: " + accion.name();
+		String line = "ADMIN: " + admin.getLogin() + ", FECHA: " + dateFormat.format(new Date()) + ", ACCION: "
+				+ accion.name();
 		if (nombreParam != null && valorParam != null)
 			line += ", " + nombreParam + ": " + valorParam;
 		out.println(line);
