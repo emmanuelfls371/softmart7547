@@ -41,6 +41,16 @@ public class MyVendedorAccountWidget extends AccountWidget
 			buildWidget();
 		}
 
+		private Oferta buscarMenorOferta(Proyecto proyecto){
+			Oferta menor=proyecto.getOfertas().get(0);
+			for(Oferta oferta : proyecto.getOfertas()){
+				if(oferta.getMonto() < menor.getMonto()){
+					menor=oferta;
+				}
+			}
+			return menor;
+		}
+		
 		private void buildWidget()
 		{
 
@@ -77,7 +87,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 					{
 						Oferta ofG = result;
 						Oferta ofertaPropia = null;
-						Oferta menorOferta = null;
+						Oferta menorOferta = buscarMenorOferta(proyecto);
 
 						for (final Oferta of : proyecto.getOfertas())
 						{
@@ -86,9 +96,6 @@ public class MyVendedorAccountWidget extends AccountWidget
 								ofertaPropia = of;
 							else
 								ofertaPropia = null;
-
-							if (menorOferta == null || of.getMonto() < menorOferta.getMonto())
-								menorOferta = of;
 
 							if (ofG != null)
 							{
