@@ -230,8 +230,8 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			contrato.setProyecto(offer.getProyecto());
 			TransactionWrapper.save(sess, contrato);
 			
-			/*offer.getProyecto().setDestacado(false);
-			TransactionWrapper.save(sess, offer.getProyecto());*/
+			offer.getProyecto().setDestacado(false);
+			TransactionWrapper.save(sess, offer.getProyecto());
 			
 			return null;
 		}
@@ -372,10 +372,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 					+ "p.contrato IS EMPTY AND p.fecha >= current_date()";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).list();
-			projects.addAll(sess.createQuery(
+			/*projects.addAll(sess.createQuery(
 					"FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 							+ "(p.contrato.califAlComprador IS NULL OR p.contrato.califAlVendedor IS NULL)").list());
-			for (Proyecto project : projects)
+			*/for (Proyecto project : projects)
 				project.pruneNotIncludingOffers();
 			return projects;
 		}
@@ -1270,22 +1270,4 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	@Override
-	public boolean proyectoExists(String project) {
-
-		Session sess = HibernateUtil.getSession();
-
-		try
-		{
-			Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, project).uniqueResult();
-			if(result == null)
-				return false;
-			else
-				return true;
-		}
-		finally
-		{
-			sess.close();
-		}
-	}
 }

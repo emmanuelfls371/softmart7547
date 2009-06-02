@@ -95,5 +95,5 @@ public interface SoftmartServiceAsync
 
 	public void getTextoBienvenida(String locale, AsyncCallback<String> callback);
 
-	public void proyectoExists(String project, AsyncCallback<Boolean> callback);
+
 }
