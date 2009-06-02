@@ -101,6 +101,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 							if (ofertaPropia != null)
 							{
+																
 								Anchor aProy = new Anchor(proyecto.getNombre());
 								aProy.addClickHandler(new ClickHandler()
 								{

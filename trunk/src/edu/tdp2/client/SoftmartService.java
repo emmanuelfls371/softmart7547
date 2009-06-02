@@ -96,5 +96,5 @@ public interface SoftmartService extends RemoteService
 
 	public String getTextoBienvenida(String locale);
 	
-	public boolean proyectoExists(String project);
+	
 }

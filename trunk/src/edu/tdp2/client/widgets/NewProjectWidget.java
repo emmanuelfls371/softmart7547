@@ -1,6 +1,8 @@
 package edu.tdp2.client.widgets;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class NewProjectWidget extends FormWidget
 {
-	private boolean proyectoRepetido;
+	
 	
 	private enum ProjectFields implements FormFields
 	{
@@ -93,25 +95,9 @@ public class NewProjectWidget extends FormWidget
 			final ProyectoDto proyectoDto = (ProyectoDto) dto;
 			proyectoDto.setNombre(((TextBox) instance.widgets.get(ProjectFields.Nombre)).getText());
 
-			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>(){
+			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
 
-				public void onFailure(Throwable caught) {
-					Window.alert(constants.failProyectoExists());
-					
-				}
-
-				public void onSuccess(Boolean result) {
-					
-					proyectoRepetido=false;
-					
-					if(result == true){
-						proyectoRepetido=true;
-					}
-
-					
-						FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
-
-						if (hayRangos)
+			if (hayRangos)
 						{
 							ListBox lisRangos = (ListBox) panel.getWidget(1);
 							proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
@@ -152,10 +138,6 @@ public class NewProjectWidget extends FormWidget
 					
 				}
 			
-				
-			};
-			ClientUtils.getSoftmartService().proyectoExists(((ProyectoDto) dto).getNombre(), callback);			
-		}
 	}
 
 	private static NewProjectWidget instance;
@@ -359,8 +341,7 @@ public class NewProjectWidget extends FormWidget
 			errMsgs.add(constants.debeIngresarCierre());
 		else if (((ProyectoDto) dto).getFecha().before(new Date()))
 			errMsgs.add(constants.fechaCierreAnteriorHoy());
-		if(proyectoRepetido)
-			errMsgs.add(constants.proyectoRepetido());
+		
 	}
 
 	@Override
