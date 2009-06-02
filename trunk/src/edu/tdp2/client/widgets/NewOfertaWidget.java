@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
@@ -47,8 +49,7 @@ public class NewOfertaWidget extends FormWidget
 			errMsgs.clear();
 			dto = new OfertaDto();
 			OfertaDto ofertaDto = (OfertaDto) dto;
-			try
-			{
+			
 				FlowPanel panel = (FlowPanel) instance.widgets.get(OfertaFields.MailNotification);
 				for (Widget widget : panel)
 				{
@@ -57,13 +58,25 @@ public class NewOfertaWidget extends FormWidget
 						ofertaDto.setNotificacion(b.getHTML());
 				}
 
-				ofertaDto.setDescripcion(((TextBox) instance.widgets.get(OfertaFields.Descripcion)).getText());
-
+				ofertaDto.setDescripcion(((TextArea) instance.widgets.get(OfertaFields.Descripcion)).getText());
 				FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-				ofertaDto.setMonto(Float.parseFloat(((TextBox) f.getWidget(0)).getText()));
+				try
+				{
+					ofertaDto.setMonto(Float.parseFloat(((TextBox) f.getWidget(0)).getText()));
+					
+				}catch (NumberFormatException e)
+				{
+					errMsgs.add(constants.errorFormatoDiasMonto());
+				}
 				ofertaDto.setMoneda(((ListBox) f.getWidget(1)).getValue(((ListBox) f.getWidget(1)).getSelectedIndex()));
-				ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
-
+				
+				try
+				{
+					ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
+				}catch(NumberFormatException e){
+					
+					errMsgs.add(constants.verifiqueDias());
+				}
 				ofertaDto.setProyecto(projectId);
 
 				ofertaDto.setUsuario(LoginWidget.getCurrentUser());
@@ -86,12 +99,6 @@ public class NewOfertaWidget extends FormWidget
 							reload();
 					}
 				});
-			}
-			catch (NumberFormatException e)
-			{
-				errMsgs.add(constants.errorFormatoDiasMonto() + constants.verifiqueDias());
-				validate();
-			}
 		}
 	}
 
@@ -193,10 +200,12 @@ public class NewOfertaWidget extends FormWidget
 		panel.add(new RadioButton(OfertaFields.MailNotification.toString(), constants.no()));
 		widgets.put(OfertaFields.MailNotification, panel);
 
-		t = new TextBox();
-		t.setHeight("100px");
-		t.setName(OfertaFields.Descripcion.toString());
-		widgets.put(OfertaFields.Descripcion, t);
+		TextArea t2 = new TextArea();
+		t2.setHeight("100px");
+		t2.setWidth("500px");
+		t2.setTextAlignment(TextBoxBase.ALIGN_JUSTIFY);
+		t2.setName(OfertaFields.Descripcion.toString());
+		widgets.put(OfertaFields.Descripcion, t2);
 	}
 
 	@Override

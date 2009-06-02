@@ -1,8 +1,8 @@
 package edu.tdp2.client.widgets;
 
-import java.util.Calendar;
+
 import java.util.Date;
-import java.util.GregorianCalendar;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -339,7 +339,10 @@ public class NewProjectWidget extends FormWidget
 	{
 		if (((ProyectoDto) dto).getFecha() == null)
 			errMsgs.add(constants.debeIngresarCierre());
-		else if (((ProyectoDto) dto).getFecha().before(new Date()))
+		else if (((ProyectoDto) dto).getFecha().before(new Date())&&
+				!((((ProyectoDto) dto).getFecha().getDate()==(new Date().getDate()))&&
+				(((ProyectoDto) dto).getFecha().getMonth()==(new Date().getMonth()))&&
+				(((ProyectoDto) dto).getFecha().getYear()==(new Date().getYear()))))
 			errMsgs.add(constants.fechaCierreAnteriorHoy());
 		
 	}
