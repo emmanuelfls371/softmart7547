@@ -50,6 +50,8 @@ public class Softmart implements EntryPoint, LoginListener
 		AbstractImagePrototype header();
 
 		AbstractImagePrototype header2();
+		
+		AbstractImagePrototype header3();
 	}
 
 	private class SoftmartHistoryHandler implements ValueChangeHandler<String>
@@ -95,12 +97,16 @@ public class Softmart implements EntryPoint, LoginListener
 	private Images images;
 	private ListBox lisIdiomas;
 
-	public void onLogin()
-	{
-		centerPanel.clear();
+	public void onShowNorthPanel(){
+		
 		northPanel.clear();
-		Image header2 = images.header2().createImage();
-		northPanel.add(header2);
+		Image header = null;
+		if(lisIdiomas.getSelectedIndex()==0){
+			header = images.header2().createImage();
+		}else{
+			header = images.header3().createImage();
+		}
+			northPanel.add(header);
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
 		String currentUser = loginCookie.split(";")[0];
 		LoginWidget.setCurrentUser(currentUser);
@@ -166,6 +172,13 @@ public class Softmart implements EntryPoint, LoginListener
 			}
 		});
 		northPanel.add(showSearch, 150, 5);
+	}
+	
+	public void onLogin()
+	{
+		centerPanel.clear();
+		
+		onShowNorthPanel();
 
 		onShowDestacados();
 	}
@@ -248,6 +261,7 @@ public class Softmart implements EntryPoint, LoginListener
 			public void onChange(ChangeEvent event)
 			{
 				Window.open("Softmart.html" + lisIdiomas.getValue(lisIdiomas.getSelectedIndex()), "_self", "");
+				onShowNorthPanel();
 			}
 		});
 		panel.add(lisIdiomas, 0, 0);
