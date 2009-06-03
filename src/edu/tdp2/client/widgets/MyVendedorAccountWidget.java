@@ -115,7 +115,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 									public void onClick(ClickEvent event)
 									{
 										centerPanel.clear();
-										centerPanel.add(new ProjectWidget(proyecto));
+										centerPanel.add(new ProjectWidget(proyecto, true));
 										// centerPanel.add(underPanel);
 									}
 								});
@@ -297,11 +297,19 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
-		underPanel.add(new HTML(constants.miReputacionVendedor() + String.valueOf(datos.getReputacion()) + " </p>"));
+		String promedio;
+		if(datos.getReputacion() > 0){
+			promedio=String.valueOf(datos.getReputacion());
+		}else{
+			promedio = "-";
+		}
+		underPanel.add(new HTML(constants.miReputacionVendedor() + promedio + " </p>"));
 		for (Moneda ganancia : datos.getGananciaAcumulada().keySet())
 			underPanel.add(new HTML(constants.gananciaAcumulada()
-					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + constants.preposicionEn()
-					+ ganancia.getDescription() + " </p> "));
+					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + " " + ganancia.getDescription() + " </p> "));
+		if(datos.getGananciaAcumulada().keySet().isEmpty()){
+			underPanel.add(new HTML(constants.gananciaAcumulada() + "0"));
+		}
 		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;
 	}

@@ -855,6 +855,14 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
+	
+	private boolean proyectoExists(ProyectoDto proyecto, Session sess){
+		Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, proyecto.getNombre()).uniqueResult();
+		if(result==null)
+			return false;
+		else
+			return true;
+	}
 
 	public String publicar(ProyectoDto proyecto)
 	{
@@ -865,7 +873,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (us != null)
 			{
 				final Proyecto nuevo = new Proyecto(proyecto, us, buscarMoneda(proyecto.getMoneda()));
-				if (us.addProyecto(nuevo))
+				if (us.addProyecto(nuevo)&&!proyectoExists(proyecto, sess))
 					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
 					{
 						public void execute()

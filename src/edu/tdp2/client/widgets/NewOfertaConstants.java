@@ -31,4 +31,6 @@ public interface NewOfertaConstants extends Constants
 
 	String verifiqueDias();
 
+	String errorDescription();
+
 }
