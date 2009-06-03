@@ -20,11 +20,13 @@ public class ProjectWidget extends VerticalPanel
 	private ProjectConstants constants;
 	private Proyecto project;
 	private FlexTable table = new FlexTable();
+	private boolean aparecerBloqueado;
 
-	public ProjectWidget(Proyecto project)
+	public ProjectWidget(Proyecto project, boolean aparecerBloqueado)
 	{
 		this.project = project;
 		constants = GWT.create(ProjectConstants.class);
+		this.aparecerBloqueado=aparecerBloqueado;
 		load();
 	}
 
@@ -70,7 +72,8 @@ public class ProjectWidget extends VerticalPanel
 					h2.setStyleName("blocked");
 					h2.addStyleName("c1y2ProjectWidget");
 					h2.setWidth("580px");
-					add(h2);
+					if(aparecerBloqueado)
+						add(h2);
 					h.setHTML(project.getUsuario().getLogin() + "*");
 				}
 			}

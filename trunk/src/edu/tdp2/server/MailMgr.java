@@ -2,6 +2,8 @@ package edu.tdp2.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -32,10 +34,23 @@ public class MailMgr
 	public static void enviar(Oferta nueva)
 	{
 		Proyecto proy = nueva.getProyecto();
-		for (Oferta existente : proy.getOfertas())
+		Map<Long, Oferta> usuarios = new HashMap<Long, Oferta>();
+		for (Oferta existente : proy.getOfertas()){
 			if (nueva.getMonto() < existente.getMonto() && nueva.getUsuario().getId() != existente.getUsuario().getId()
-					&& existente.getNotificacion().equals("Si"))
-				sendEmail(nueva, existente);
+					&& existente.getNotificacion().equals("Si")){
+				if(usuarios.containsKey(existente.getUsuario().getId())){
+					if(existente.getMonto()<usuarios.get(existente.getUsuario().getId()).getMonto())
+						usuarios.put(existente.getUsuario().getId(), existente);
+				}else{
+						usuarios.put(existente.getUsuario().getId(), existente);
+				}
+			}
+		}
+		
+		for(Oferta existente: usuarios.values()){
+			sendEmail(nueva, existente);
+		}
+		
 	}
 
 	private static void fetchConfig()

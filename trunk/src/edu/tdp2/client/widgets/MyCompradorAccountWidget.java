@@ -67,7 +67,7 @@ public class MyCompradorAccountWidget extends AccountWidget
 					public void onClick(ClickEvent event)
 					{
 						centerPanel.clear();
-						centerPanel.add(new ProjectWidget(proyecto));
+						centerPanel.add(new ProjectWidget(proyecto, true));
 					}
 				});
 				setWidget(row, 0, aProy);
@@ -295,7 +295,13 @@ public class MyCompradorAccountWidget extends AccountWidget
 
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
-		HTML rep = new HTML(constants.miReputacionComprador() + String.valueOf(datos.getReputacion()) + " </p>");
+		String promedio;
+		if(datos.getReputacion() > 0){
+			promedio=String.valueOf(datos.getReputacion());
+		}else{
+			promedio = "-";
+		}
+		HTML rep = new HTML(constants.miReputacionComprador() + promedio + " </p>");
 		underPanel.add(rep);
 		return panel;
 	}

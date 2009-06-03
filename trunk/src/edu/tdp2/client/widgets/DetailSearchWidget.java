@@ -58,7 +58,7 @@ public class DetailSearchWidget extends VerticalPanel
 				else
 				{
 					ofertas = of;
-					add(new ProjectWidget(proy));
+					add(new ProjectWidget(proy, false));
 					getOfertaGanadora();
 				}
 			}

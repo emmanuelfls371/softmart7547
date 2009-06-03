@@ -77,7 +77,7 @@ public class NavigablePanel extends VerticalPanel
 	private void onShowProyecto(Proyecto project)
 	{
 
-		putAlone(new ProjectWidget(project));
+		putAlone(new ProjectWidget(project, true));
 	}
 
 	/*

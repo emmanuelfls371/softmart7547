@@ -35,8 +35,6 @@ public interface MyVendedorAccountConstants extends Constants
 
 	String perdidos();
 
-	String preposicionEn();
-
 	String proyecto();
 
 	String proyectosOfertados();

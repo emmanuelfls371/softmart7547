@@ -59,6 +59,9 @@ public class NewOfertaWidget extends FormWidget
 				}
 
 				ofertaDto.setDescripcion(((TextArea) instance.widgets.get(OfertaFields.Descripcion)).getText());
+				if(ofertaDto.getDescripcion().length() > 200)
+					errMsgs.add(constants.errorDescription());
+				
 				FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
 				try
 				{
