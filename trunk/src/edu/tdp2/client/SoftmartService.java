@@ -1,7 +1,8 @@
 package edu.tdp2.client;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -96,5 +97,7 @@ public interface SoftmartService extends RemoteService
 
 	public String getTextoBienvenida(String locale);
 	
-	
+	public String filterLog(Date from, Date to, String admin);	
+
+	public List<String> getAdmins();
 }

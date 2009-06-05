@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.tdp2.client.utils.ClientUtils;
+import edu.tdp2.client.widgets.AdminLogFilterWidget;
 import edu.tdp2.client.widgets.AdminLoginWidget;
 import edu.tdp2.client.widgets.AdminProjectsWidget;
 import edu.tdp2.client.widgets.AdminUsersWidget;
@@ -67,6 +68,10 @@ public class Admin implements EntryPoint, LoginListener
 		w3.setContainer(dtPanel);
 		w3.setLocale(lisIdiomas.getValue(lisIdiomas.getSelectedIndex()));
 		w3.load();
+
+		AdminLogFilterWidget w4 = AdminLogFilterWidget.getInstance();
+		w4.setContainer(dtPanel);
+		w4.load();
 
 		dtPanel.selectTab(0);
 	}

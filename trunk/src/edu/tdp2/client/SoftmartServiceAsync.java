@@ -1,5 +1,7 @@
 package edu.tdp2.client;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -95,5 +97,7 @@ public interface SoftmartServiceAsync
 
 	public void getTextoBienvenida(String locale, AsyncCallback<String> callback);
 
+	public void filterLog(Date from, Date to, String admin, AsyncCallback<String> callback);
 
+	public void getAdmins(AsyncCallback<List<String>> callback);
 }
