@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,10 +230,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			contrato.setOfertaGanadora(offer);
 			contrato.setProyecto(offer.getProyecto());
 			TransactionWrapper.save(sess, contrato);
-			
+
 			offer.getProyecto().setDestacado(false);
 			TransactionWrapper.save(sess, offer.getProyecto());
-			
+
 			return null;
 		}
 		catch (Exception e)
@@ -372,10 +373,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 					+ "p.contrato IS EMPTY AND p.fecha >= current_date()";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).list();
-			/*projects.addAll(sess.createQuery(
-					"FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
-							+ "(p.contrato.califAlComprador IS NULL OR p.contrato.califAlVendedor IS NULL)").list());
-			*/for (Proyecto project : projects)
+			/*
+			 * projects.addAll(sess.createQuery(
+			 * "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND " +
+			 * "(p.contrato.califAlComprador IS NULL OR p.contrato.califAlVendedor IS NULL)").list());
+			 */for (Proyecto project : projects)
 				project.pruneNotIncludingOffers();
 			return projects;
 		}
@@ -855,10 +857,12 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.close();
 		}
 	}
-	
-	private boolean proyectoExists(ProyectoDto proyecto, Session sess){
-		Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0, proyecto.getNombre()).uniqueResult();
-		if(result==null)
+
+	private boolean proyectoExists(ProyectoDto proyecto, Session sess)
+	{
+		Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0,
+				proyecto.getNombre()).uniqueResult();
+		if (result == null)
 			return false;
 		else
 			return true;
@@ -873,7 +877,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (us != null)
 			{
 				final Proyecto nuevo = new Proyecto(proyecto, us, buscarMoneda(proyecto.getMoneda()));
-				if (us.addProyecto(nuevo)&&!proyectoExists(proyecto, sess))
+				if (us.addProyecto(nuevo) && !proyectoExists(proyecto, sess))
 					TransactionWrapper.execute(sess, new TransactionWrapper.Action()
 					{
 						public void execute()
@@ -1262,7 +1266,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
-			System.out.println("Editando recurso: " + relativePath);
 			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
 			InputStream stream = FileUploadServlet.class.getClassLoader().getResourceAsStream(relativePath);
 			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
@@ -1278,4 +1281,32 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
+	@Override
+	public String filterLog(Date from, Date to, String admin)
+	{
+		try
+		{
+			return AdminLogMgr.getFilteredLog(from, to, admin);
+		}
+		catch (Exception e)
+		{
+			throw new SoftmartServerException(e.getMessage());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAdmins()
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			return (List<String>) sess.createQuery("SELECT login FROM Administrador").list();
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
 }
