@@ -11,6 +11,8 @@ public interface NewOfertaConstants extends Constants
 
 	String dias();
 
+	String errorDescription();
+
 	String errorFormatoDiasMonto();
 
 	String failGetMonedas();
@@ -30,7 +32,5 @@ public interface NewOfertaConstants extends Constants
 	String si();
 
 	String verifiqueDias();
-
-	String errorDescription();
 
 }

@@ -45,6 +45,24 @@ public class AdminLogFilterWidget extends AdminWidget
 		loadPanel();
 	}
 
+	private void initLisAdmins()
+	{
+		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert(caught.getMessage());
+			}
+
+			public void onSuccess(List<String> result)
+			{
+				for (String adminLogin : result)
+					lisAdmin.addItem(adminLogin, adminLogin);
+			}
+		};
+		ClientUtils.getSoftmartService().getAdmins(callback);
+	}
+
 	private void loadPanel()
 	{
 		initLisAdmins();
@@ -85,23 +103,5 @@ public class AdminLogFilterWidget extends AdminWidget
 		});
 		vPanel.add(filtrarLog);
 		vPanel.add(text);
-	}
-
-	private void initLisAdmins()
-	{
-		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>()
-		{
-			public void onFailure(Throwable caught)
-			{
-				Window.alert(caught.getMessage());
-			}
-
-			public void onSuccess(List<String> result)
-			{
-				for (String adminLogin : result)
-					lisAdmin.addItem(adminLogin, adminLogin);
-			}
-		};
-		ClientUtils.getSoftmartService().getAdmins(callback);
 	}
 }

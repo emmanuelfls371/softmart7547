@@ -19,8 +19,7 @@ public class NewCalificationWidget extends FormWidget
 {
 	private enum CalificacionFields implements FormFields
 	{
-		Proyecto(constants.proyecto()), Calif(constants.calificacion()), Comentario(
-				constants.comentario());
+		Proyecto(constants.proyecto()), Calif(constants.calificacion()), Comentario(constants.comentario());
 
 		public String description;
 
@@ -85,7 +84,7 @@ public class NewCalificationWidget extends FormWidget
 		if (instance == null)
 			instance = new NewCalificationWidget();
 		((Label) instance.widgets.get(CalificacionFields.Proyecto)).setText(project.getNombre());
-		
+
 		instance.projectId = project.getId();
 		return instance;
 	}

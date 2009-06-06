@@ -50,7 +50,7 @@ public class Softmart implements EntryPoint, LoginListener
 		AbstractImagePrototype header();
 
 		AbstractImagePrototype header2();
-		
+
 		AbstractImagePrototype header3();
 	}
 
@@ -97,16 +97,70 @@ public class Softmart implements EntryPoint, LoginListener
 	private Images images;
 	private ListBox lisIdiomas;
 
-	public void onShowNorthPanel(){
-		
+	public void onLogin()
+	{
+		centerPanel.clear();
+
+		onShowNorthPanel();
+
+		onShowDestacados();
+	}
+
+	public void onLogout()
+	{
+		Cookies.setCookie(constants.loginCookieName(), "");
+		LoginWidget.setCurrentUser(null);
+		northPanel.clear();
+		showWelcome();
+	}
+
+	/**
+	 * This is the entry point method.
+	 */
+	public void onModuleLoad()
+	{
+		if (RootPanel.get("SoftmartIdentifierDiv") == null)
+			return;
+
+		constants = GWT.create(SoftmartConstants.class);
+		i18nConstants = GWT.create(I18nConstants.class);
+		images = (Images) GWT.create(Images.class);
+		History.addValueChangeHandler(new SoftmartHistoryHandler());
+
+		HorizontalPanel hPanel = new HorizontalPanel();
+		DockPanel dPanel = new DockPanel();
+
+		dPanel.add(getFooterPanel(), DockPanel.SOUTH);
+		dPanel.add(getCenterPanel(), DockPanel.CENTER);
+		dPanel.add(getHeaderPanel(), DockPanel.NORTH);
+		dPanel.add(getNorthPanel(), DockPanel.NORTH);
+		String loginCookie = Cookies.getCookie(constants.loginCookieName());
+		if (loginCookie != null && !loginCookie.equals(""))
+			LoginWidget.setCurrentUser(loginCookie.split(";")[0]);
+		showWelcome();
+		History.newItem(HistoryToken.Welcome.toString());
+
+		hPanel.add(dPanel);
+		hPanel.setWidth("100%");
+		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
+		RootPanel.get().add(hPanel);
+	}
+
+	public void onShowNewProject()
+	{
+		putAlone(NewProjectWidget.getInstance(), HistoryToken.onShowNewProject.toString());
+	}
+
+	public void onShowNorthPanel()
+	{
+
 		northPanel.clear();
 		Image header = null;
-		if(lisIdiomas.getSelectedIndex()==0){
+		if (lisIdiomas.getSelectedIndex() == 0)
 			header = images.header2().createImage();
-		}else{
+		else
 			header = images.header3().createImage();
-		}
-			northPanel.add(header);
+		northPanel.add(header);
 		String loginCookie = Cookies.getCookie(constants.loginCookieName());
 		String currentUser = loginCookie.split(";")[0];
 		LoginWidget.setCurrentUser(currentUser);
@@ -172,60 +226,6 @@ public class Softmart implements EntryPoint, LoginListener
 			}
 		});
 		northPanel.add(showSearch, 150, 5);
-	}
-	
-	public void onLogin()
-	{
-		centerPanel.clear();
-		
-		onShowNorthPanel();
-
-		onShowDestacados();
-	}
-
-	public void onLogout()
-	{
-		Cookies.setCookie(constants.loginCookieName(), "");
-		LoginWidget.setCurrentUser(null);
-		northPanel.clear();
-		showWelcome();
-	}
-
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad()
-	{
-		if (RootPanel.get("SoftmartIdentifierDiv") == null)
-			return;
-
-		constants = GWT.create(SoftmartConstants.class);
-		i18nConstants = GWT.create(I18nConstants.class);
-		images = (Images) GWT.create(Images.class);
-		History.addValueChangeHandler(new SoftmartHistoryHandler());
-
-		HorizontalPanel hPanel = new HorizontalPanel();
-		DockPanel dPanel = new DockPanel();
-
-		dPanel.add(getFooterPanel(), DockPanel.SOUTH);
-		dPanel.add(getCenterPanel(), DockPanel.CENTER);
-		dPanel.add(getHeaderPanel(), DockPanel.NORTH);
-		dPanel.add(getNorthPanel(), DockPanel.NORTH);
-		String loginCookie = Cookies.getCookie(constants.loginCookieName());
-		if (loginCookie != null && !loginCookie.equals(""))
-			LoginWidget.setCurrentUser(loginCookie.split(";")[0]);
-		showWelcome();
-		History.newItem(HistoryToken.Welcome.toString());
-
-		hPanel.add(dPanel);
-		hPanel.setWidth("100%");
-		hPanel.setCellHorizontalAlignment(dPanel, HasHorizontalAlignment.ALIGN_CENTER);
-		RootPanel.get().add(hPanel);
-	}
-
-	public void onShowNewProject()
-	{
-		putAlone(NewProjectWidget.getInstance(), HistoryToken.onShowNewProject.toString());
 	}
 
 	public void onShowRegistration()
@@ -306,6 +306,23 @@ public class Softmart implements EntryPoint, LoginListener
 		centerPanel.add(widget);
 	}
 
+	private void setWelcomeText(String locale, final HTML widget)
+	{
+		AsyncCallback<String> callback = new AsyncCallback<String>()
+		{
+			public void onFailure(Throwable caught)
+			{
+				Window.alert(caught.getMessage());
+			}
+
+			public void onSuccess(String result)
+			{
+				widget.setHTML(result);
+			}
+		};
+		ClientUtils.getSoftmartService().getTextoBienvenida(locale, callback);
+	}
+
 	private void showWelcome()
 	{
 		centerPanel.clear();
@@ -330,22 +347,5 @@ public class Softmart implements EntryPoint, LoginListener
 			loginWidget.getPasswordTextBox().setText("");
 			loginWidget.setLoginListener(this);
 		}
-	}
-
-	private void setWelcomeText(String locale, final HTML widget)
-	{
-		AsyncCallback<String> callback = new AsyncCallback<String>()
-		{
-			public void onFailure(Throwable caught)
-			{
-				Window.alert(caught.getMessage());
-			}
-
-			public void onSuccess(String result)
-			{
-				widget.setHTML(result);
-			}
-		};
-		ClientUtils.getSoftmartService().getTextoBienvenida(locale, callback);
 	}
 }

@@ -26,7 +26,7 @@ public class ProjectWidget extends VerticalPanel
 	{
 		this.project = project;
 		constants = GWT.create(ProjectConstants.class);
-		this.aparecerBloqueado=aparecerBloqueado;
+		this.aparecerBloqueado = aparecerBloqueado;
 		load();
 	}
 
@@ -72,7 +72,7 @@ public class ProjectWidget extends VerticalPanel
 					h2.setStyleName("blocked");
 					h2.addStyleName("c1y2ProjectWidget");
 					h2.setWidth("580px");
-					if(aparecerBloqueado)
+					if (aparecerBloqueado)
 						add(h2);
 					h.setHTML(project.getUsuario().getLogin() + "*");
 				}

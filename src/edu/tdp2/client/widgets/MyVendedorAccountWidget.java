@@ -41,16 +41,6 @@ public class MyVendedorAccountWidget extends AccountWidget
 			buildWidget();
 		}
 
-		private Oferta buscarMenorOferta(Proyecto proyecto){
-			Oferta menor=proyecto.getOfertas().get(0);
-			for(Oferta oferta : proyecto.getOfertas()){
-				if(oferta.getMonto() < menor.getMonto()){
-					menor=oferta;
-				}
-			}
-			return menor;
-		}
-		
 		private void buildWidget()
 		{
 
@@ -108,7 +98,7 @@ public class MyVendedorAccountWidget extends AccountWidget
 
 							if (ofertaPropia != null)
 							{
-																
+
 								Anchor aProy = new Anchor(proyecto.getNombre());
 								aProy.addClickHandler(new ClickHandler()
 								{
@@ -146,19 +136,28 @@ public class MyVendedorAccountWidget extends AccountWidget
 									setWidget(row, 6, getActionButton(proyecto));
 									getCellFormatter().addStyleName(row, 6, "column");
 								}
-								
+
 								for (int i = 0; i < 6; i++)
 									getCellFormatter().addStyleName(row, i, "column");
-								
+
 								row++;
 							}
-							
+
 						}
 					}
 
 				};
 				ClientUtils.getSoftmartService().getOfertaGanadora(proyecto.getId(), callback);
 			}
+		}
+
+		private Oferta buscarMenorOferta(Proyecto proyecto)
+		{
+			Oferta menor = proyecto.getOfertas().get(0);
+			for (Oferta oferta : proyecto.getOfertas())
+				if (oferta.getMonto() < menor.getMonto())
+					menor = oferta;
+			return menor;
 		}
 	}
 
@@ -298,18 +297,17 @@ public class MyVendedorAccountWidget extends AccountWidget
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
 		String promedio;
-		if(datos.getReputacion() > 0){
-			promedio=String.valueOf(datos.getReputacion());
-		}else{
+		if (datos.getReputacion() > 0)
+			promedio = String.valueOf(datos.getReputacion());
+		else
 			promedio = "-";
-		}
 		underPanel.add(new HTML(constants.miReputacionVendedor() + promedio + " </p>"));
 		for (Moneda ganancia : datos.getGananciaAcumulada().keySet())
 			underPanel.add(new HTML(constants.gananciaAcumulada()
-					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + " " + ganancia.getDescription() + " </p> "));
-		if(datos.getGananciaAcumulada().keySet().isEmpty()){
+					+ String.valueOf(datos.getGananciaAcumulada().get(ganancia)) + " " + ganancia.getDescription()
+					+ " </p> "));
+		if (datos.getGananciaAcumulada().keySet().isEmpty())
 			underPanel.add(new HTML(constants.gananciaAcumulada() + "0"));
-		}
 		underPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		return panel;
 	}

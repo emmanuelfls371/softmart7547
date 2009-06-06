@@ -246,6 +246,19 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
+	@Override
+	public String filterLog(Date from, Date to, String admin)
+	{
+		try
+		{
+			return AdminLogMgr.getFilteredLog(from, to, admin);
+		}
+		catch (Exception e)
+		{
+			throw new SoftmartServerException(e.getMessage());
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public SearchDto filterProject(FiltroDto filtro)
 	{
@@ -363,7 +376,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	 * Muestra todos los proyectos activos ((sin contrato y con la fecha aun no vencida) o sin calificacion), sin
 	 * importar si tienen la aprobacion del admin
 	 */
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings( { "unchecked", "deprecation" })
 	public List<Proyecto> getActiveProjects()
 	{
 		Session sess = HibernateUtil.getSession();
@@ -389,6 +402,22 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			e.getMessage();
 			return null;
+		}
+		finally
+		{
+			sess.close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAdmins()
+	{
+		Session sess = HibernateUtil.getSession();
+
+		try
+		{
+			return (List<String>) sess.createQuery("SELECT login FROM Administrador").list();
 		}
 		finally
 		{
@@ -727,6 +756,28 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		return lista;
 	}
 
+	@Override
+	public String getTextoBienvenida(String locale)
+	{
+		locale = getFormattedLocale(locale);
+		try
+		{
+			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
+			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
+			InputStream stream = FileUploadServlet.class.getClassLoader().getResourceAsStream(relativePath);
+			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+			String line = "";
+			StringBuilder text = new StringBuilder();
+			while ((line = r.readLine()) != null)
+				text.append(line + "\n");
+			return new String(text.toString().getBytes("ISO-8859-1"), "UTF-8");
+		}
+		catch (Exception e)
+		{
+			throw new SoftmartServerException(e.getMessage());
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Proyecto> getUnassignedProjects(String usuario)
 	{
@@ -862,16 +913,6 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		}
 	}
 
-	private boolean proyectoExists(ProyectoDto proyecto, Session sess)
-	{
-		Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0,
-				proyecto.getNombre()).uniqueResult();
-		if (result == null)
-			return false;
-		else
-			return true;
-	}
-
 	public String publicar(ProyectoDto proyecto)
 	{
 		final Session sess = HibernateUtil.getSession();
@@ -965,6 +1006,29 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+
+	@Override
+	public String setTextoBienvenida(String locale, String text)
+	{
+		locale = getFormattedLocale(locale);
+
+		try
+		{
+			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
+			System.out.println("Editando recurso: " + relativePath);
+			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
+			File file = new File(FileUploadServlet.class.getClassLoader().getResource(relativePath).getPath());
+			System.out.println("Editando archivo: " + file.getAbsolutePath());
+			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			pw.print(new String(text.getBytes("UTF-8"), "ISO-8859-1"));
+			pw.close();
+		}
+		catch (Exception e)
+		{
+			throw new SoftmartServerException(e.getMessage());
+		}
+		return null;
 	}
 
 	public String setUsuarioBloqueado(String adminUserName, Long userId, Boolean bloqueado)
@@ -1137,6 +1201,19 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 
 	}
 
+	private String getFormattedLocale(String locale)
+	{
+		assert locale != null;
+		assert locale.startsWith("?");
+		locale = locale.substring(1);
+		if (!locale.isEmpty())
+		{
+			assert locale.contains("=");
+			locale = locale.split("=", 2)[1];
+		}
+		return locale;
+	}
+
 	private OfertaDto getOfertaDto(Oferta o)
 	{
 		OfertaDto dto = new OfertaDto();
@@ -1185,6 +1262,16 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			return null;
 	}
 
+	private boolean proyectoExists(ProyectoDto proyecto, Session sess)
+	{
+		Proyecto result = (Proyecto) sess.createQuery("FROM Proyecto WHERE nombre = ?").setString(0,
+				proyecto.getNombre()).uniqueResult();
+		if (result == null)
+			return false;
+		else
+			return true;
+	}
+
 	private void setCalifComprador(Contrato c, CalificacionDto calif)
 	{
 		calif.setCalificacion(c.getCalifAlComprador().getCalificacion());
@@ -1225,92 +1312,5 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			sess.update(us);
 		}
 
-	}
-
-	@Override
-	public String setTextoBienvenida(String locale, String text)
-	{
-		locale = getFormattedLocale(locale);
-
-		try
-		{
-			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
-			System.out.println("Editando recurso: " + relativePath);
-			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
-			File file = new File(FileUploadServlet.class.getClassLoader().getResource(relativePath).getPath());
-			System.out.println("Editando archivo: " + file.getAbsolutePath());
-			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-			pw.print(new String(text.getBytes("UTF-8"), "ISO-8859-1"));
-			pw.close();
-		}
-		catch (Exception e)
-		{
-			throw new SoftmartServerException(e.getMessage());
-		}
-		return null;
-	}
-
-	private String getFormattedLocale(String locale)
-	{
-		assert locale != null;
-		assert locale.startsWith("?");
-		locale = locale.substring(1);
-		if (!locale.isEmpty())
-		{
-			assert locale.contains("=");
-			locale = locale.split("=", 2)[1];
-		}
-		return locale;
-	}
-
-	@Override
-	public String getTextoBienvenida(String locale)
-	{
-		locale = getFormattedLocale(locale);
-		try
-		{
-			String relativePath = "edu/tdp2/client/WelcomeConstants$locale.properties";
-			relativePath = relativePath.replace("$locale", locale.isEmpty() ? "" : "_" + locale);
-			InputStream stream = FileUploadServlet.class.getClassLoader().getResourceAsStream(relativePath);
-			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
-			String line = "";
-			StringBuilder text = new StringBuilder();
-			while ((line = r.readLine()) != null)
-				text.append(line + "\n");
-			return new String(text.toString().getBytes("ISO-8859-1"), "UTF-8");
-		}
-		catch (Exception e)
-		{
-			throw new SoftmartServerException(e.getMessage());
-		}
-	}
-
-	@Override
-	public String filterLog(Date from, Date to, String admin)
-	{
-		try
-		{
-			return AdminLogMgr.getFilteredLog(from, to, admin);
-		}
-		catch (Exception e)
-		{
-			throw new SoftmartServerException(e.getMessage());
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<String> getAdmins()
-	{
-		Session sess = HibernateUtil.getSession();
-
-		try
-		{
-			return (List<String>) sess.createQuery("SELECT login FROM Administrador").list();
-		}
-		finally
-		{
-			sess.close();
-		}
 	}
 }

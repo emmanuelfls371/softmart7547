@@ -49,59 +49,62 @@ public class NewOfertaWidget extends FormWidget
 			errMsgs.clear();
 			dto = new OfertaDto();
 			OfertaDto ofertaDto = (OfertaDto) dto;
-			
-				FlowPanel panel = (FlowPanel) instance.widgets.get(OfertaFields.MailNotification);
-				for (Widget widget : panel)
+
+			FlowPanel panel = (FlowPanel) instance.widgets.get(OfertaFields.MailNotification);
+			for (Widget widget : panel)
+			{
+				RadioButton b = (RadioButton) widget;
+				if (b.getValue())
+					ofertaDto.setNotificacion(b.getHTML());
+			}
+
+			ofertaDto.setDescripcion(((TextArea) instance.widgets.get(OfertaFields.Descripcion)).getText());
+			if (ofertaDto.getDescripcion().length() > 200)
+				errMsgs.add(constants.errorDescription());
+
+			FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
+			try
+			{
+				ofertaDto.setMonto(Float.parseFloat(((TextBox) f.getWidget(0)).getText()));
+
+			}
+			catch (NumberFormatException e)
+			{
+				errMsgs.add(constants.errorFormatoDiasMonto());
+			}
+			ofertaDto.setMoneda(((ListBox) f.getWidget(1)).getValue(((ListBox) f.getWidget(1)).getSelectedIndex()));
+
+			try
+			{
+				ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
+			}
+			catch (NumberFormatException e)
+			{
+
+				errMsgs.add(constants.verifiqueDias());
+			}
+			ofertaDto.setProyecto(projectId);
+
+			ofertaDto.setUsuario(LoginWidget.getCurrentUser());
+
+			if (!validate())
+				return;
+
+			ClientUtils.getSoftmartService().ofertar((OfertaDto) dto, new AsyncCallback<String>()
+			{
+				public void onFailure(Throwable caught)
 				{
-					RadioButton b = (RadioButton) widget;
-					if (b.getValue())
-						ofertaDto.setNotificacion(b.getHTML());
+					Window.alert(constants.failOfertar());
 				}
 
-				ofertaDto.setDescripcion(((TextArea) instance.widgets.get(OfertaFields.Descripcion)).getText());
-				if(ofertaDto.getDescripcion().length() > 200)
-					errMsgs.add(constants.errorDescription());
-				
-				FlowPanel f = (FlowPanel) instance.widgets.get(OfertaFields.Presupuesto);
-				try
+				public void onSuccess(String errMsg)
 				{
-					ofertaDto.setMonto(Float.parseFloat(((TextBox) f.getWidget(0)).getText()));
-					
-				}catch (NumberFormatException e)
-				{
-					errMsgs.add(constants.errorFormatoDiasMonto());
+					if (errMsg != null)
+						Window.alert(errMsg);
+					else
+						reload();
 				}
-				ofertaDto.setMoneda(((ListBox) f.getWidget(1)).getValue(((ListBox) f.getWidget(1)).getSelectedIndex()));
-				
-				try
-				{
-					ofertaDto.setDias(Integer.parseInt(((TextBox) instance.widgets.get(OfertaFields.Dias)).getText()));
-				}catch(NumberFormatException e){
-					
-					errMsgs.add(constants.verifiqueDias());
-				}
-				ofertaDto.setProyecto(projectId);
-
-				ofertaDto.setUsuario(LoginWidget.getCurrentUser());
-
-				if (!validate())
-					return;
-
-				ClientUtils.getSoftmartService().ofertar((OfertaDto) dto, new AsyncCallback<String>()
-				{
-					public void onFailure(Throwable caught)
-					{
-						Window.alert(constants.failOfertar());
-					}
-
-					public void onSuccess(String errMsg)
-					{
-						if (errMsg != null)
-							Window.alert(errMsg);
-						else
-							reload();
-					}
-				});
+			});
 		}
 	}
 

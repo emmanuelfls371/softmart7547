@@ -296,11 +296,10 @@ public class MyCompradorAccountWidget extends AccountWidget
 		panel.setWidth("50px");
 		panel.addStyleName("hl");
 		String promedio;
-		if(datos.getReputacion() > 0){
-			promedio=String.valueOf(datos.getReputacion());
-		}else{
+		if (datos.getReputacion() > 0)
+			promedio = String.valueOf(datos.getReputacion());
+		else
 			promedio = "-";
-		}
 		HTML rep = new HTML(constants.miReputacionComprador() + promedio + " </p>");
 		underPanel.add(rep);
 		return panel;

@@ -5,13 +5,13 @@ import com.google.gwt.i18n.client.Constants;
 public interface AdminLogFilterConstants extends Constants
 {
 
-	String logFilter();
+	String desde();
 
 	String filter();
 
-	String desde();
-
 	String hasta();
+
+	String logFilter();
 
 	String seleccioneAdmin();
 

@@ -4,6 +4,8 @@ import com.google.gwt.i18n.client.Constants;
 
 public interface SoftmartConstants extends Constants
 {
+	String adminLoginCookieName();
+
 	String back();
 
 	String elijaRango();
@@ -23,6 +25,4 @@ public interface SoftmartConstants extends Constants
 	String toSoftmart();
 
 	String welcomeUser();
-
-	String adminLoginCookieName();
 }

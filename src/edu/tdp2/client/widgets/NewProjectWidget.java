@@ -1,8 +1,6 @@
 package edu.tdp2.client.widgets;
 
-
 import java.util.Date;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +28,7 @@ import edu.tdp2.client.utils.ClientUtils;
 
 public class NewProjectWidget extends FormWidget
 {
-	
-	
+
 	private enum ProjectFields implements FormFields
 	{
 		Nombre(constants.nombre()), Presupuesto(constants.presupuesto()), Fecha(constants.fechaCierre()), Nivel(
@@ -98,46 +95,44 @@ public class NewProjectWidget extends FormWidget
 			FlowPanel panel = (FlowPanel) instance.widgets.get(ProjectFields.Presupuesto);
 
 			if (hayRangos)
-						{
-							ListBox lisRangos = (ListBox) panel.getWidget(1);
-							proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
-						}
-						ListBox lisMonedas = (ListBox) panel.getWidget(0);
-						proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
+			{
+				ListBox lisRangos = (ListBox) panel.getWidget(1);
+				proyectoDto.setPresupuesto(lisRangos.getValue(lisRangos.getSelectedIndex()));
+			}
+			ListBox lisMonedas = (ListBox) panel.getWidget(0);
+			proyectoDto.setMoneda(lisMonedas.getValue(lisMonedas.getSelectedIndex()));
 
-						DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
-						proyectoDto.setFecha(dateFecha.getValue());
+			DateBox dateFecha = (DateBox) instance.widgets.get(ProjectFields.Fecha);
+			proyectoDto.setFecha(dateFecha.getValue());
 
-						ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
-						proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
+			ListBox lisNivel = (ListBox) instance.widgets.get(ProjectFields.Nivel);
+			proyectoDto.setNivel(lisNivel.getValue(lisNivel.getSelectedIndex()));
 
-						FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
-						for (Widget widget : panelDificultad)
-						{
-							RadioButton b = (RadioButton) widget;
-							if (b.getValue())
-								proyectoDto.setDificultad(b.getHTML());
-						}
+			FlowPanel panelDificultad = (FlowPanel) instance.widgets.get(ProjectFields.Dificultad);
+			for (Widget widget : panelDificultad)
+			{
+				RadioButton b = (RadioButton) widget;
+				if (b.getValue())
+					proyectoDto.setDificultad(b.getHTML());
+			}
 
-						FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
-						for (Widget widget : panelTamanio)
-						{
-							RadioButton b = (RadioButton) widget;
-							if (b.getValue())
-								proyectoDto.setTamanio(b.getHTML());
-						}
+			FlowPanel panelTamanio = (FlowPanel) instance.widgets.get(ProjectFields.Tamanio);
+			for (Widget widget : panelTamanio)
+			{
+				RadioButton b = (RadioButton) widget;
+				if (b.getValue())
+					proyectoDto.setTamanio(b.getHTML());
+			}
 
-						proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
+			proyectoDto.setDescripcion(((TextBox) instance.widgets.get(ProjectFields.Descripcion)).getText());
 
-						((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
+			((ProyectoDto) dto).setUsuario(LoginWidget.getCurrentUser());
 
-					
-					
-					if (!validate())
-						event.cancel();
-					
-				}
-			
+			if (!validate())
+				event.cancel();
+
+		}
+
 	}
 
 	private static NewProjectWidget instance;
@@ -186,7 +181,7 @@ public class NewProjectWidget extends FormWidget
 	@Override
 	protected void populateWidgets()
 	{
-		
+
 		TextBox t = new TextBox();
 		t.setMaxLength(50);
 		t.setName(ProjectFields.Nombre.toString());
@@ -340,12 +335,12 @@ public class NewProjectWidget extends FormWidget
 	{
 		if (((ProyectoDto) dto).getFecha() == null)
 			errMsgs.add(constants.debeIngresarCierre());
-		else if (((ProyectoDto) dto).getFecha().before(new Date())&&
-				!((((ProyectoDto) dto).getFecha().getDate()==(new Date().getDate()))&&
-				(((ProyectoDto) dto).getFecha().getMonth()==(new Date().getMonth()))&&
-				(((ProyectoDto) dto).getFecha().getYear()==(new Date().getYear()))))
+		else if (((ProyectoDto) dto).getFecha().before(new Date())
+				&& !(((ProyectoDto) dto).getFecha().getDate() == new Date().getDate()
+						&& ((ProyectoDto) dto).getFecha().getMonth() == new Date().getMonth() && ((ProyectoDto) dto)
+						.getFecha().getYear() == new Date().getYear()))
 			errMsgs.add(constants.fechaCierreAnteriorHoy());
-		
+
 	}
 
 	@Override
