@@ -334,6 +334,7 @@ public class NewProjectWidget extends FormWidget
 		widgets.put(ProjectFields.Archivo, f);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void validate(List<String> errMsgs)
 	{
