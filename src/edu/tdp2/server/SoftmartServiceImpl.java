@@ -387,6 +387,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			today.setHours(0);
 			today.setMinutes(0);
 			today.setSeconds(0);
+			today.setTime(today.getTime() - 1000);
 			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 					+ "p.contrato IS EMPTY AND p.fecha >= ?";
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setParameter(0, today).list();
