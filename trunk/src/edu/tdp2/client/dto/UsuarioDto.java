@@ -113,7 +113,7 @@ public class UsuarioDto implements IValidatable, Serializable, Dto
 
 	public void setClave(String clave)
 	{
-		this.clave = clave.isEmpty() ? "" : MD5.md5(clave);
+		this.clave = clave.isEmpty() ? "" : clave.equals(INVALIDO) ? INVALIDO : MD5.md5(clave);
 	}
 
 	public void setCodPostal(String codigoPostal)
