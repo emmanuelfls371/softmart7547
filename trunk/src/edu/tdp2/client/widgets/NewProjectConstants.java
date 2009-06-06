@@ -25,6 +25,8 @@ public interface NewProjectConstants extends Constants
 
 	String failGetTamanios();
 
+	String failProyectoExists();
+
 	String failPublicar();
 
 	String fechaCierre();
@@ -39,12 +41,10 @@ public interface NewProjectConstants extends Constants
 
 	String proyectoAltaOk();
 
+	String proyectoRepetido();
+
 	String reputacion();
 
 	String tamano();
-
-	String failProyectoExists();
-
-	String proyectoRepetido();
 
 }

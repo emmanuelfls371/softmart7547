@@ -20,6 +20,10 @@ import edu.tdp2.client.model.Usuario;
 
 public interface SoftmartServiceAsync
 {
+	public void adminLogin(String userName, String passwordHash, AsyncCallback<String> callback);
+
+	public void adminLogout(String userName, AsyncCallback<String> callback);
+
 	public void buscarMonedas(AsyncCallback<List<Moneda>> callback);
 
 	public void calificar(CalificacionDto calif, AsyncCallback<String> asyncCallback);
@@ -30,9 +34,13 @@ public interface SoftmartServiceAsync
 
 	public void chooseOffer(long offerId, AsyncCallback<String> callback);
 
+	public void filterLog(Date from, Date to, String admin, AsyncCallback<String> callback);
+
 	public void filterProject(FiltroDto filtro, AsyncCallback<SearchDto> callback);
 
 	public void getActiveProjects(AsyncCallback<List<Proyecto>> callback);
+
+	public void getAdmins(AsyncCallback<List<String>> callback);
 
 	public void getCalificacionesHechas(String user, AsyncCallback<List<ContratoDto>> callback);
 
@@ -64,6 +72,8 @@ public interface SoftmartServiceAsync
 
 	public void getTamanios(AsyncCallback<List<String>> callback);
 
+	public void getTextoBienvenida(String locale, AsyncCallback<String> callback);
+
 	public void getUnassignedProjects(String usuario, AsyncCallback<List<Proyecto>> callback);
 
 	public void getUsers(AsyncCallback<List<Usuario>> callback);
@@ -84,19 +94,9 @@ public interface SoftmartServiceAsync
 
 	public void setProyectoRevisado(String adminUserName, Long projectId, Boolean value, AsyncCallback<String> callback);
 
+	public void setTextoBienvenida(String locale, String text, AsyncCallback<String> callback);
+
 	public void setUsuarioBloqueado(String adminUserName, Long id, Boolean value, AsyncCallback<String> callback);
 
 	public void update(UsuarioDto dto, String usuarioAnterior, AsyncCallback<String> callback);
-
-	public void adminLogin(String userName, String passwordHash, AsyncCallback<String> callback);
-
-	public void adminLogout(String userName, AsyncCallback<String> callback);
-
-	public void setTextoBienvenida(String locale, String text, AsyncCallback<String> callback);
-
-	public void getTextoBienvenida(String locale, AsyncCallback<String> callback);
-
-	public void filterLog(Date from, Date to, String admin, AsyncCallback<String> callback);
-
-	public void getAdmins(AsyncCallback<List<String>> callback);
 }

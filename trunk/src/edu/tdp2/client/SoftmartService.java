@@ -1,6 +1,5 @@
 package edu.tdp2.client;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +20,10 @@ import edu.tdp2.client.model.Usuario;
 
 public interface SoftmartService extends RemoteService
 {
+	public String adminLogin(String userName, String passwordHash);
+
+	public String adminLogout(String userName);
+
 	public List<Moneda> buscarMonedas();
 
 	public String calificar(CalificacionDto calif);
@@ -31,9 +34,13 @@ public interface SoftmartService extends RemoteService
 
 	public String chooseOffer(long offerId);
 
+	public String filterLog(Date from, Date to, String admin);
+
 	public SearchDto filterProject(FiltroDto filtro);
 
 	public List<Proyecto> getActiveProjects();
+
+	public List<String> getAdmins();
 
 	public List<ContratoDto> getCalificacionesHechas(String user);
 
@@ -65,6 +72,8 @@ public interface SoftmartService extends RemoteService
 
 	public List<String> getTamanios();
 
+	public String getTextoBienvenida(String locale);
+
 	public List<Proyecto> getUnassignedProjects(String usuario);
 
 	public List<Usuario> getUsers();
@@ -85,19 +94,9 @@ public interface SoftmartService extends RemoteService
 
 	public String setProyectoRevisado(String adminUserName, Long projectId, Boolean value);
 
+	public String setTextoBienvenida(String locale, String text);
+
 	public String setUsuarioBloqueado(String adminUserName, Long id, Boolean value);
 
 	public String update(UsuarioDto dto, String usuarioAnterior);
-
-	public String adminLogin(String userName, String passwordHash);
-
-	public String adminLogout(String userName);
-
-	public String setTextoBienvenida(String locale, String text);
-
-	public String getTextoBienvenida(String locale);
-	
-	public String filterLog(Date from, Date to, String admin);	
-
-	public List<String> getAdmins();
 }

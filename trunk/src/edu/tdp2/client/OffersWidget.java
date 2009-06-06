@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
-
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -87,7 +86,7 @@ public class OffersWidget extends VerticalPanel
 
 	private void load()
 	{
-		add(new HTML("<big>" +constants.ofertasParaProyecto() + project.getNombre()+ "</big>"));
+		add(new HTML("<big>" + constants.ofertasParaProyecto() + project.getNombre() + "</big>"));
 		AsyncCallback<List<Oferta>> callback = new AsyncCallback<List<Oferta>>()
 		{
 			public void onFailure(Throwable caught)

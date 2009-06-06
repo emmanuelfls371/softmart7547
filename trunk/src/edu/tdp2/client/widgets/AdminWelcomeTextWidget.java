@@ -15,10 +15,6 @@ import edu.tdp2.client.utils.ClientUtils;
 public class AdminWelcomeTextWidget extends AdminWidget
 {
 	private static AdminWelcomeTextWidget instance;
-	private TextArea text = new TextArea();
-	private VerticalPanel vPanel = new VerticalPanel();
-	private AdminWelcomeTextConstants constants = GWT.create(AdminWelcomeTextConstants.class);
-	private String locale;
 
 	public static AdminWelcomeTextWidget getInstance()
 	{
@@ -27,6 +23,12 @@ public class AdminWelcomeTextWidget extends AdminWidget
 		return instance;
 	}
 
+	private TextArea text = new TextArea();
+	private VerticalPanel vPanel = new VerticalPanel();
+	private AdminWelcomeTextConstants constants = GWT.create(AdminWelcomeTextConstants.class);
+
+	private String locale;
+
 	@Override
 	public void load()
 	{
@@ -34,6 +36,11 @@ public class AdminWelcomeTextWidget extends AdminWidget
 
 		statusMessage = new HTML();
 		loadPanel();
+	}
+
+	public void setLocale(String locale)
+	{
+		this.locale = locale;
 	}
 
 	private void loadPanel()
@@ -83,10 +90,5 @@ public class AdminWelcomeTextWidget extends AdminWidget
 			}
 		};
 		ClientUtils.getSoftmartService().getTextoBienvenida(locale, callback);
-	}
-
-	public void setLocale(String locale)
-	{
-		this.locale = locale;
 	}
 }

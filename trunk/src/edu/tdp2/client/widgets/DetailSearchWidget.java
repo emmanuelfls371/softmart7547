@@ -137,31 +137,25 @@ public class DetailSearchWidget extends VerticalPanel
 							}
 						}
 					});
-				else{
-					String errores=null;
-					if(ofertaG != null){
-						errores=constants.errorOfertaCerrada();
-					}
-					if(proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser())){
-						errores=constants.errorUsuariosNoIguales();
-					}
-					if(!proy.getFecha().after(new Date())){
-						errores=constants.errorFechaCierrePasada();
-					}
-					if(proy.isCancelado()){
-						errores=constants.errorCancelado();
-					}
-					if(proy.isCanceladoXAdmin()){
-						errores=constants.errorCanceladoXAdmin();
-					}
-					if(!proy.isRevisado()){
-						errores=constants.errorNoRevisado();
-					}
-					
-					if(proy.getUsuario().isBloqueado()){
-						errores=constants.errorUsuarioBloqueado();
-					}
-					HTML error = new HTML (errores);
+				else
+				{
+					String errores = null;
+					if (ofertaG != null)
+						errores = constants.errorOfertaCerrada();
+					if (proy.getUsuario().getLogin().equals(LoginWidget.getCurrentUser()))
+						errores = constants.errorUsuariosNoIguales();
+					if (!proy.getFecha().after(new Date()))
+						errores = constants.errorFechaCierrePasada();
+					if (proy.isCancelado())
+						errores = constants.errorCancelado();
+					if (proy.isCanceladoXAdmin())
+						errores = constants.errorCanceladoXAdmin();
+					if (!proy.isRevisado())
+						errores = constants.errorNoRevisado();
+
+					if (proy.getUsuario().isBloqueado())
+						errores = constants.errorUsuarioBloqueado();
+					HTML error = new HTML(errores);
 					error.addStyleName("blocked");
 					add(error);
 					// menuLink.setEnabled(false);

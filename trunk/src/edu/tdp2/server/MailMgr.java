@@ -35,22 +35,20 @@ public class MailMgr
 	{
 		Proyecto proy = nueva.getProyecto();
 		Map<Long, Oferta> usuarios = new HashMap<Long, Oferta>();
-		for (Oferta existente : proy.getOfertas()){
+		for (Oferta existente : proy.getOfertas())
 			if (nueva.getMonto() < existente.getMonto() && nueva.getUsuario().getId() != existente.getUsuario().getId()
-					&& existente.getNotificacion().equals("Si")){
-				if(usuarios.containsKey(existente.getUsuario().getId())){
-					if(existente.getMonto()<usuarios.get(existente.getUsuario().getId()).getMonto())
-						usuarios.put(existente.getUsuario().getId(), existente);
-				}else{
+					&& existente.getNotificacion().equals("Si"))
+				if (usuarios.containsKey(existente.getUsuario().getId()))
+				{
+					if (existente.getMonto() < usuarios.get(existente.getUsuario().getId()).getMonto())
 						usuarios.put(existente.getUsuario().getId(), existente);
 				}
-			}
-		}
-		
-		for(Oferta existente: usuarios.values()){
+				else
+					usuarios.put(existente.getUsuario().getId(), existente);
+
+		for (Oferta existente : usuarios.values())
 			sendEmail(nueva, existente);
-		}
-		
+
 	}
 
 	private static void fetchConfig()

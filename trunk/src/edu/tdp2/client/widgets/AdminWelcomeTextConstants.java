@@ -5,12 +5,12 @@ import com.google.gwt.i18n.client.Constants;
 public interface AdminWelcomeTextConstants extends Constants
 {
 
-	String textoWelcome();
+	String errorSetTextoBienvenida();
 
 	String guardar();
 
 	String textoModificado();
 
-	String errorSetTextoBienvenida();
-	
+	String textoWelcome();
+
 }
