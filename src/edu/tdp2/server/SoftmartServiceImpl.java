@@ -363,16 +363,20 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	 * Muestra todos los proyectos activos ((sin contrato y con la fecha aun no vencida) o sin calificacion), sin
 	 * importar si tienen la aprobacion del admin
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<Proyecto> getActiveProjects()
 	{
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
+			Date today = new Date();
+			today.setHours(0);
+			today.setMinutes(0);
+			today.setSeconds(0);
 			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
-					+ "p.contrato IS EMPTY AND p.fecha >= current_date()";
-			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).list();
+					+ "p.contrato IS EMPTY AND p.fecha >= ?";
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setParameter(0, today).list();
 			/*
 			 * projects.addAll(sess.createQuery(
 			 * "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND " +
