@@ -25,7 +25,9 @@ public class AdminLogFilterWidget extends AdminWidget
 	private DateBox dateFrom = new DateBox();
 	private DateBox dateTo = new DateBox();
 	private ListBox lisAdmin = new ListBox();
+	private FlexTable fieldsTable = new FlexTable();
 	private VerticalPanel vPanel = new VerticalPanel();
+	private Button filtrarLog = new Button(constants.filter());
 	private static AdminLogFilterConstants constants = GWT.create(AdminLogFilterConstants.class);
 
 	public static AdminLogFilterWidget getInstance()
@@ -49,16 +51,14 @@ public class AdminLogFilterWidget extends AdminWidget
 		text.setVisibleLines(20);
 		text.setWidth("700px");
 
-		FlexTable table = new FlexTable();
-		table.setWidget(0, 0, new HTML(constants.desde()));
-		table.setWidget(0, 1, dateFrom);
-		table.setWidget(1, 0, new HTML(constants.hasta()));
-		table.setWidget(1, 1, dateTo);		
-		table.setWidget(2, 0, new HTML(constants.seleccioneAdmin()));
-		table.setWidget(2, 1, lisAdmin);
-		vPanel.add(table);
-		
-		Button filtrarLog = new Button(constants.filter());
+		fieldsTable.setWidget(0, 0, new HTML(constants.desde()));
+		fieldsTable.setWidget(0, 1, dateFrom);
+		fieldsTable.setWidget(1, 0, new HTML(constants.hasta()));
+		fieldsTable.setWidget(1, 1, dateTo);
+		fieldsTable.setWidget(2, 0, new HTML(constants.seleccioneAdmin()));
+		fieldsTable.setWidget(2, 1, lisAdmin);
+		vPanel.add(fieldsTable);
+
 		filtrarLog.addClickHandler(new ClickHandler()
 		{
 			public void onClick(ClickEvent event)
