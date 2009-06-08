@@ -324,7 +324,7 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			if (filtro.getFechaDesde() != null)
 				filtros.add(" fecha >= :fecha_desde");
 			else
-				filtros.add(" fecha >= current_date()");
+				filtros.add(" fecha >= :today");
 			if (filtro.getFechaHasta() != null)
 				filtros.add(" fecha <= :fecha_hasta");
 			if (filtro.getReputacion() != null && !filtro.getReputacion().isEmpty())
@@ -348,14 +348,15 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 			String consulta = StringUtils.join(filtros.iterator(), " AND ");
 			List<Proyecto> projects = null;
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() == null)
-				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate("fecha_desde",
-						filtro.getFechaDesde()).list();
+				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate(":today",
+						getToday()).setDate("fecha_desde", filtro.getFechaDesde()).list();
 			if (filtro.getFechaHasta() != null && filtro.getFechaDesde() == null)
 				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate("fecha_hasta",
 						filtro.getFechaHasta()).list();
 			if (filtro.getFechaDesde() != null && filtro.getFechaHasta() != null)
-				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate("fecha_desde",
-						filtro.getFechaDesde()).setDate("fecha_hasta", filtro.getFechaHasta()).list();
+				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).setDate(":today",
+						getToday()).setDate("fecha_desde", filtro.getFechaDesde()).setDate("fecha_hasta",
+						filtro.getFechaHasta()).list();
 			if (filtro.getFechaHasta() == null && filtro.getFechaDesde() == null)
 				projects = (List<Proyecto>) sess.createQuery("FROM Proyecto WHERE" + consulta).list();
 
@@ -376,21 +377,16 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 	 * Muestra todos los proyectos activos ((sin contrato y con la fecha aun no vencida) o sin calificacion), sin
 	 * importar si tienen la aprobacion del admin
 	 */
-	@SuppressWarnings( { "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	public List<Proyecto> getActiveProjects()
 	{
 		Session sess = HibernateUtil.getSession();
 
 		try
 		{
-			Date today = new Date();
-			today.setHours(0);
-			today.setMinutes(0);
-			today.setSeconds(0);
-			today.setTime(today.getTime() - 1000);
 			String sql = "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND "
 					+ "p.contrato IS EMPTY AND p.fecha >= ?";
-			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setParameter(0, today).list();
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setDate(0, getToday()).list();
 			/*
 			 * projects.addAll(sess.createQuery(
 			 * "FROM Proyecto AS p WHERE p.cancelado = false AND p.canceladoXAdmin = false AND " +
@@ -408,6 +404,11 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			sess.close();
 		}
+	}
+
+	private Date getToday()
+	{
+		return new Date();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -503,8 +504,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 							.setParameter(0, usuario).list());
 			comprador.setProyectosAbiertos((List<Proyecto>) sess.createQuery(
 					"SELECT DISTINCT proy FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-							+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
-							+ "AND proy.canceladoXAdmin = false ").setParameter(0, usuario.getLogin()).list());
+							+ "AND fecha >= ? AND proy.usuario.login = ? AND proy.cancelado = false "
+							+ "AND proy.canceladoXAdmin = false ").setDate(0, getToday()).setParameter(1,
+					usuario.getLogin()).list());
 
 			MyVendedorAccount vendedor = dto.getDatosVendedor();
 			Double reputacionVend = (Double) sess.createQuery(
@@ -663,9 +665,10 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		try
 		{
 			String sql = "FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) "
-					+ "AND fecha >= current_date() AND proy.usuario.login = ? AND proy.cancelado = false "
+					+ "AND fecha >= ? AND proy.usuario.login = ? AND proy.cancelado = false "
 					+ "AND revisado = true AND proy.canceladoXAdmin = false ";
-			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setString(0, user).list();
+			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(sql).setDate(0, getToday()).setString(1, user)
+					.list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
@@ -788,9 +791,9 @@ public class SoftmartServiceImpl extends RemoteServiceServlet implements Softmar
 		{
 			List<Proyecto> projects = (List<Proyecto>) sess.createQuery(
 					"FROM Proyecto AS proy WHERE proy NOT IN (SELECT proyecto FROM Contrato) AND "
-							+ "fecha >= current_date() AND usuario.login != ? AND cancelado = false "
+							+ "fecha >= ? AND usuario.login != ? AND cancelado = false "
 							+ "AND proy.revisado = true AND proy.canceladoXAdmin = false AND "
-							+ "usuario.bloqueado = false").setString(0, usuario).list();
+							+ "usuario.bloqueado = false").setDate(0, getToday()).setString(1, usuario).list();
 			for (Proyecto project : projects)
 				project.prune();
 			return projects;
